@@ -337,7 +337,7 @@ jobs:
         - put: tfstate
           params:
             action: destroy
-            env_name: lemp-((env))
+            env_name: ((project))-((env))
             terraform_source: merged-stack/
           get_params:
             action: destroy
