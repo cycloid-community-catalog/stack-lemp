@@ -14,6 +14,8 @@ variable "project" {
 
 variable "env" {}
 
+variable "customer" {}
+
 variable "short_region" {
   type = "map"
 

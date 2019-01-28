@@ -1,0 +1,66 @@
+---
+
+#
+# Front
+#
+- hosts: tag_role_front:&tag_project_{{project}}:&tag_env_{{ env }}
+  become: yes
+  serial: 100%
+
+  vars_files:
+    - "environments/default_front.yml"
+    - [ "environments/{{ env }}-front.yml", "environments/empty.yml" ]
+    - [ "environments/{{ env }}-secrets.yml", "environments/empty.yml" ]
+
+  pre_tasks:
+    - name: Restart fuentd to use the hostname on boot
+      service:
+        name: td-agent
+        state: restarted
+      tags:
+        - notforbuild
+
+  roles:
+    - role: cycloid.base-aws
+    - role: cycloid.customer-ssh
+      home_directory: "/home/{{ ansistrano_user }}"
+      user: "{{ ansistrano_user }}"
+      tags: team-ssh
+    #- role: cycloid.postfix
+    #  tags:
+    #    - postfix
+    #    - runatboot
+    #- {role: dharrisio.aws-cloudwatch-logs, tags: logs}
+    - role: cycloid.php
+      tags:
+        - php
+        - runatboot
+
+    #
+    # Application DEPLOY
+    #
+    - role: cycloid.deployment
+      ansistrano_deploy_to: "/home/www/"
+      ansistrano_s3_object: "{{ deploy_bucket_object_path }}"
+      ansistrano_before_symlink_tasks_file: "config/before_symlink_tasks.yml"
+      ansistrano_after_symlink_tasks_file: "config/after_symlink_tasks.yml"
+      ansistrano_parameters_template: "env.j2"
+      ansistrano_parameters_destination: ".env"
+      ansistrano_s3_archive_content: false
+      tags:
+        - notforbuild
+        - deploy
+
+    - role: jdauphant.nginx
+      tags:
+        - nginx
+
+    #- role: cycloid.cron
+    #  tags:
+    #    - cron
+    #    - notforbuild
+
+    - {role: cycloid.telegraf, tags: telegraf}
+    - {role: cycloid.fluentd, tags: fluentd}
+  tags:
+    - front

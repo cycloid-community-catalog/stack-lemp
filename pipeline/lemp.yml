@@ -142,7 +142,7 @@ resources:
     check_every: 2m
     private_key: ((config_git_private_key))
     paths:
-      - ((config_terraform_path))/((env))/*
+      - ((config_terraform_path))/*
 
 # The Ansible stack (will be merged with the config)
 - name: git_stack-ansible
@@ -221,7 +221,8 @@ jobs:
         CONFIG_PATH: ((config_ansible_path))
         STACK_PATH: ansible
         EXTRA_ANSIBLE_VARS:
-          deploy_bucket_object_path: (( deploy_bucket_object_path ))
+          deploy_bucket_object_path: ((deploy_bucket_object_path))
+          deploy_bucket_name: ((deploy_bucket_name))
 
     - put: ami_front
       params:
@@ -477,12 +478,15 @@ jobs:
         DEPLOY_BUCKET_NAME: ((deploy_bucket_name))
         DEPLOY_BUCKET_OBJECT_PATH: ((deploy_bucket_object_path))
         DEPLOY_BUCKET_REGION: ((aws_default_region))
-        FORCE_ANSIBLE_GALAXY: false
+        ANSIBLE_FORCE_GALAXY: false
         EXTRA_VARS:
           customer: ((customer))
           project: ((project))
           env: ((env))
           default_ec2_region: ((aws_default_region))
+#        EXTRA_ANSIBLE_VARS:
+          deploy_bucket_object_path: ((deploy_bucket_object_path))
+          deploy_bucket_name: ((deploy_bucket_name))
         TAGS:
           - deploy
 

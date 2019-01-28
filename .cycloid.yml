@@ -14,7 +14,7 @@ technologies:
   - technology: Nginx
     version: 1.1x
   - technology: php
-    version: 7.x
+    version: 7.2
   - technology: mysql
     version: 10.x
   - technology: redis
