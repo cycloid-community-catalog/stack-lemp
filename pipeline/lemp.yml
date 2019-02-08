@@ -8,7 +8,7 @@ shared:
       type: docker-image
       source:
         repository: cycloid/cycloid-toolkit
-        tag: latest
+        tag: v2.7
     run:
       path: /usr/bin/merge-stack-and-config
     outputs:
@@ -40,7 +40,7 @@ shared:
         type: docker-image
         source:
           repository: cycloid/cycloid-toolkit
-          tag: latest
+          tag: v2.7
       run:
         path: /usr/bin/aws-ami-cleaner
       params:
@@ -126,20 +126,20 @@ resources:
 # The Terraform stack (will be merged with the config)
 - name: git_stack-terraform
   type: git
+  check_every: 2m
   source:
     uri: https://github.com/cycloid-community-catalog/stack-lemp
     branch: ((stack_git_branch))
-    check_every: 2m
     paths:
       - terraform/*
 
 # The Terraform config (will be merged with the stack)
 - name: git_config-terraform
   type: git
+  check_every: 2m
   source:
     uri: ((config_git_repository))
     branch: ((config_git_branch))
-    check_every: 2m
     private_key: ((config_git_private_key))
     paths:
       - ((config_terraform_path))/*
@@ -147,20 +147,20 @@ resources:
 # The Ansible stack (will be merged with the config)
 - name: git_stack-ansible
   type: git
+  check_every: 2m
   source:
     uri: https://github.com/cycloid-community-catalog/stack-lemp
     branch: ((stack_git_branch))
-    check_every: 2m
     paths:
       - ansible/*
 
 # The Ansible config (will be merged with the stack)
 - name: git_config-ansible
   type: git
+  check_every: 2m
   source:
     uri: ((config_git_repository))
     branch: ((config_git_branch))
-    check_every: 2m
     private_key: ((config_git_private_key))
     paths:
       - ((config_ansible_path))/((env))-*
@@ -170,10 +170,10 @@ resources:
 #
 - name: git_app-code
   type: git
+  check_every: 2m
   source:
     uri: ((lemp_git_repository))
     branch: ((lemp_git_branch))
-    check_every: 2m
     private_key: ((lemp_git_private_key))
 
 - name: s3_app-release
@@ -312,7 +312,8 @@ jobs:
           run_plan: true
           terraform_source: merged-stack/
 
-      - *aws-ami-cleaner
+      # https://github.com/bonclay7/aws-amicleaner/issues/90
+      #- *aws-ami-cleaner
 
 - name: terraform-destroy
   max_in_flight: 1

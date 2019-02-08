@@ -58,6 +58,7 @@ resource "aws_launch_template" "front" {
 
   network_interfaces {
     associate_public_ip_address = "${var.front_associate_public_ip_address}"
+    delete_on_termination       = true
 
     security_groups = ["${compact(list(
     "${var.bastion_sg_allow}",
