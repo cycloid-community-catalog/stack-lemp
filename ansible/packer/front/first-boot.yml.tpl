@@ -18,7 +18,7 @@
      - boto
 
    - name: Gather ec2 facts
-     ec2_facts:
+     ec2_metadata_facts:
 
    - name: Retrieve all tags on an instance
      ec2_tag:
