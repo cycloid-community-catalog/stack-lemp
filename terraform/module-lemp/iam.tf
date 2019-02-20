@@ -85,6 +85,8 @@ resource "aws_iam_role_policy_attachment" "cloudformation-signal" {
 
 #####################
 # Logs
+#####################
+
 data "aws_iam_policy_document" "push-logs" {
   statement {
     effect = "Allow"
@@ -132,4 +134,54 @@ resource "aws_iam_policy_attachment" "push-logs" {
   name       = "${var.env}-${var.project}-push-logs"
   roles      = ["${aws_iam_role.front.name}"]
   policy_arn = "${aws_iam_policy.push-logs.arn}"
+}
+
+#####################
+# Deployment
+#####################
+
+# S3 deployment policy
+data "aws_iam_policy_document" "s3_bucket_deploy" {
+  statement {
+    actions = [
+      "s3:ListBucket",
+      "s3:ListBucketVersions",
+      "s3:GetBucketVersioning",
+    ]
+
+    effect = "Allow"
+
+    resources = [
+      "arn:aws:s3:::${var.deploy_bucket_name}",
+    ]
+  }
+
+  statement {
+    actions = [
+      "s3:GetObject",
+      "s3:GetObjectAcl",
+      "s3:ListBucket",
+      "s3:AbortMultipartUpload",
+      "s3:GetObjectVersion",
+    ]
+
+    effect = "Allow"
+
+    resources = [
+      "arn:aws:s3:::${var.deploy_bucket_name}/*",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "s3_bucket_deploy" {
+  name        = "${var.env}-${var.project}-s3_bucket_deploy"
+  path        = "/"
+  description = "Get code archive"
+  policy      = "${data.aws_iam_policy_document.s3_bucket_deploy.json}"
+}
+
+resource "aws_iam_policy_attachment" "s3_bucket_deploy" {
+  name       = "${var.env}-${var.project}-s3_bucket_deploy"
+  roles      = ["${aws_iam_role.front.name}"]
+  policy_arn = "${aws_iam_policy.s3_bucket_deploy.arn}"
 }

@@ -4,24 +4,26 @@ base_extra_packages:
 base_extra_pip_packages:
   - boto3
 
-rds_host: "{{project}}-rds-eu-we1.{{project}}.{{env}}"
-rds_root_user: "{{project}}"
-
 # Deployment common vars
 ansistrano_user: "{{customer}}"
 ansistrano_php_fpm_service_name: "php{{ php_version_to_install }}-fpm"
 ansistrano_php_fpm_enabled: true
 ansistrano_group: www-data
+ansistrano_deploy_to: "/home/www/"
 ansistrano_keep_releases: 1
 ansistrano_current_dir: current
 ansistrano_deploy_via: s3_unarchive
 ansistrano_rolling_elb_enabled: false
 ansistrano_rolling_releases: true
-ansistrano_s3_bucket: "{{customer}}-deployment"
-ansistrano_s3_region: eu-west-1
-ansistrano_s3_aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY_ID') | default(omit)}}"
-ansistrano_s3_aws_secret_key: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') | default(omit)}}"
-ansistrano_s3_archive_content: true
+ansistrano_s3_bucket: "{{ deploy_bucket_name }}"
+ansistrano_s3_region: "{{ aws_default_region }}"
+ansistrano_s3_object: "{{ deploy_bucket_object_path }}"
+ansistrano_before_symlink_tasks_file: "config/before_symlink_tasks.yml"
+ansistrano_after_symlink_tasks_file: "config/after_symlink_tasks.yml"
+
+#ansistrano_s3_aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY_ID') | default(omit)}}"
+#ansistrano_s3_aws_secret_key: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') | default(omit)}}"
+ansistrano_s3_archive_content: false
 
 #
 # Nginx

@@ -264,3 +264,7 @@ variable "elasticache_engine_version" {
 variable "elasticache_port" {
   default = "6379"
 }
+
+variable "deploy_bucket_name" {
+  default = "application-deployment"
+}

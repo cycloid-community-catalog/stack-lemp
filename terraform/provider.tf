@@ -12,6 +12,8 @@ variable "rds_password" {
   default = "ChangeMePls"
 }
 
+variable "deploy_bucket_name" {}
+
 variable "access_key" {}
 variable "secret_key" {}
 

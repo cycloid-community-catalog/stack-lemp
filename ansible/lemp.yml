@@ -40,13 +40,6 @@
     # Application DEPLOY
     #
     - role: cycloid.deployment
-      ansistrano_deploy_to: "/home/www/"
-      ansistrano_s3_object: "{{ deploy_bucket_object_path }}"
-      ansistrano_before_symlink_tasks_file: "config/before_symlink_tasks.yml"
-      ansistrano_after_symlink_tasks_file: "config/after_symlink_tasks.yml"
-      ansistrano_parameters_template: "env.j2"
-      ansistrano_parameters_destination: ".env"
-      ansistrano_s3_archive_content: false
       tags:
         - notforbuild
         - deploy

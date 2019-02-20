@@ -3,9 +3,10 @@ module "lemp" {
 # Do not modify the following lines #
   source = "module-lemp"
 
-  project  = "${var.project}"
-  env      = "${var.env}"
-  customer = "${var.customer}"
+  project              = "${var.project}"
+  env                  = "${var.env}"
+  customer             = "${var.customer}"
+  deploy_bucket_name   = "${var.deploy_bucket_name}"
 
 #####################################
 

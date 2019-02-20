@@ -7,7 +7,7 @@ aws_access_key: ((aws.access_key))
 aws_secret_key: ((aws.secret_key))
 aws_default_region: eu-west-1
 
-# Password used for your rds
+# Password used for your rds. Set "empty" if you dont use databases
 rds_password: ((raw_rds_password))
 
 # Bucket configuration to store terraform remote state file.
