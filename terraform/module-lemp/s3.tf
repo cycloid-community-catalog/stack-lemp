@@ -128,13 +128,13 @@ resource "aws_iam_user_policy_attachment" "s3-medias_access" {
 }
 
 output "iam_s3-medias_user_key" {
-  value = "${aws_iam_access_key.s3-medias.*.id}"
+  value = "${join("", aws_iam_access_key.s3-medias.*.id)}"
 }
 
 output "iam_s3-medias_user_secret" {
-  value = "${aws_iam_access_key.s3-medias.*.secret}"
+  value = "${join("", aws_iam_access_key.s3-medias.*.secret)}"
 }
 
 output "s3_medias" {
-  value = "${aws_s3_bucket.medias.*.id}"
+  value = "${join("", aws_s3_bucket.medias.*.id)}"
 }

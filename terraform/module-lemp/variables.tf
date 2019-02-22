@@ -105,7 +105,7 @@ variable "rds_subnet_group" {
 }
 
 variable "rds_parameters" {
-  default = ""
+  default = "default.mysql5.7"
 }
 
 variable "rds_engine" {
@@ -142,7 +142,7 @@ variable "application_ssl_policy" {
 }
 
 variable "application_health_check_path" {
-  default = "/"
+  default = "/health-check"
 }
 
 variable "application_health_check_matcher" {
@@ -237,7 +237,7 @@ variable "front_update_min_in_service" {
 
 ###
 
-variable "create_redis" {
+variable "create_elasticache" {
   default = false
 }
 

@@ -377,13 +377,16 @@ jobs:
             echo "### Build release"
             cd ${DIR}/code
 
-            # make action if needed
+            # make action/build if needed
 
-            echo "# create the archive release"
-            cd ${DIR}/code
-            echo "${rds_password}" >> env.yml
-            echo "${env}" >> env.yml
+            # Generate config file if needed
+            echo "rds_password: ${rds_password}" >> config.yml
+            echo "env: ${env}" >> config.yml
 
+            # Update a dedicated healthcheck page if needed
+            echo '<?php echo "ok"; ?>' > healthcheck.php
+
+            # create the archive release
             tar --exclude .git -zcf ${DIR}/release/s3_app-release.tar.gz .
         params:
           rds_password: ((rds_password))
@@ -476,7 +479,7 @@ jobs:
       <<: *run-ansible-from-bastion
       params:
         BASTION_URL: ((bastion_url))
-        BASTION_PRIVATE_KEY: ((bastion_private_key_pair))
+        SSH_PRIVATE_KEY: ((bastion_private_key_pair))
         ANSIBLE_VAULT_PASSWORD: ((ansible_vault_password))
         AWS_DEFAULT_REGION: ((aws_default_region))
         AWS_ACCESS_KEY_ID: ((aws_access_key))

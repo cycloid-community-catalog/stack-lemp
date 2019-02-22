@@ -43,7 +43,7 @@ module "lemp" {
   # ElastiCache / redis
   ###
 
-  # create_redis = true
+  # create_elasticache = true
   # cache_subnet                     = "cache-subnet-id"
   # elasticache_type                 = "cache.t2.micro"
   # elasticache_nodes                = "1"

@@ -72,7 +72,7 @@ resource "aws_db_instance" "application" {
 }
 
 resource "aws_db_subnet_group" "rds-subnet" {
-  name        = "cycloid.io_subnet-rds-${var.vpc_id}-${var.env}"
+  name        = "cycloid-sub-rds-${var.vpc_id}-${var.env}"
   count       = "${var.rds_subnet_group == "" && var.create_rds ? 1 : 0}"
   description = "subnet-rds-${var.vpc_id}"
   subnet_ids  = ["${var.private_subnets_ids}"]
@@ -83,17 +83,17 @@ resource "aws_db_subnet_group" "rds-subnet" {
 #
 
 output "rds_address" {
-  value = "${aws_db_instance.application.*.address}"
+  value = "${join("", aws_db_instance.application.*.address)}"
 }
 
 output "rds_port" {
-  value = "${aws_db_instance.application.*.port}"
+  value = "${join("", aws_db_instance.application.*.port)}"
 }
 
 output "rds_database" {
-  value = "${aws_db_instance.application.*.name}"
+  value = "${join("", aws_db_instance.application.*.name)}"
 }
 
 output "rds_username" {
-  value = "${aws_db_instance.application.*.username}"
+  value = "${join("", aws_db_instance.application.*.username)}"
 }

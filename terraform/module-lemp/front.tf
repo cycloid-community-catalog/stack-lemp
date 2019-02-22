@@ -122,8 +122,14 @@ resource "aws_launch_template" "front" {
 
 ###
 
-#["${compact(concat(list("${aws_alb_target_group.front-80.arn}", "${aws_alb_target_group.front-443.arn}"), "${var.foo}" ))}"]
-#        "TargetGroupARNs": ["${aws_alb_target_group.front-80.arn}","${aws_alb_target_group.front-443.*.arn}"],
+# Workaround to have 80 or 443 optional
+locals {
+  target_group_arns = ["${compact(concat("${aws_alb_target_group.front-80.*.arn}", "${aws_alb_target_group.front-443.*.arn}"))}"]
+}
+
+output "front_target_group_arns" {
+  value = "${local.target_group_arns}"
+}
 
 resource "aws_cloudformation_stack" "front" {
   name = "${var.project}-front-${var.env}"
@@ -145,7 +151,7 @@ resource "aws_cloudformation_stack" "front" {
         "MinSize": "${var.front_asg_min_size}",
         "TerminationPolicies": ["OldestLaunchConfiguration", "NewestInstance"],
         "HealthCheckType": "ELB",
-        "TargetGroupARNs": ["${aws_alb_target_group.front-80.arn}"],
+        "TargetGroupARNs": ["${join(",", local.target_group_arns)}"],
         "HealthCheckGracePeriod": 600,
         "Tags" : [
           { "Key" : "Name", "Value" : "${var.project}-front-${lookup(var.short_region, var.aws_region)}-${var.env}", "PropagateAtLaunch" : "true" },

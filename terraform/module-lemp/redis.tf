@@ -1,5 +1,5 @@
 resource "aws_security_group" "redis" {
-  count       = "${var.create_redis ? 1 : 0}"
+  count       = "${var.create_elasticache ? 1 : 0}"
   name        = "${var.customer}-${var.project}-${var.elasticache_engine}-${lookup(var.short_region, var.aws_region)}-${var.env}"
   description = "${var.elasticache_engine} ${var.env} for ${var.project}"
   vpc_id      = "${var.vpc_id}"
@@ -25,7 +25,7 @@ resource "aws_security_group" "redis" {
 }
 
 resource "aws_elasticache_cluster" "redis" {
-  count                = "${var.create_redis ? 1 : 0}"
+  count                = "${var.create_elasticache ? 1 : 0}"
   cluster_id           = "${var.project}${count.index}-${var.env}"
   engine               = "${var.elasticache_engine}"
   engine_version       = "${var.elasticache_engine_version}"
@@ -48,8 +48,12 @@ resource "aws_elasticache_cluster" "redis" {
 }
 
 resource "aws_elasticache_subnet_group" "cache-subnet" {
-  name        = "engine-cycloid.io_subnet-cache-${var.vpc_id}"
-  count       = "${var.cache_subnet_group == "" && var.create_redis ? 1 : 0}"
+  name        = "cycloid-sub-cache-${var.vpc_id}-${var.env}"
+  count       = "${var.cache_subnet_group == "" && var.create_elasticache ? 1 : 0}"
   description = "redis cache subnet for ${var.vpc_id}"
   subnet_ids  = ["${var.private_subnets_ids}"]
+}
+
+output "elasticache_address" {
+  value = "${aws_elasticache_cluster.redis.cache_nodes.0.address}"
 }

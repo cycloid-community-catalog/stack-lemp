@@ -6,8 +6,8 @@ output "alb_front_zone_id" {
   value = "${module.lemp.alb_front_zone_id}"
 }
 
-output "cache_address" {
-  value = "${module.lemp.cache_address}"
+output "elasticache_address" {
+  value = "${module.lemp.elasticache_address}"
 }
 
 output "rds_address" {
@@ -27,13 +27,17 @@ output "rds_database" {
 }
 
 output "iam_s3-medias_user_key" {
-  value = "${module.lemp.rds_database}"
+  value = "${module.lemp.iam_s3-medias_user_key}"
 }
 
 output "iam_s3-medias_user_secret" {
-  value = "${module.lemp.rds_database}"
+  value = "${module.lemp.iam_s3-medias_user_secret}"
 }
 
 output "s3_medias" {
-  value = "${module.lemp.rds_database}"
+  value = "${module.lemp.s3_medias}"
+}
+
+output "front_target_group_arns" {
+  value = "${module.lemp.front_target_group_arns}"
 }

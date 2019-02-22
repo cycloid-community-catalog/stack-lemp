@@ -109,4 +109,4 @@ log "Finished running code deployment"
 log "Removing playbooks"
 rm -fr /home/admin/first-boot.yml /home/admin/${CUSTOMER} ${ANSIBLE_LOCAL_TEMP} -rf
 log "Finishing ${0} script and removing it"
-#rm ${0}
+rm ${0}

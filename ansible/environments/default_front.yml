@@ -20,7 +20,6 @@ ansistrano_s3_region: "{{ aws_default_region }}"
 ansistrano_s3_object: "{{ deploy_bucket_object_path }}"
 ansistrano_before_symlink_tasks_file: "config/before_symlink_tasks.yml"
 ansistrano_after_symlink_tasks_file: "config/after_symlink_tasks.yml"
-
 #ansistrano_s3_aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY_ID') | default(omit)}}"
 #ansistrano_s3_aws_secret_key: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') | default(omit)}}"
 ansistrano_s3_archive_content: false
@@ -67,22 +66,24 @@ nginx_configs:
   upstream:
     - upstream php { server "unix:/var/run/php-fpm.sock"; }
 
+application_server_name:
+    - application.com
+
+healthcheck_location: |
+    location /health-check {
+      root {{ ansistrano_deploy_to }}current/;
+      index healthcheck.php;
+      fastcgi_pass   php;
+      fastcgi_index  healthcheck.php;
+      fastcgi_param  SCRIPT_FILENAME  {{ ansistrano_deploy_to }}current/healthcheck.php;
+      fastcgi_param  PATH_INFO        $fastcgi_path_info;
+
+      include        fastcgi_params;
+      access_log off;
+      allow all;
+    }
 
 nginx_sites:
-  00-healthcheck:
-    - listen       8080 default_server
-    - server_name  default
-    - root         /home/www/healthcheck.php
-    - index        index.php
-    - access_log /var/log/nginx/healthcheck-access.log
-    - error_log  /var/log/nginx/healthcheck-error.log
-    - location /index.php {
-          fastcgi_pass  php;
-          fastcgi_index index.php;
-          include       fastcgi_params;
-          fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-          fastcgi_param DOCUMENT_ROOT $realpath_root;
-      }
   00-metrics:
     - listen 80
     - server_name 127.0.0.1
@@ -92,56 +93,53 @@ nginx_sites:
         allow 127.0.0.1;
         deny all;
       }
-    - set $pool "php"
-    - if ($arg_pool) {
-        set $pool $arg_pool;
-      }
     - location ~ "/fpm-(status|ping)" {
         access_log   off;
         allow 127.0.0.1;
         deny all;
-        fastcgi_pass $pool;
+        fastcgi_pass php;
         include fastcgi_params;
         fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
       }
 
   50-application:
     - listen 80 default_server
-    - server_name application.com
-    - root /home/www/current/
-    - index index.php
+    - server_name {{ application_server_name | join(' ') }}
+    - root {{ ansistrano_deploy_to }}current/
+    - set $ssl off
+    - index index.php index.html
+    - if ($http_x_custom_proto = "https") { set $ssl on; }
+    - if ($http_x_forwarded_proto = "https") { set $ssl on; }
+    - autoindex off
+    - charset UTF-8
     - access_log /var/log/nginx/application-access.log
     - error_log  /var/log/nginx/application-error.log
+
+    - "{{ healthcheck_location }}"
+
     - location / {
           try_files $uri $uri/ /index.php?$args;
       }
-    - location ~ \index.php$ {
-          try_files $uri = 404;
-          fastcgi_pass  php;
-          fastcgi_index index.php;
-          fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-          include       fastcgi_params;
-          fastcgi_param HTTP-X-FORWARDED-PROTO $scheme;
+
+    - location ~ \.php$ { echo_exec @fastcgi_backend; }
+
+    - location @fastcgi_backend {
+        expires off;
+        fastcgi_pass php;
+        fastcgi_read_timeout 900s;
+        fastcgi_connect_timeout 900s;
+        fastcgi_send_timeout 900s;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        fastcgi_param  HTTPS $ssl;
+        fastcgi_param  X-FORWARDED-PROTO $scheme;
+        fastcgi_param  X-FORWARDED-HOST  $host;
+        include        fastcgi_params;
       }
 
 nginx_snippets:
-  php_forward:
-    - location ~ \index.php$ {
-          try_files $uri = 404;
-
-          fastcgi_buffers      32 32k;
-          fastcgi_buffer_size  32k;
-          fastcgi_pass         php;
-          fastcgi_read_timeout 180;
-          fastcgi_index        index.php;
-          fastcgi_param        SCRIPT_FILENAME   $document_root$fastcgi_script_name;
-          include              fastcgi_params;
-          fastcgi_param        X-FORWARDED-PROTO $scheme;
-          fastcgi_param        X-FORWARDED-HOST  $host;
-      }
-
   redirect_to_https:
-    - if ($needsHttpsRedirect) {
+    - if ($ssl == "off") {
           return 301 https://$host$request_uri;
       }
 
@@ -234,9 +232,11 @@ php_fpm_pools:
     #pm.min_spare_servers: 15
     #pm.start_servers: 15
     #pm.max_children: 50
-    #request_terminate_timeout: 7200
+    #pm.max_requests: 30000
+    #request_terminate_timeout: 300
     #catch_workers_output: yes
-    #php_flag[display_errors]: on
-    php_admin_value[error_log]: /tmp/php.log
+    php_flag[display_errors]: on
+    php_admin_flag[log_errors]: true
+    php_admin_value[error_log]: /var/log/php-error.log
     #error_log: /var/log/php-fpm.log
     #php_admin_flag[log_errors]: true
