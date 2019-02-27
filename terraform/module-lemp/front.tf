@@ -38,7 +38,7 @@ resource "aws_security_group" "front" {
 ###
 
 resource "aws_launch_template" "front" {
-  name_prefix = "front_${var.env}_version_"
+  name_prefix = "${var.project}_front_${var.env}_version_"
 
   image_id      = "${data.aws_ami.front.id}"
   instance_type = "${var.front_type}"
@@ -54,7 +54,7 @@ resource "aws_launch_template" "front" {
       max_price          = "${var.front_spot_price}"
     }
   }
-*/
+  */
 
   network_interfaces {
     associate_public_ip_address = "${var.front_associate_public_ip_address}"

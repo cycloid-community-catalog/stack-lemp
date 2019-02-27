@@ -1,24 +1,24 @@
 module "lemp" {
-#####################################
-# Do not modify the following lines #
+  #####################################
+  # Do not modify the following lines #
   source = "module-lemp"
 
-  project              = "${var.project}"
-  env                  = "${var.env}"
-  customer             = "${var.customer}"
+  project  = "${var.project}"
+  env      = "${var.env}"
+  customer = "${var.customer}"
   deploy_bucket_name   = "${var.deploy_bucket_name}"
 
-#####################################
+  #####################################
 
   vpc_id                   = "<vpc-id>"
   private_subnets_ids      = ["private-subnets"]
   public_subnets_ids       = ["<public-subnets>"]
-  magento_ssl_cert         = "<ssl-cert-arn>"
   bastion_sg_allow         = "<bastion-sg>"
+
   # metrics_sg_allow         = "<prometheus-sg>"
 
   # SSH keypair name to use to deploy ec2 instances
-  # keypair_name = "demo"
+  keypair_name = "demo"
 
 
   ###
@@ -26,25 +26,25 @@ module "lemp" {
   ###
 
   # create_rds           = true
-  # rds_database         = "magento"
+  # rds_database         = "application"
   # rds_password         = "${var.rds_password}"
   # rds_disk_size        = 10
   # rds_multiaz          = false
   # rds_storage_type     = "gp2"
-  # rds_subnet_group     = "<rds-subnet-id>"
+  # rds_subnet_group     = "<rds-subnet-id>" # If not specified, create a dedicated group with private_subnets_ids
   # rds_type             = "db.t3.small"
   # rds_username         = "magento"
   # rds_engine           = "mysql"
   # rds_engine_version   = "5.7.16"
   # rds_backup_retention = 7
-  # rds_parameters       = ""
+  # rds_parameters       = "default.mysql5.7"
 
   ###
   # ElastiCache / redis
   ###
 
   # create_elasticache = true
-  # cache_subnet                     = "cache-subnet-id"
+  # cache_subnet_group             = "<cache-subnet-id>" # If not specified, create a dedicated group with private_subnets_ids
   # elasticache_type                 = "cache.t2.micro"
   # elasticache_nodes                = "1"
   # elasticache_parameter_group_name = "default.redis5.0"
@@ -52,16 +52,20 @@ module "lemp" {
   # elasticache_engine               = "redis"
   # elasticache_port                 = "6379"
 
-  # front_count           = "1"
-  # front_disk_size       = "60"
-  # front_disk_type       = "gp2"
-  # front_type            = "t3.small"
-  # front_ebs_optimized   = "false"
+  ###
+  # S3 medias
+  ###
+
+  # create_s3_medias = true
+
+  ###
+  # fronts
+  ###
+
+  # application_ssl_cert  = "arn:aws:acm:..."
+  front_count           = "1"
+  front_disk_size       = "60"
+  front_disk_type       = "gp2"
+  front_type            = "t3.small"
+  front_ebs_optimized   = "false"
 }
-
-
-# ???
-
-#variable "vault_password" {
-#  default = "tmp"
-#}

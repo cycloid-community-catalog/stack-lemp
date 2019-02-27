@@ -4,7 +4,7 @@
 Linux operating system
 Nginx (Pronounced as Engine-X) web server
 MySQL (RDS) database server
-PHP for dynamic data processing
+PHP-fpm for dynamic data processing
 
 
 # Architecture
@@ -16,8 +16,9 @@ This stack will deploy a php application on X Amazon EC2 instances behind an ALB
   * **ALB**: Amazon application loadbalancer
   * **ASG**: Autoscaling group for fronts
   * **front**: EC2 instances from builded AMI
-  * **RDS**: Amazon RDS database (mysql)
-  * **Elasticache**: Amazon Elasticache (redis)
+  * **RDS** (optional): Amazon RDS database (mysql)
+  * **Elasticache** (optional): Amazon Elasticache (redis)
+  * **S3 bucket** (optional): public medias bucket
 
 > **Pipeline** The pipeline contains a manual approval between terraform plan and terraform apply.
 > That means if you trigger a terraform plan, to apply it, you have to go on terraform apply job
@@ -44,7 +45,9 @@ Create:
 
   * ALB (loadbalancer)
   * ASG with launch_template of fronts
-  * RDS
+  * RDS (optional)
+  * Elasticache (optional)
+  * S3 bucket (optional) + Iam
 
 **Ansible**
 

@@ -149,7 +149,7 @@ nginx_snippets:
 
 cycloid_files_watched:
  - name: php
-   path: "/tmp/php.log"
+   path: "php_errorlog_path"
  - name: php-fpm
    path: "/var/log/php{{ php_version_to_install }}-fpm.log"
  - name: php-slow
@@ -158,8 +158,6 @@ cycloid_files_watched:
    path: "/var/log/nginx/access.log"
  - name: nginx-error
    path: "/var/log/nginx/error.log"
- - name: nginx-healthcheck
-   path: "/var/log/nginx/healthcheck-*.log"
  - name: nginx-application
    path: "/var/log/nginx/application-*.log"
 
@@ -219,6 +217,7 @@ php_short_open_tag: true
 
 # overrided on staging fronts
 php_slowlog_path: /var/log/php-slow.log
+php_errorlog_path: /var/log/php-error.log
 php_enable_php_fpm: true
 php_fpm_pools:
   - name: "{{ ansistrano_user }}"
@@ -237,6 +236,4 @@ php_fpm_pools:
     #catch_workers_output: yes
     php_flag[display_errors]: on
     php_admin_flag[log_errors]: true
-    php_admin_value[error_log]: /var/log/php-error.log
-    #error_log: /var/log/php-fpm.log
-    #php_admin_flag[log_errors]: true
+    php_admin_value[error_log]: "{{ php_errorlog_path }}"

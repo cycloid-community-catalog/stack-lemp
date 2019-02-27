@@ -16,7 +16,7 @@ technologies:
   - technology: php
     version: 7.2
   - technology: mysql
-    version: 10.x
+    version: 5.7.x
   - technology: redis
     version: 5.0.x
 

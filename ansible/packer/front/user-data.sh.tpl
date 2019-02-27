@@ -83,19 +83,27 @@ echo ${CUSTOMER_VAULT_PASSWORD} > ${VAULT_FILE}
 export AWS_ACCESS_KEY_ID="{{aws_access_key_id}}"
 export AWS_SECRET_ACCESS_KEY="{{aws_secret_access_key}}"
 ANSIBLE_FORCE_COLOR=1 PYTHONUNBUFFERED=1 ansible-playbook ${ANSIBLE_DEPLOYMENT_PLAYBOOK} --diff \
-            -e "env=${ENV}" \
-            -e "project=${PROJECT}" \
-            -e "customer=${CUSTOMER}" \
-            -e "ec2_tag_env=${ENV}" \
-            -e "ec2_tag_project=${PROJECT}" \
-            -e "ec2_tag_client=${CUSTOMER}" \
-            -e "ec2_tag_role=${ROLE}" \
-            -e "ansistrano_rolling_elb_enabled=false" \
-            --tags="runatboot,notforbuild" \
-            --connection=local \
-            --vault-password-file ${VAULT_FILE}
+         -e "env=${ENV}" \
+         -e "project=${PROJECT}" \
+         -e "customer=${CUSTOMER}" \
+         -e "rds_address=${RDS_ADDRESS}" \
+         -e "rds_port=${RDS_PORT}" \
+         -e "rds_database=${RDS_DATABASE}" \
+         -e "rds_username=${RDS_USERNAME}" \
+         -e "s3_medias=${S3_MEDIAS}" \
+         -e "elasticache_address=${ELASTICACHE_ADDRESS}" \
+         -e "ec2_tag_env=${ENV}" \
+         -e "ec2_tag_project=${PROJECT}" \
+         -e "ec2_tag_client=${CUSTOMER}" \
+         -e "ec2_tag_role=${ROLE}" \
+         -e "ansistrano_rolling_elb_enabled=false" \
+         --tags="runatboot,notforbuild" \
+         --connection=local \
+         --vault-password-file ${VAULT_FILE}
 DEPLOY_STATUS=${?}
 rm ${VAULT_FILE}
+
+
 
 if [[ "${DEPLOY_STATUS}" != "0" ]]; then
     log "Error running ${ANSIBLE_DEPLOYMENT_PLAYBOOK} playbook"

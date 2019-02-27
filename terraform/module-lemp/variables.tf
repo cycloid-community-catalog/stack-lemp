@@ -129,7 +129,7 @@ variable "rds_skip_final_snapshot" {
 #
 
 variable "vault_password" {
-  default = "tmp"
+  default = "empty"
 }
 
 variable "application_ssl_cert" {

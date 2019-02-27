@@ -5,6 +5,12 @@ export CUSTOMER=${customer}
 export PROJECT=${project}
 export ROLE=${role}
 export CUSTOMER_VAULT_PASSWORD=${vault_password}
+export RDS_ADDRESS=${rds_address}
+export RDS_PORT=${rds_port}
+export RDS_DATABASE=${rds_database}
+export RDS_USERNAME=${rds_username}
+export S3_MEDIAS=${s3_medias}
+export ELASTICACHE_ADDRESS=${elasticache_address}
 
 LOG_FILE="/var/log/user-data.log"
 

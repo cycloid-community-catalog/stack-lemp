@@ -7,6 +7,16 @@
   become: yes
   serial: 100%
 
+  vars:
+    # variable set by userdata or via the pipeline
+    env_variables:
+      RDS_ADDRESS: "{{ rds_address | default('empty', True) }}"
+      RDS_PORT: "{{ rds_port | default('empty', True) }}"
+      RDS_DATABASE: "{{ rds_database | default('empty', True) }}"
+      RDS_USERNAME: "{{ rds_username | default('empty', True) }}"
+      S3_MEDIAS: "{{ s3_medias | default('empty', True) }}"
+      ELASTICACHE_ADDRESS: "{{ elasticache_address | default('empty', True) }}"
+
   vars_files:
     - "environments/default_front.yml"
     - [ "environments/{{ env }}-front.yml", "environments/empty.yml" ]
@@ -18,6 +28,29 @@
         name: td-agent
         state: restarted
       tags:
+        - notforbuild
+
+
+    - name: Add environments variables
+      copy:
+        content: "{% for key, value in env_variables.items() %}export {{key}}='{{value}}'\n{% endfor %}"
+        dest: "/etc/environment"
+        owner: root
+        group: root
+      tags:
+        - php
+        - deploy
+        - notforbuild
+
+    - name: Add fpm environments variables
+      copy:
+        content: "[{{ ansistrano_user }}]\n{% for key, value in env_variables.items() %}  env[{{key}}] = '{{value}}'\n{% endfor %}"
+        dest: "/etc/php/{{ php_version_to_install }}/fpm/pool.d/env_variables.conf"
+        owner: root
+        group: root
+      tags:
+        - php
+        - deploy
         - notforbuild
 
   roles:
