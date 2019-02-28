@@ -314,7 +314,7 @@ jobs:
           run_plan: true
           terraform_source: merged-stack/
 
-      # https://github.com/bonclay7/aws-amicleaner/issues/90
+      # TODO: https://github.com/bonclay7/aws-amicleaner/issues/90
       #- *aws-ami-cleaner
 
 - name: terraform-destroy
