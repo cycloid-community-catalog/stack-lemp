@@ -127,10 +127,6 @@ locals {
   target_group_arns = ["${compact(concat("${aws_alb_target_group.front-80.*.arn}", "${aws_alb_target_group.front-443.*.arn}"))}"]
 }
 
-output "front_target_group_arns" {
-  value = "${local.target_group_arns}"
-}
-
 resource "aws_cloudformation_stack" "front" {
   name = "${var.project}-front-${var.env}"
 

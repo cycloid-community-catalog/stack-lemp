@@ -37,7 +37,3 @@ output "iam_s3-medias_user_secret" {
 output "s3_medias" {
   value = "${module.lemp.s3_medias}"
 }
-
-output "front_target_group_arns" {
-  value = "${module.lemp.front_target_group_arns}"
-}
