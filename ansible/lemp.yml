@@ -3,7 +3,7 @@
 #
 # Front
 #
-- hosts: tag_role_front:&tag_project_{{project}}:&tag_env_{{ env }}
+- hosts: tag_role_front:&tag_project_{{project}}:&tag_env_{{ env }}:!tag_packer_build_true
   become: yes
   serial: 100%
 

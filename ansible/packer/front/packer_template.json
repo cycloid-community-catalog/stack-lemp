@@ -18,7 +18,6 @@
            "ssh_username": "admin",
            "run_tags": {
                "Name": "{{user `customer`}}_{{user `project`}}_{{user `role`}}_{{user `env`}}-{{timestamp}}",
-               "packer_build": "true",
                "client": "{{user `customer`}}",
                "env": "{{user `env`}}",
                "project": "{{user `project`}}",
