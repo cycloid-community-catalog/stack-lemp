@@ -52,3 +52,37 @@ Create:
 **Ansible**
 
   * Playbook and packer config to build a debian image with telegraf, fluentd, nginx and php-fpm installed
+
+
+# Troubleshooting
+
+## Test ansible role with molecule
+
+Requires a bucket which contains a build of magento sources and AWS accesskey
+
+virtualenv if needed
+```
+virtualenv    .env  --clear
+source .env/bin/activate
+
+pip install ansible==2.7
+pip install molecule
+pip install docker-py
+```
+
+Run the test
+```
+cd ansible
+
+export AWS_SECRET_ACCESS_KEY=AKI...
+export AWS_ACCESS_KEY_ID=....
+
+export DEPLOY_BUCKET_NAME=cycloid-deploy
+export DEPLOY_BUCKET_OBJECT_PATH=catalog-lemp-app/ci/lemp-app.tar.gz
+export DEPLOY_BUCKET_REGION=eu-west-1
+
+# Run molecule
+molecule destroy
+molecule converge
+molecule verify
+```

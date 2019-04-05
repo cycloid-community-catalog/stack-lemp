@@ -29,6 +29,7 @@
         state: restarted
       tags:
         - notforbuild
+        - molecule-notest
 
 
     - name: Add environments variables
@@ -41,6 +42,14 @@
         - php
         - deploy
         - notforbuild
+
+    - name: Ensure php fpm pool.d directory exist
+      file:
+        path: /etc/php/{{ php_version_to_install }}/fpm/pool.d
+        state: directory
+        mode: 0755
+      tags:
+        - php
 
     - name: Add fpm environments variables
       copy:
@@ -63,7 +72,6 @@
     #  tags:
     #    - postfix
     #    - runatboot
-    #- {role: dharrisio.aws-cloudwatch-logs, tags: logs}
     - role: cycloid.php
       tags:
         - php
