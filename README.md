@@ -3,7 +3,7 @@
 This stack will create A full LEMP infrastructure based on ASG and RDS database.
 
   * Linux operating system
-  * Nginx (Pronounced as Engine-X) web server
+  * NGINX (Pronounced as Engine-X) web server
   * MySQL (RDS) database server
   * PHP-FPM for dynamic data processing
 
