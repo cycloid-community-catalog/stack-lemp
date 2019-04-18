@@ -47,7 +47,7 @@ deploy_bucket_object_path: /catalog-lemp-app/($ environment $)/lemp-app.tar.gz
 ansible_vault_password: ((raw_ansible_vault_password))
 
 #. bastion_url (required): admin@bastion.cycloid.io
-#+ bastion url used by ansible to connect on aws ec2 instances.
+#+ bastion URL used by ansible to connect on AWS EC2 instances.
 bastion_url: admin@bastion.cycloid.io
 
 #. bastion_private_key_pair (required): ((ssh_bastion.ssh_key))
