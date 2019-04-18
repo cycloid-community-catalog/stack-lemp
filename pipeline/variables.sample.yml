@@ -64,7 +64,7 @@ bastion_private_key_pair: ((ssh_bastion.ssh_key))
 config_git_repository: git@github.com:MyUser/config-lemp-app.git
 
 #. config_git_branch (required): master
-#+ Branch of the config git repository.
+#+ Branch of the config Git repository.
 config_git_branch: master
 
 #. config_git_private_key (required): ((git_config.ssh_key))
