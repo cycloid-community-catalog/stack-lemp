@@ -7,4 +7,4 @@
 #+ Provide log files you want to export to Cycloid logs.
 
 #. php_version_to_install: 7.2
-#+ PHP fpm version to install.
+#+ PHP-FPM version to install.
