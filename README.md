@@ -14,7 +14,7 @@ This stack will create A full LEMP infrastructure based on ASG and RDS database.
 </p>
 
 
-  * **ALB**: Amazon application loadbalancer
+  * **ALB**: Amazon Application Load Balancer
   * **ASG**: Autoscaling group for fronts
   * **front**: EC2 instances from builded AMI
   * **RDS** (optional): Amazon RDS database (mysql)
