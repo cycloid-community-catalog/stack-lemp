@@ -118,7 +118,7 @@ module "lemp" {
   #+ ElastiCache group parameter name to use.
 
   #. elasticache_engine_version (optional): 5.0.0
-  #+ Version of the Elasticache engine
+  #+ Version of the ElastiCache engine
 
   #. elasticache_engine (optional): redis
   #+ Type of the elasticache engine
