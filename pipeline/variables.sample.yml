@@ -106,7 +106,7 @@ customer: ($ organization_canonical $)
 stack_git_branch: master
 
 #. config_ansible_path (required): ($ project $)/ansible
-#+ Path of Ansible files in the config git repository
+#+ Path of Ansible files in the config Git repository
 config_ansible_path: ($ project $)/ansible
 
 #. config_terraform_path (required): ($ project $)/terraform/($ environment $)
