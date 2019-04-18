@@ -30,7 +30,7 @@ module "lemp" {
   metrics_sg_allow        = "<prometheus-sg>"
 
   #. keypair_name (requiredl): cycloid
-  #+ SSH keypair name to use to deploy ec2 instances.
+  #+ SSH keypair name to use to deploy EC2 instances.
   keypair_name            = "cycloid"
 
   ###
