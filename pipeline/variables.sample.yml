@@ -51,7 +51,7 @@ ansible_vault_password: ((raw_ansible_vault_password))
 bastion_url: admin@bastion.cycloid.io
 
 #. bastion_private_key_pair (required): ((ssh_bastion.ssh_key))
-#+ bastion SSH private key used by ansible to connect on aws ec2 instances and the bastion itself.
+#+ bastion SSH private key used by ansible to connect on AWS EC2 instances and the bastion itself.
 bastion_private_key_pair: ((ssh_bastion.ssh_key))
 
 
