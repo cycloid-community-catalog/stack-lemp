@@ -18,7 +18,7 @@ This stack will create A full LEMP infrastructure based on ASG and RDS database.
   * **ASG**: Autoscaling group for fronts
   * **front**: EC2 instances from builded AMI
   * **RDS** (optional): Amazon RDS database (mysql)
-  * **Elasticache** (optional): Amazon Elasticache (redis)
+  * **ElastiCache** (optional): Amazon ElastiCache (Redis)
   * **S3 bucket** (optional): public medias bucket
 
 # Requirements
