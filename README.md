@@ -1,4 +1,4 @@
-# stack-lemp (Linux, Nginx, MySQL, PHP)
+# stack-lemp (Linux, NGINX, MySQL, PHP)
 
 This stack will create A full LEMP infrastructure based on ASG and RDS database.
 
