@@ -81,7 +81,7 @@ lemp_git_repository: git@github.com:MyUser/code-lemp.git
 lemp_git_branch: master
 
 #. lemp_git_private_key (required): ((git_lemp_app.ssh_key))
-#+ SSH key pair to fetch lemp source code git repository.
+#+ SSH key pair to fetch LEMP source code Git repository.
 lemp_git_private_key:  ((git_lemp_app.ssh_key))
 
 
