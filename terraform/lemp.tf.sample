@@ -121,7 +121,7 @@ module "lemp" {
   #+ Version of the ElastiCache engine
 
   #. elasticache_engine (optional): redis
-  #+ Type of the elasticache engine
+  #+ Type of the ElastiCache engine
 
   #. elasticache_port (optional): 6379
   #+ Port of the elasticache
