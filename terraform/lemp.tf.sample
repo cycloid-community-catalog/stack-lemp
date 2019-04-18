@@ -106,7 +106,7 @@ module "lemp" {
   # Define if we want to create or not an Amazon ElastiCache
 
   #. cache_subnet_group (optional):
-  #+ Name os the Amazon elasticache subnet group to use. If not specified, create a dedicated group with private_subnets_ids.
+  #+ Name os the Amazon ElastiCache subnet group to use. If not specified, create a dedicated group with private_subnets_ids.
 
   #. elasticache_type (optional): cache.t2.micro
   #+ Instance size to use for elasticache nodes.
