@@ -102,7 +102,7 @@ project: ($ project $)
 customer: ($ organization_canonical $)
 
 #. stack_git_branch (required): master
-#+ Branch to use on the public stack git repository
+#+ Branch to use on the public stack Git repository
 stack_git_branch: master
 
 #. config_ansible_path (required): ($ project $)/ansible
