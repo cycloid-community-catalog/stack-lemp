@@ -103,7 +103,7 @@ module "lemp" {
   ###
 
   #. create_elasticache (optional, bool): true
-  # Define if we want to create or not an Amazon elasticache
+  # Define if we want to create or not an Amazon ElastiCache
 
   #. cache_subnet_group (optional):
   #+ Name os the Amazon elasticache subnet group to use. If not specified, create a dedicated group with private_subnets_ids.
