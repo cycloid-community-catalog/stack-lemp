@@ -115,7 +115,7 @@ module "lemp" {
   #+ Number of nodes in the ElastiCache cluster.
 
   #. elasticache_parameter_group_name (optional): default.redis5.0
-  #+ Elasticache group parameter name to use.
+  #+ ElastiCache group parameter name to use.
 
   #. elasticache_engine_version (optional): 5.0.0
   #+ Version of the Elasticache engine
