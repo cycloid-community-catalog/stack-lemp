@@ -1,6 +1,6 @@
 output "alb_front_dns_name" {
   value       = "${module.lemp.alb_front_dns_name}"
-  description = "DNS name of the front alb."
+  description = "DNS name of the front ALB."
 }
 
 output "alb_front_zone_id" {
