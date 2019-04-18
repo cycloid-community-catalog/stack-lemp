@@ -124,7 +124,7 @@ module "lemp" {
   #+ Type of the ElastiCache engine
 
   #. elasticache_port (optional): 6379
-  #+ Port of the elasticache
+  #+ Port of the ElastiCache
 
   ###
   # S3 medias
