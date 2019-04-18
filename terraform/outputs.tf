@@ -5,7 +5,7 @@ output "alb_front_dns_name" {
 
 output "alb_front_zone_id" {
   value       = "${module.lemp.alb_front_zone_id}"
-  description = "Zone ID of the front alb."
+  description = "Zone ID of the front ALB."
 }
 
 output "elasticache_address" {
