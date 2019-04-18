@@ -22,7 +22,7 @@ module "lemp" {
   public_subnets_ids      = ["public-subnets"]
 
   #. bastion_sg_allow (optional):
-  #+ Amazon source security group ID which will be allowed to connect on Fronts port 22 (ssh).
+  #+ Amazon source security group ID which will be allowed to connect on Fronts port 22 (SSH).
   bastion_sg_allow         = "<bastion-sg>"
 
   #. metrics_sg_allow (optional): ""
