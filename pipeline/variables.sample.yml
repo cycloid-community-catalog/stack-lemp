@@ -73,7 +73,7 @@ config_git_private_key: ((git_config.ssh_key))
 
 
 #. lemp_git_repository (required): git@github.com:MyUser/code-lemp.git
-#+ Url to the git repository containing lemp website source code.
+#+ URL to the Git repository containing LEMP website source code.
 lemp_git_repository: git@github.com:MyUser/code-lemp.git
 
 #. lemp_git_branch (required): master
