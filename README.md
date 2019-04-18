@@ -149,7 +149,7 @@ In order to run this task, couple elements are required within the infrastructur
 
 # Molecule tests
 
-Requires a bucket which contains a build of magento sources and AWS accesskey
+Requires a bucket which contains a build of magento sources and AWS access key
 
 virtualenv if needed
 ```
