@@ -109,7 +109,7 @@ module "lemp" {
   #+ Name os the Amazon ElastiCache subnet group to use. If not specified, create a dedicated group with private_subnets_ids.
 
   #. elasticache_type (optional): cache.t2.micro
-  #+ Instance size to use for elasticache nodes.
+  #+ Instance size to use for ElastiCache nodes.
 
   #. elasticache_nodes (optional): 1
   #+ Number of nodes in the elasticache cluster.
