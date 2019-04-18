@@ -10,7 +10,7 @@ output "alb_front_zone_id" {
 
 output "elasticache_address" {
   value       = "${module.lemp.elasticache_address}"
-  description = "Address of the elasticache."
+  description = "Address of the ElastiCache."
 }
 
 output "rds_address" {
