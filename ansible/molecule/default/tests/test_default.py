@@ -13,7 +13,6 @@ def test_services_running(host):
     fluentd = host.process.filter(user='root', comm='fluentd')
     telegraf = host.process.filter(user='telegraf', comm='telegraf')
 
-    print host.process.filter(user='cycloid')
     assert len(nginx) >= 1
     assert len(phpfpm) >= 1
     assert len(fluentd) >= 1

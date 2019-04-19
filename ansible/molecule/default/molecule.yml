@@ -38,10 +38,10 @@ provisioner:
   options:
     # vault-password-file: ../../.vault-password
     extra-vars:
-      env=test
-      project=lemp
-      customer=cycloid
-      role=front
+      env: test
+      project: lemp
+      customer: cycloid
+      role: front
     #skip-tags: molecule-notest
     #vvv: "True"
 
