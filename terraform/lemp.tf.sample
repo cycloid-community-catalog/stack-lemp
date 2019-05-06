@@ -26,11 +26,11 @@ module "lemp" {
   bastion_sg_allow         = "<bastion-sg>"
 
   #. metrics_sg_allow (optional): ""
-  #+ Additionnal security group ID to assign to Cycloid workers. Goal is to allow monitoring server to query metrics.
+  #+ Additionnal security group ID to assign to servers. Goal is to allow monitoring server to query metrics.
   metrics_sg_allow        = "<prometheus-sg>"
 
   #. keypair_name (requiredl): cycloid
-  #+ SSH keypair name to use to deploy EC2 instances.
+  #+ Name of an existing AWS SSH keypair to use to deploy EC2 instances.
   keypair_name            = "cycloid"
 
   ###
@@ -63,7 +63,7 @@ module "lemp" {
   ###
 
   #. create_rds (optional, bool): false
-  #+ Define if we want to create or not a RDS database.
+  #+ Define if we want to create or not an RDS database.
 
   #. rds_database (optional): application
   #+ RDS database name.
@@ -106,7 +106,7 @@ module "lemp" {
   # Define if we want to create or not an Amazon ElastiCache
 
   #. cache_subnet_group (optional):
-  #+ Name os the Amazon ElastiCache subnet group to use. If not specified, create a dedicated group with private_subnets_ids.
+  #+ Name of the Amazon ElastiCache subnet group to use. If not specified, create a dedicated group with private_subnets_ids.
 
   #. elasticache_type (optional): cache.t2.micro
   #+ Instance size to use for ElastiCache nodes.

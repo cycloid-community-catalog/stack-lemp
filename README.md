@@ -43,11 +43,11 @@ In order to run this task, couple elements are required within the infrastructur
 
 **Jobs description**
 
-  * `build-worker-ami` : Build Front Amazon image AMI using Packer and Ansible.
+  * `build-ami-front` : Build Front Amazon image AMI using Packer and Ansible.
   * `build-application`: Runs the appropriate php/composer commands and build a release file of the code to put it on S3.
-  * `unittest`: Dummy job meant to eventually be replaced by proper tests or removed.
   * `terraform-plan`: Terraform job that will simply make a plan of the stack.
   * `terraform-apply`: Terraform job similar to the plan one, but will actually create/update everything that needs to. Please see the plan diff for a better understanding.
+  * `unittests`: Dummy job meant to eventually be replaced by proper tests or removed.
   * `application-deployment`: Simply trigger a deployment using Ansible of the last version of the code on existing instances.
   * `functional-tests`: Dummy job meant to eventually be replaced by proper functional or removed.
   * `terraform-destroy`: :warning: Terraform job meant to destroy the whole stack - **NO CONFIRMATION ASKED**. If triggered, the full project **WILL** be destroyed. Use with caution.
@@ -88,24 +88,24 @@ In order to run this task, couple elements are required within the infrastructur
 |Name|Description|Type|Default|Required|
 |---|---|:---:|:---:|:---:|
 |`application_ssl_cert`|ARN of an Amazon cert (ACM) to use for the loadbalancer.|`-`|``|`False`|
-|`bastion_sg_allow`|Amazon source security group ID which will be allowed to connect on Fronts port 22 (ssh).|`-`|``|`False`|
-|`cache_subnet_group`|Name os the Amazon elasticache subnet group to use. If not specified, create a dedicated group with private_subnets_ids.|`-`|``|`False`|
+|`bastion_sg_allow`|Amazon source security group ID which will be allowed to connect on Fronts port 22 (SSH).|`-`|``|`False`|
+|`cache_subnet_group`|Name of the Amazon ElastiCache subnet group to use. If not specified, create a dedicated group with private_subnets_ids.|`-`|``|`False`|
 |`create_elasticache`||`bool`|`true`|`False`|
-|`create_rds`|Define if we want to create or not a RDS database.|`bool`|`false`|`False`|
+|`create_rds`|Define if we want to create or not an RDS database.|`bool`|`false`|`False`|
 |`create_s3_medias`|Create a S3 bucket dedicated to medias for the LEMP application|`bool`|`false`|`False`|
-|`elasticache_engine`|Type of the elasticache engine|`-`|`redis`|`False`|
-|`elasticache_engine_version`|Version of the Elasticache engine|`-`|`5.0.0`|`False`|
-|`elasticache_nodes`|Number of nodes in the elasticache cluster.|`-`|`1`|`False`|
-|`elasticache_parameter_group_name`|Elasticache group parameter name to use.|`-`|`default.redis5.0`|`False`|
-|`elasticache_port`|Port of the elasticache|`-`|`6379`|`False`|
-|`elasticache_type`|Instance size to use for elasticache nodes.|`-`|`cache.t2.micro`|`False`|
+|`elasticache_engine`|Type of the ElastiCache engine|`-`|`redis`|`False`|
+|`elasticache_engine_version`|Version of the ElastiCache engine|`-`|`5.0.0`|`False`|
+|`elasticache_nodes`|Number of nodes in the ElastiCache cluster.|`-`|`1`|`False`|
+|`elasticache_parameter_group_name`|ElastiCache group parameter name to use.|`-`|`default.redis5.0`|`False`|
+|`elasticache_port`|Port of the ElastiCache|`-`|`6379`|`False`|
+|`elasticache_type`|Instance size to use for ElastiCache nodes.|`-`|`cache.t2.micro`|`False`|
 |`front_asg_max_size`|Maximum number of front server allowed in the AutoScaling group.|`-`|`5`|`False`|
 |`front_count`|Desired number of front servers|`-`|`1`|`False`|
 |`front_disk_size`|Disk size of front servers.|`-`|`30`|`False`|
 |`front_ebs_optimized`|Whether the Instance is EBS optimized or not, related to the instance type you choose.|`bool`|`false`|`False`|
 |`front_type`|Type of instance to use for front servers|`-`|`t3.small`|`False`|
-|`keypair_name`|SSH keypair name to use to deploy ec2 instances.|`-`|`cycloid`|`False`|
-|`metrics_sg_allow`|Additionnal security group ID to assign to Cycloid workers. Goal is to allow monitoring server to query metrics.|`-`|`""`|`False`|
+|`keypair_name`|Name of an existing AWS SSH keypair to use to deploy EC2 instances.|`-`|`cycloid`|`False`|
+|`metrics_sg_allow`|Additionnal security group ID to assign to servers. Goal is to allow monitoring server to query metrics.|`-`|`""`|`False`|
 |`private_subnets_ids`|Amazon subnets IDs on which create each components.|`array`|``|`True`|
 |`public_subnets_ids`|Amazon subnets IDs on which create each components.|`array`|``|`True`|
 |`rds_backup_retention`|The days to retain backups for. Must be between 0 and 35. When creating a Read Replica the value must be greater than 0|`-`|`7`|`False`|
