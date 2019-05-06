@@ -1,1 +1,10 @@
 # In this file you could override any variables present in default_front.yaml file
+
+#. nginx_sites (optional, dict): <metric and application vhost>
+#+ Contain NGINX vhosts to create on front servers. A default application and metrics vhosts are already provided.
+
+#. cycloid_files_watched (optional; dict): <Default log files watched>
+#+ Provide log files you want to export to Cycloid logs.
+
+#. php_version_to_install: 7.2
+#+ PHP-FPM version to install.
