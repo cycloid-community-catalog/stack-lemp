@@ -1,61 +1,114 @@
+  
 #
 # Terraform
 #
 
 # Amazon access to use to run terraform. Usually admin account to be able to create Amazon services.
+
+#. aws_access_key (required): ((aws.access_key))
+#+ Amazon AWS access key for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)
 aws_access_key: ((aws.access_key))
+
+#. aws_secret_key (required): ((aws.secret_key))
+#+ Amazon AWS secret key for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)
 aws_secret_key: ((aws.secret_key))
+
+#. aws_default_region (required): eu-west-1
+#+ Amazon AWS region to use for Terraform.
 aws_default_region: eu-west-1
 
-# Password used for your rds. Set "empty" if you dont use databases
+#. terraform_storage_bucket_name (required): ($ organization_canonical $)-terraform-remote-state
+#+ AWS S3 bucket name to store terraform remote state file.
+terraform_storage_bucket_name: ($ organization_canonical $)-terraform-remote-state
+
+#. terraform_storage_bucket_path (required): ($ project $)/($ environment $)
+#+ AWS S3 bucket path to store terraform remote state file.
+terraform_storage_bucket_path: ($ project $)/($ environment $)
+
+#. rds_password (optional): ((raw_rds_password))
+#+ Password used for your rds. Set "empty" if you dont use databases
 rds_password: ((raw_rds_password))
 
-# Bucket configuration to store terraform remote state file.
-terraform_storage_bucket_name: ($ organization_canonical $)-terraform-remote-state
-terraform_storage_bucket_path: ($ project $)/($ environment $)
 
 #
 # Ansible
 #
 
+#. deploy_bucket_name (required): ($ project $)-deploy
+#+ AWS S3 bucket name in which store the builded code of the website.
 deploy_bucket_name: ($ project $)-deploy
+
+#. deploy_bucket_object_path (required): /catalog-lemp-app/($ environment $)/lemp-app.tar.gz
+#+ AWS S3 bucket path in which store the builded code of the website.
 deploy_bucket_object_path: /catalog-lemp-app/($ environment $)/lemp-app.tar.gz
 
-# Password used for your ansible vault variables (raw_ansible_vault_password depend of you credential name).
+#. ansible_vault_password (required): ((raw_ansible_vault_password))
+#+ Password used by ansible vault to decrypt your vaulted files.
 ansible_vault_password: ((raw_ansible_vault_password))
 
-# Configuration of the bastion server used to run ansible (ssh_bastion depend of you credential name)
-bastion_url: admin@bastion.cycloid.io
+#. bastion_url (required): user@bastion.server.com
+#+ bastion URL used by ansible to connect on AWS EC2 instances.
+bastion_url: user@bastion.server.com
+
+#. bastion_private_key_pair (required): ((ssh_bastion.ssh_key))
+#+ bastion SSH private key used by ansible to connect on AWS EC2 instances and the bastion itself.
 bastion_private_key_pair: ((ssh_bastion.ssh_key))
+
 
 #
 # Repos
 #
 
-# Configuration of the git repository used to configure the stack
+#. config_git_repository (required): git@github.com:MyUser/config-lemp-app.git
+#+ Git repository URL containing the config of the stack.
 config_git_repository: git@github.com:MyUser/config-lemp-app.git
+
+#. config_git_branch (required): master
+#+ Branch of the config Git repository.
 config_git_branch: master
+
+#. config_git_private_key (required): ((git_config.ssh_key))
+#+ SSH key pair to fetch the config Git repository.
 config_git_private_key: ((git_config.ssh_key))
 
-lemp_git_repository: git@github.com:MyUser/code-magento.git
+
+#. lemp_git_repository (required): git@github.com:MyUser/code-lemp.git
+#+ URL to the Git repository containing LEMP website source code.
+lemp_git_repository: git@github.com:MyUser/code-lemp.git
+
+#. lemp_git_branch (required): master
+#+ Branch of the LEMP source code Git repository.
 lemp_git_branch: master
+
+#. lemp_git_private_key (required): ((git_lemp_app.ssh_key))
+#+ SSH key pair to fetch LEMP source code Git repository.
 lemp_git_private_key:  ((git_lemp_app.ssh_key))
+
 
 #
 # Default variables that shouldn't be changed except if needed
 #
 
+#. env (required): ($ environment $)
+#+ Name of the project's environment.
 env: ($ environment $)
+
+#. project (required): ($ project $)
+#+ Name of the project.
 project: ($ project $)
+
+#. customer (required): ($ organization_canonical $)
+#+ Name of the Cycloid Organization, used as customer variable name.
 customer: ($ organization_canonical $)
 
-# If you need to use a specific branch of stack
+#. stack_git_branch (required): master
+#+ Branch to use on the public stack Git repository
 stack_git_branch: master
 
-# Path of your configuration
+#. config_ansible_path (required): ($ project $)/ansible
+#+ Path of Ansible files in the config Git repository
 config_ansible_path: ($ project $)/ansible
-config_terraform_path: ($ project $)/terraform/($ environment $)
 
-# Packer
-packer_ansible_version: "2.7"
-debug_public_key: "ssh-rsa ..."
+#. config_terraform_path (required): ($ project $)/terraform/($ environment $)
+#+ Path of Terraform files in the config git repository
+config_terraform_path: ($ project $)/terraform/($ environment $)
