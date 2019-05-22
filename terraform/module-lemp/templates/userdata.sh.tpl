@@ -14,8 +14,8 @@ export ELASTICACHE_ADDRESS=${elasticache_address}
 
 LOG_FILE="/var/log/user-data.log"
 
-AWS_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
-AWS_UNIQUE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
+export AWS_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
+export AWS_UNIQUE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
 
 #TMP fix for https://github.com/boto/boto/issues/3783
 echo '[Boto]
