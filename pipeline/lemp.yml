@@ -493,11 +493,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ((aws_secret_key))
         ANSIBLE_PLAYBOOK_PATH: ansible-playbook
         ANSIBLE_PLAYBOOK_NAME: lemp.yml
-        DEPLOY_BUCKET_NAME: ((deploy_bucket_name))
-        DEPLOY_BUCKET_OBJECT_PATH: ((deploy_bucket_object_path))
-        DEPLOY_BUCKET_REGION: ((aws_default_region))
         ANSIBLE_FORCE_GALAXY: false
-#        EXTRA_VARS:
         EXTRA_ANSIBLE_VARS:
           customer: ((customer))
           project: ((project))
