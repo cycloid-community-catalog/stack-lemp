@@ -485,7 +485,7 @@ jobs:
     - task: run-ansible
       <<: *run-ansible-from-bastion
       params:
-        BASTION_URL: ((bastion_url))
+        SSH_JUMP_URL: ((bastion_url))
         SSH_PRIVATE_KEY: ((bastion_private_key_pair))
         ANSIBLE_VAULT_PASSWORD: ((ansible_vault_password))
         AWS_DEFAULT_REGION: ((aws_default_region))
