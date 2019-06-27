@@ -307,7 +307,7 @@ jobs:
       - put: tfstate
         params:
           env_name: ((project))-((env))
-          run_plan: true
+          plan_run: true
           terraform_source: merged-stack/
 
       - *aws-ami-cleaner
