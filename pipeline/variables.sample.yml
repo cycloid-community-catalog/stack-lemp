@@ -1,4 +1,4 @@
-  
+
 #
 # Terraform
 #
@@ -20,10 +20,6 @@ aws_default_region: eu-west-1
 #. terraform_storage_bucket_name (required): ($ organization_canonical $)-terraform-remote-state
 #+ AWS S3 bucket name to store terraform remote state file.
 terraform_storage_bucket_name: ($ organization_canonical $)-terraform-remote-state
-
-#. terraform_storage_bucket_path (required): ($ project $)/($ environment $)
-#+ AWS S3 bucket path to store terraform remote state file.
-terraform_storage_bucket_path: ($ project $)/($ environment $)
 
 #. rds_password (optional): ((raw_rds_password))
 #+ Password used for your rds. Set "empty" if you dont use databases
