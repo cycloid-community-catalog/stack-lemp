@@ -2,7 +2,8 @@ variable "aws_region" {
   default = "eu-west-1"
 }
 
-variable "bastion_sg_allow" {}
+variable "bastion_sg_allow" {
+}
 
 variable "metrics_sg_allow" {
   default = ""
@@ -12,12 +13,14 @@ variable "project" {
   default = "lemp"
 }
 
-variable "env" {}
+variable "env" {
+}
 
-variable "customer" {}
+variable "customer" {
+}
 
 variable "short_region" {
-  type = "map"
+  type = map(string)
 
   default = {
     ap-northeast-1 = "ap-no1"
@@ -39,18 +42,19 @@ variable "keypair_name" {
 }
 
 variable "private_subnets_ids" {
-  type = "list"
+  type = list(string)
 }
 
 variable "public_subnets_ids" {
-  type = "list"
+  type = list(string)
 }
 
 variable "cache_subnet_group" {
   default = ""
 }
 
-variable "vpc_id" {}
+variable "vpc_id" {
+}
 
 variable "zones" {
   default = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
@@ -268,3 +272,4 @@ variable "elasticache_port" {
 variable "deploy_bucket_name" {
   default = "application-deployment"
 }
+

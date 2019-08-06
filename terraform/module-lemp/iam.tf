@@ -16,13 +16,13 @@ data "aws_iam_policy_document" "assume_role" {
 # Create IAM Role for front
 resource "aws_iam_role" "front" {
   name               = "cycloid_${var.env}-front"
-  assume_role_policy = "${data.aws_iam_policy_document.assume_role.json}"
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
   path               = "/${var.project}/"
 }
 
 resource "aws_iam_instance_profile" "front_profile" {
   name = "cycloid_profile-front-${var.project}-${var.env}"
-  role = "${aws_iam_role.front.name}"
+  role = aws_iam_role.front.name
 }
 
 #
@@ -43,19 +43,20 @@ resource "aws_iam_policy" "ec2-tag-describe" {
   name        = "${var.env}-${var.project}-ec2-tag-describe"
   path        = "/"
   description = "EC2 tags Read only"
-  policy      = "${data.aws_iam_policy_document.ec2-tag-describe.json}"
+  policy      = data.aws_iam_policy_document.ec2-tag-describe.json
 }
 
 resource "aws_iam_role_policy_attachment" "ec2-tag-describe" {
-  role       = "${aws_iam_role.front.name}"
-  policy_arn = "${aws_iam_policy.ec2-tag-describe.arn}"
+  role       = aws_iam_role.front.name
+  policy_arn = aws_iam_policy.ec2-tag-describe.arn
 }
 
 #
 # cloudformation signal-resource allow to send signal to cloudworker stack
 #
 #Get the account id to generate the policy
-data "aws_caller_identity" "current" {}
+data "aws_caller_identity" "current" {
+}
 
 data "aws_iam_policy_document" "cloudformation-signal" {
   statement {
@@ -75,12 +76,12 @@ resource "aws_iam_policy" "cloudformation-signal" {
   name        = "${var.env}-${var.project}-cloudformation-signal"
   path        = "/"
   description = "Allow to send stack signal for front"
-  policy      = "${data.aws_iam_policy_document.cloudformation-signal.json}"
+  policy      = data.aws_iam_policy_document.cloudformation-signal.json
 }
 
 resource "aws_iam_role_policy_attachment" "cloudformation-signal" {
-  role       = "${aws_iam_role.front.name}"
-  policy_arn = "${aws_iam_policy.cloudformation-signal.arn}"
+  role       = aws_iam_role.front.name
+  policy_arn = aws_iam_policy.cloudformation-signal.arn
 }
 
 #####################
@@ -127,13 +128,13 @@ resource "aws_iam_policy" "push-logs" {
   name        = "${var.env}-${var.project}-push-logs"
   path        = "/"
   description = "Push log to cloudwatch"
-  policy      = "${data.aws_iam_policy_document.push-logs.json}"
+  policy      = data.aws_iam_policy_document.push-logs.json
 }
 
 resource "aws_iam_policy_attachment" "push-logs" {
   name       = "${var.env}-${var.project}-push-logs"
-  roles      = ["${aws_iam_role.front.name}"]
-  policy_arn = "${aws_iam_policy.push-logs.arn}"
+  roles      = [aws_iam_role.front.name]
+  policy_arn = aws_iam_policy.push-logs.arn
 }
 
 #####################
@@ -177,11 +178,12 @@ resource "aws_iam_policy" "s3_bucket_deploy" {
   name        = "${var.env}-${var.project}-s3_bucket_deploy"
   path        = "/"
   description = "Get code archive"
-  policy      = "${data.aws_iam_policy_document.s3_bucket_deploy.json}"
+  policy      = data.aws_iam_policy_document.s3_bucket_deploy.json
 }
 
 resource "aws_iam_policy_attachment" "s3_bucket_deploy" {
   name       = "${var.env}-${var.project}-s3_bucket_deploy"
-  roles      = ["${aws_iam_role.front.name}"]
-  policy_arn = "${aws_iam_policy.s3_bucket_deploy.arn}"
+  roles      = [aws_iam_role.front.name]
+  policy_arn = aws_iam_policy.s3_bucket_deploy.arn
 }
+

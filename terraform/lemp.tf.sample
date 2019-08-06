@@ -1,37 +1,38 @@
 module "lemp" {
   #####################################
   # Do not modify the following lines #
-  source = "module-lemp"
+  source = "./module-lemp"
 
-  project  = "${var.project}"
-  env      = "${var.env}"
-  customer = "${var.customer}"
-  deploy_bucket_name   = "${var.deploy_bucket_name}"
+  project            = var.project
+  env                = var.env
+  customer           = var.customer
+  deploy_bucket_name = var.deploy_bucket_name
+
   #####################################
 
   #. vpc_id (required):
   #+ Amazon VPC id on which create each components.
-  vpc_id                   = "<vpc-id>"
+  vpc_id = "<vpc-id>"
 
   #. private_subnets_ids (required, array):
   #+ Amazon subnets IDs on which create each components.
-  private_subnets_ids      = ["private-subnets"]
+  private_subnets_ids = ["private-subnets"]
 
   #. public_subnets_ids (required, array):
   #+ Amazon subnets IDs on which create each components.
-  public_subnets_ids      = ["public-subnets"]
+  public_subnets_ids = ["public-subnets"]
 
   #. bastion_sg_allow (optional):
   #+ Amazon source security group ID which will be allowed to connect on Fronts port 22 (SSH).
-  bastion_sg_allow         = "<bastion-sg>"
+  bastion_sg_allow = "<bastion-sg>"
 
   #. metrics_sg_allow (optional): ""
   #+ Additionnal security group ID to assign to servers. Goal is to allow monitoring server to query metrics.
-  metrics_sg_allow        = "<prometheus-sg>"
+  metrics_sg_allow = "<prometheus-sg>"
 
   #. keypair_name (requiredl): cycloid
   #+ Name of an existing AWS SSH keypair to use to deploy EC2 instances.
-  keypair_name            = "cycloid"
+  keypair_name = "cycloid"
 
   ###
   # fronts
@@ -39,16 +40,15 @@ module "lemp" {
 
   #. front_count (optional): 1
   #+ Desired number of front servers
-  front_count           = "1"
+  front_count = "1"
 
   #. front_type (optional): t3.small
   #+ Type of instance to use for front servers
-  front_type            = "t3.small"
+  front_type = "t3.small"
 
   #. front_ebs_optimized (optional, bool): false
   #+ Whether the Instance is EBS optimized or not, related to the instance type you choose.
-  front_ebs_optimized   = false
-
+  front_ebs_optimized = false
   #. front_disk_size (optional): 30
   #+ Disk size of front servers.
 
