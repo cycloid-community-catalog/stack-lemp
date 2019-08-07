@@ -17,9 +17,9 @@ ansistrano_rolling_elb_enabled: false
 ansistrano_rolling_releases: true
 
 # Variable given by the pipeline, env vars used for molecule rest archive
-ansistrano_s3_bucket: "{{ lookup('env','DEPLOY_BUCKET_NAME') | default('{{ deploy_bucket_name }}')}}"
-ansistrano_s3_object: "{{ lookup('env','DEPLOY_BUCKET_OBJECT_PATH') | default('{{ deploy_bucket_object_path }}')}}"
-ansistrano_s3_region: "{{ lookup('env','DEPLOY_BUCKET_REGION') | default('{{ aws_default_region }}')}}"
+ansistrano_s3_bucket: "{{ lookup('env','DEPLOY_BUCKET_NAME') | default(deploy_bucket_name, true)}}"
+ansistrano_s3_object: "{{ lookup('env','DEPLOY_BUCKET_OBJECT_PATH') | default(deploy_bucket_object_path, true)}}"
+ansistrano_s3_region: "{{ lookup('env','DEPLOY_BUCKET_REGION') | default(aws_default_region, true)}}"
 ansistrano_s3_aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY_ID') | default(omit)}}"
 ansistrano_s3_aws_secret_key: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') | default(omit)}}"
 

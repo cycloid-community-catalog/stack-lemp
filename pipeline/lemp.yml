@@ -87,7 +87,7 @@ resource_types:
   type: docker-image
   source:
     repository: ljfranklin/terraform-resource
-    tag: 0.11.14
+    tag: '0.12.5'
 
 - name: packer
   type: docker-image
@@ -105,12 +105,15 @@ resources:
 - name: tfstate
   type: terraform
   source:
-    storage:
+    env_name: ((env))
+    backend_type: s3
+    backend_config:
       bucket: ((terraform_storage_bucket_name))
-      bucket_path: ((terraform_storage_bucket_path))
-      region_name: ((aws_default_region))
-      access_key_id: ((aws_access_key))
-      secret_access_key: ((aws_secret_key))
+      key: ((project))-((env)).tfstate
+      workspace_key_prefix: ((project))
+      region: ((aws_default_region))
+      access_key: ((aws_access_key))
+      secret_key: ((aws_secret_key))
     vars:
       access_key: ((aws_access_key))
       secret_key: ((aws_secret_key))
@@ -238,6 +241,7 @@ jobs:
         aws_secret_access_key: ((aws_admin.secret_key))
         aws_region: ((aws_default_region))
         ansible_version: ((packer_ansible_version))
+        packer_instance_type: t3.nano
 
 # Merge and trigger a plan whenever there is a commit in Terraform stack or config
 - name: terraform-plan
@@ -268,7 +272,6 @@ jobs:
 
       - put: tfstate
         params:
-          env_name: ((project))-((env))
           plan_only: true
           terraform_source: merged-stack/
 
@@ -306,7 +309,6 @@ jobs:
 
       - put: tfstate
         params:
-          env_name: ((project))-((env))
           plan_run: true
           terraform_source: merged-stack/
 
@@ -336,7 +338,6 @@ jobs:
         - put: tfstate
           params:
             action: destroy
-            env_name: ((project))-((env))
             terraform_source: merged-stack/
           get_params:
             action: destroy

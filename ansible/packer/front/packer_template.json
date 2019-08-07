@@ -13,7 +13,7 @@
              "owners": ["379101102735"],
              "most_recent": true
            },
-           "instance_type": "t2.nano",
+           "instance_type": "{{user `packer_instance_type`}}",
            "ami_name": "{{user `customer`}}_{{user `project`}}_{{user `role`}}_{{user `env`}}_{{timestamp}}",
            "ssh_username": "admin",
            "run_tags": {
@@ -60,6 +60,7 @@
             "sudo apt-get upgrade -yqq > /dev/null ",
             "sudo apt-get install -yqq build-essential libssl-dev libffi-dev python-dev python-setuptools git curl jq > /dev/null",
             "sudo easy_install --quiet pip",
+            "sudo pip install cryptography --upgrade",
             "sudo pip install -q ansible=={{user `ansible_version`}}",
             "echo 'Host *' >> /home/admin/.ssh/config",
             "echo 'StrictHostKeyChecking no' >> /home/admin/.ssh/config",
