@@ -273,3 +273,6 @@ variable "deploy_bucket_name" {
   default = "application-deployment"
 }
 
+variable "front_ami_id" {
+  default = ""
+}

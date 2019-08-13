@@ -25,6 +25,7 @@ data "aws_ami" "debian" {
 }
 
 data "aws_ami" "front" {
+  count       = var.front_ami_id == "" ? 1 : 0
   most_recent = true
 
   filter {
@@ -50,3 +51,6 @@ data "aws_ami" "front" {
   owners = ["self"]
 }
 
+locals {
+  image_id = var.front_ami_id != "" ? var.front_ami_id : element(data.aws_ami.debian.*.id, 0)
+}

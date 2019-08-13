@@ -40,7 +40,7 @@ resource "aws_security_group" "front" {
 resource "aws_launch_template" "front" {
   name_prefix = "${var.project}_front_${var.env}_version_"
 
-  image_id      = data.aws_ami.front.id
+  image_id      = local.image_id
   instance_type = var.front_type
   user_data     = base64encode(data.template_file.user_data_front.rendered)
   key_name      = var.keypair_name

@@ -133,4 +133,7 @@ module "lemp" {
   #. create_s3_medias (optional, bool): false
   #+ Create a S3 bucket dedicated to medias for the LEMP application
 
+
+  # for ami id for testing purpose
+  front_ami_id = "front_ami_id"
 }
