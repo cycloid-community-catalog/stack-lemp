@@ -23,7 +23,7 @@ shared:
         type: docker-image
         source:
           repository: cycloid/cycloid-toolkit
-          tag: v2.7
+          tag: v((ansible_version))
       run:
         path: /usr/bin/ansible-runner
       caches:
@@ -40,7 +40,7 @@ shared:
         type: docker-image
         source:
           repository: cycloid/cycloid-toolkit
-          tag: v2.7
+          tag: v((ansible_version))
       run:
         path: /usr/bin/aws-ami-cleaner
       params:
@@ -240,8 +240,8 @@ jobs:
         aws_access_key_id: ((aws_admin.access_key))
         aws_secret_access_key: ((aws_admin.secret_key))
         aws_region: ((aws_default_region))
-        ansible_version: ((packer_ansible_version))
-        packer_instance_type: t3.nano
+        ansible_version: ((ansible_version))
+        packer_instance_type: t2.micro
 
 # Merge and trigger a plan whenever there is a commit in Terraform stack or config
 - name: terraform-plan
