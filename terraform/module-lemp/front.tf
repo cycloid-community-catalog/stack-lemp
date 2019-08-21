@@ -124,16 +124,6 @@ resource "aws_launch_template" "front" {
 
 ###
 
-# Workaround to have 80 or 443 optional
-locals {
-  target_group_arns = compact(
-    concat(
-      aws_alb_target_group.front-80.*.arn,
-      aws_alb_target_group.front-443.*.arn,
-    ),
-  )
-}
-
 resource "aws_cloudformation_stack" "front" {
   name = "${var.project}-front-${var.env}"
 
@@ -154,7 +144,7 @@ resource "aws_cloudformation_stack" "front" {
         "MinSize": "${var.front_asg_min_size}",
         "TerminationPolicies": ["OldestLaunchConfiguration", "NewestInstance"],
         "HealthCheckType": "ELB",
-        "TargetGroupARNs": ["${join("\", \"", local.target_group_arns)}"],
+        "TargetGroupARNs": ["${aws_alb_target_group.front-80.arn}"],
         "HealthCheckGracePeriod": 600,
         "Tags" : [
           { "Key" : "Name", "Value" : "${var.project}-front-${var.short_region[var.aws_region]}-${var.env}", "PropagateAtLaunch" : "true" },
@@ -233,27 +223,6 @@ resource "aws_security_group" "alb-front" {
 resource "aws_alb_target_group" "front-80" {
   name = "${var.project}-front80-${var.env}"
   port = 80
-  protocol = "HTTP"
-  vpc_id = var.vpc_id
-
-  health_check {
-    path = var.application_health_check_path
-    matcher = var.application_health_check_matcher
-    timeout = var.application_path_health_timeout
-    interval = var.application_path_health_interval
-  }
-
-  stickiness {
-    type = "lb_cookie"
-    enabled = true
-  }
-}
-
-# TargetGroup for ALBs
-resource "aws_alb_target_group" "front-443" {
-  count = var.application_ssl_cert != "" ? 1 : 0
-  name = "${var.project}-front443-${var.env}"
-  port = 443
   protocol = "HTTP"
   vpc_id = var.vpc_id
 

@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "assume_role" {
 
 # Create IAM Role for front
 resource "aws_iam_role" "front" {
-  name               = "cycloid_${var.env}-front"
+  name               = "cycloid_${var.project}-${var.env}-front"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
   path               = "/${var.project}/"
 }
