@@ -13,6 +13,11 @@ output "elasticache_address" {
   description = "Address of the ElastiCache."
 }
 
+output "elasticache_cluster_id" {
+  value       = module.lemp.elasticache_cluster_id
+  description = "Cluster Id of the ElastiCache."
+}
+
 output "rds_address" {
   value       = module.lemp.rds_address
   description = "Address of the RDS database."
