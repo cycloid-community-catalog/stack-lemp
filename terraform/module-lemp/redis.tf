@@ -26,7 +26,7 @@ resource "aws_security_group" "redis" {
 
 resource "aws_elasticache_cluster" "redis" {
   count                = var.create_elasticache ? 1 : 0
-  cluster_id           = "${var.project}${count.index}-${var.env}"
+  cluster_id           = local.elasticache_cluster_id
   engine               = var.elasticache_engine
   engine_version       = var.elasticache_engine_version
   node_type            = var.elasticache_type
@@ -56,4 +56,8 @@ resource "aws_elasticache_subnet_group" "cache-subnet" {
 
 output "elasticache_address" {
   value = aws_elasticache_cluster.redis[0].cache_nodes[0].address
+}
+
+output "elasticache_cluster_id" {
+  value = local.elasticache_cluster_id
 }

@@ -269,6 +269,20 @@ variable "elasticache_port" {
   default = "6379"
 }
 
+variable "elasticache_cluster_id" {
+  default = ""
+}
+
+resource "random_string" "elasticache_cluster_id" {
+  length  = 18
+  upper   = false
+  special = false
+}
+
+locals {
+  elasticache_cluster_id = var.elasticache_cluster_id != "" ? var.elasticache_cluster_id : "cy${random_string.elasticache_cluster_id.result}"
+}
+
 variable "deploy_bucket_name" {
   default = "application-deployment"
 }

@@ -87,7 +87,7 @@ resource_types:
   type: docker-image
   source:
     repository: ljfranklin/terraform-resource
-    tag: '0.12.5'
+    tag: '0.12.6'
 
 - name: packer
   type: docker-image
