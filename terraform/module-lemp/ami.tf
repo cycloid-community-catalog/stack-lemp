@@ -52,5 +52,5 @@ data "aws_ami" "front" {
 }
 
 locals {
-  image_id = var.front_ami_id != "" ? var.front_ami_id : element(data.aws_ami.debian.*.id, 0)
+  image_id = var.front_ami_id != "" ? var.front_ami_id : element(data.aws_ami.front.*.id, 0)
 }
