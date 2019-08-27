@@ -74,7 +74,7 @@ In order to run this task, couple elements are required within the infrastructur
 |`lemp_git_branch`|Branch of the LEMP source code Git repository.|`-`|`master`|`True`|
 |`lemp_git_private_key`|SSH key pair to fetch LEMP source code Git repository.|`-`|`((git_lemp_app.ssh_key))`|`True`|
 |`lemp_git_repository`|URL to the Git repository containing LEMP website source code.|`-`|`git@github.com:MyUser/code-lemp.git`|`True`|
-|`packer_ansible_version`|Ansible version used in packer and cycloid-toolkit ansible runner|`-`|`"2.7"`|`True`|
+|`ansible_version`|Ansible version used in packer and cycloid-toolkit ansible runner|`-`|`"2.7"`|`True`|
 |`project`|Name of the project.|`-`|`($ project $)`|`True`|
 |`rds_password`|Password used for your rds. Set "empty" if you dont use databases|`-`|`((raw_rds_password))`|`False`|
 |`stack_git_branch`|Branch to use on the public stack Git repository|`-`|`master`|`True`|
