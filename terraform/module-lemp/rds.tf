@@ -67,9 +67,9 @@ resource "aws_db_instance" "application" {
 }
 
 resource "aws_db_subnet_group" "rds-subnet" {
-  name        = "cycloid-sub-rds-${var.vpc_id}-${var.env}"
+  name        = "rds-${var.project}-${var.vpc_id}-${var.env}"
   count       = var.rds_subnet_group == "" && var.create_rds ? 1 : 0
-  description = "subnet-rds-${var.vpc_id}"
+  description = "subnet-rds-${var.project}-${var.env}-${var.vpc_id}"
   subnet_ids  = var.private_subnets_ids
 }
 
