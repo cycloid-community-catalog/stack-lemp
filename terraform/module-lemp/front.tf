@@ -29,6 +29,7 @@ resource "aws_security_group" "front" {
     Name         = "${var.project}-front-${var.env}"
     env          = var.env
     project      = var.project
+    client       = var.customer
     role         = "front"
   }
 }
