@@ -24,14 +24,10 @@ resource "aws_security_group" "front" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    "cycloid.io" = "true"
+  tags = merge(local.merged_tags, {
     Name         = "${var.project}-front-${var.env}"
-    env          = var.env
-    project      = var.project
-    client       = var.customer
     role         = "front"
-  }
+  })
 }
 
 ###
@@ -76,37 +72,26 @@ resource "aws_launch_template" "front" {
   iam_instance_profile {
     name = aws_iam_instance_profile.front_profile.name
   }
-  tags = {
-    "cycloid.io" = "true"
+  tags = merge(local.merged_tags, {
     Name         = "${var.project}-fronttemplate-${var.env}"
-    client       = var.customer
-    env          = var.env
-    project      = var.project
     role         = "fronttemplate"
-  }
+  })
+
   tag_specifications {
     resource_type = "instance"
 
-    tags = {
-      "cycloid.io" = "true"
+    tags = merge(local.merged_tags, {
       Name         = "${var.project}-front-${var.env}"
-      client       = var.customer
-      env          = var.env
-      project      = var.project
       role         = "front"
-    }
+    })
   }
   tag_specifications {
     resource_type = "volume"
 
-    tags = {
-      "cycloid.io" = "true"
+    tags = merge(local.merged_tags, {
       Name         = "${var.project}-front-${var.env}"
-      client       = var.customer
-      env          = var.env
-      project      = var.project
       role         = "front"
-    }
+    })
   }
   block_device_mappings {
     device_name = "xvda"
@@ -124,6 +109,18 @@ resource "aws_launch_template" "front" {
 # ASG
 
 ###
+
+
+locals {
+  front_tags =  concat([
+            for tag in keys(local.merged_tags):
+               { "Key" = tag, "Value" = local.merged_tags[tag], "PropagateAtLaunch" = "true" }
+          ],
+          [
+               { "Key" = "Name", "Value" = "${var.project}-front-${var.short_region[var.aws_region]}-${var.env}", "PropagateAtLaunch" = "true" },
+               { "Key" = "role", "Value" = "front", "PropagateAtLaunch" = "true" }
+          ])
+}
 
 resource "aws_cloudformation_stack" "front" {
   name = "${var.project}-front-${var.env}"
@@ -147,14 +144,7 @@ resource "aws_cloudformation_stack" "front" {
         "HealthCheckType": "ELB",
         "TargetGroupARNs": ["${aws_alb_target_group.front-80.arn}"],
         "HealthCheckGracePeriod": 600,
-        "Tags" : [
-          { "Key" : "Name", "Value" : "${var.project}-front-${var.short_region[var.aws_region]}-${var.env}", "PropagateAtLaunch" : "true" },
-          { "Key" : "client", "Value" : "${var.customer}", "PropagateAtLaunch" : "true" },
-          { "Key" : "env", "Value" : "${var.env}", "PropagateAtLaunch" : "true" },
-          { "Key" : "project", "Value" : "${var.project}", "PropagateAtLaunch" : "true" },
-          { "Key" : "role", "Value" : "front", "PropagateAtLaunch" : "true" },
-          { "Key" : "cycloid.io", "Value" : "true", "PropagateAtLaunch" : "true" }
-        ]
+        "Tags" : ${jsonencode(local.front_tags)}
       },
       "UpdatePolicy": {
         "AutoScalingRollingUpdate": {
@@ -211,13 +201,10 @@ resource "aws_security_group" "alb-front" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "${var.project}-alb-front-${var.env}"
-    client = var.customer
-    env = var.env
-    project = var.project
-    "cycloid.io" = "true"
-  }
+  tags = merge(local.merged_tags, {
+    Name         = "${var.project}-alb-front-${var.env}"
+    role         = "front"
+  })
 }
 
 # TargetGroup for ALBs
@@ -252,14 +239,10 @@ resource "aws_alb" "front" {
   enable_cross_zone_load_balancing = true
   idle_timeout = 600
 
-  tags = {
-    Name = "${var.customer}-${var.project}-front-${var.short_region[var.aws_region]}-${var.env}"
-    client = var.customer
-    role = "front"
-    env = var.env
-    project = var.project
-    "cycloid.io" = "true"
-  }
+  tags = merge(local.merged_tags, {
+    Name         = "${var.customer}-${var.project}-front-${var.short_region[var.aws_region]}-${var.env}"
+    role         = "front"
+  })
 }
 
 # 443 by defaut to front

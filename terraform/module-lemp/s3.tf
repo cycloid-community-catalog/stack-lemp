@@ -32,13 +32,11 @@ resource "aws_s3_bucket" "medias" {
   policy = data.aws_iam_policy_document.public_s3_bucket_medias[0].json
   acl    = "public-read"
 
-  tags = {
+  tags = merge(local.merged_tags, {
     Name         = "${var.customer}-${var.project}-medias-${var.env}"
-    client       = var.customer
-    env          = var.env
-    project      = var.project
-    "cycloid.io" = "true"
-  }
+    role         = "medias"
+  })
+
 }
 
 #
