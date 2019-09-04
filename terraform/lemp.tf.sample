@@ -34,6 +34,9 @@ module "lemp" {
   #+ Name of an existing AWS SSH keypair to use to deploy EC2 instances.
   keypair_name = "cycloid"
 
+  #. extra_tags (optional): {}
+  #+ Dict of extra tags to add on aws resources. format { "foo" = "bar" }.
+
   ###
   # fronts
   ###
