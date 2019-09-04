@@ -99,6 +99,7 @@ In order to run this task, couple elements are required within the infrastructur
 |`elasticache_parameter_group_name`|ElastiCache group parameter name to use.|`-`|`default.redis5.0`|`False`|
 |`elasticache_port`|Port of the ElastiCache|`-`|`6379`|`False`|
 |`elasticache_type`|Instance size to use for ElastiCache nodes.|`-`|`cache.t2.micro`|`False`|
+|`extra_tags`|Dict of extra tags to add on aws resources. format { "foo" = "bar" }.|`-`|`{}`|`False`|
 |`front_asg_max_size`|Maximum number of front server allowed in the AutoScaling group.|`-`|`5`|`False`|
 |`front_count`|Desired number of front servers|`-`|`1`|`False`|
 |`front_disk_size`|Disk size of front servers.|`-`|`30`|`False`|
