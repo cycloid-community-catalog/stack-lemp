@@ -21,7 +21,7 @@ aws_default_region: eu-west-1
 #+ AWS S3 bucket name to store terraform remote state file.
 terraform_storage_bucket_name: ($ organization_canonical $)-terraform-remote-state
 
-#. rds_password (optional): ((raw_rds_password))
+#. rds_password (required): ((raw_rds_password))
 #+ Password used for your rds. Set "empty" if you dont use databases
 rds_password: ((raw_rds_password))
 
@@ -112,3 +112,7 @@ config_terraform_path: ($ project $)/terraform/($ environment $)
 #. ansible_version (required): "2.7"
 #+ Ansible version used in packer and cycloid-toolkit ansible runner
 ansible_version: "2.7"
+
+#. debug_public_key (optional): ""
+#+ SSH pubkey injected by packer during the ec2 ami build. Used only to debug failure.
+debug_public_key: ""

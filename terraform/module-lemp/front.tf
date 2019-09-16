@@ -25,8 +25,8 @@ resource "aws_security_group" "front" {
   }
 
   tags = merge(local.merged_tags, {
-    Name         = "${var.project}-front-${var.env}"
-    role         = "front"
+    Name = "${var.project}-front-${var.env}"
+    role = "front"
   })
 }
 
@@ -73,24 +73,24 @@ resource "aws_launch_template" "front" {
     name = aws_iam_instance_profile.front_profile.name
   }
   tags = merge(local.merged_tags, {
-    Name         = "${var.project}-fronttemplate-${var.env}"
-    role         = "fronttemplate"
+    Name = "${var.project}-fronttemplate-${var.env}"
+    role = "fronttemplate"
   })
 
   tag_specifications {
     resource_type = "instance"
 
     tags = merge(local.merged_tags, {
-      Name         = "${var.project}-front-${var.env}"
-      role         = "front"
+      Name = "${var.project}-front-${var.env}"
+      role = "front"
     })
   }
   tag_specifications {
     resource_type = "volume"
 
     tags = merge(local.merged_tags, {
-      Name         = "${var.project}-front-${var.env}"
-      role         = "front"
+      Name = "${var.project}-front-${var.env}"
+      role = "front"
     })
   }
   block_device_mappings {
@@ -112,14 +112,14 @@ resource "aws_launch_template" "front" {
 
 
 locals {
-  front_tags =  concat([
-            for tag in keys(local.merged_tags):
-               { "Key" = tag, "Value" = local.merged_tags[tag], "PropagateAtLaunch" = "true" }
-          ],
-          [
-               { "Key" = "Name", "Value" = "${var.project}-front-${var.short_region[var.aws_region]}-${var.env}", "PropagateAtLaunch" = "true" },
-               { "Key" = "role", "Value" = "front", "PropagateAtLaunch" = "true" }
-          ])
+  front_tags = concat([
+    for tag in keys(local.merged_tags) :
+    { "Key" = tag, "Value" = local.merged_tags[tag], "PropagateAtLaunch" = "true" }
+    ],
+    [
+      { "Key" = "Name", "Value" = "${var.project}-front-${var.env}", "PropagateAtLaunch" = "true" },
+      { "Key" = "role", "Value" = "front", "PropagateAtLaunch" = "true" }
+  ])
 }
 
 resource "aws_cloudformation_stack" "front" {
@@ -131,7 +131,7 @@ resource "aws_cloudformation_stack" "front" {
     "Fronts${var.env}": {
       "Type": "AWS::AutoScaling::AutoScalingGroup",
       "Properties": {
-        "AvailabilityZones": ${jsonencode(var.zones)},
+        "AvailabilityZones": ${jsonencode(local.aws_availability_zones)},
         "VPCZoneIdentifier": ${jsonencode(var.private_subnets_ids)},
         "LaunchTemplate": {
             "LaunchTemplateId": "${aws_launch_template.front.id}",
@@ -202,8 +202,8 @@ resource "aws_security_group" "alb-front" {
   }
 
   tags = merge(local.merged_tags, {
-    Name         = "${var.project}-alb-front-${var.env}"
-    role         = "front"
+    Name = "${var.project}-alb-front-${var.env}"
+    role = "front"
   })
 }
 
@@ -240,8 +240,8 @@ resource "aws_alb" "front" {
   idle_timeout = 600
 
   tags = merge(local.merged_tags, {
-    Name         = "${var.customer}-${var.project}-front-${var.short_region[var.aws_region]}-${var.env}"
-    role         = "front"
+    Name = "${var.customer}-${var.project}-front-${var.env}"
+    role = "front"
   })
 }
 

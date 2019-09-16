@@ -1,6 +1,6 @@
 resource "aws_security_group" "redis" {
   count       = var.create_elasticache ? 1 : 0
-  name        = "${var.customer}-${var.project}-${var.elasticache_engine}-${var.short_region[var.aws_region]}-${var.env}"
+  name        = "${var.customer}-${var.project}-${var.elasticache_engine}-${var.env}"
   description = "${var.elasticache_engine} ${var.env} for ${var.project}"
   vpc_id      = var.vpc_id
 
@@ -15,8 +15,8 @@ resource "aws_security_group" "redis" {
   }
 
   tags = merge(local.merged_tags, {
-    Name         = "${var.customer}-${var.project}-${var.elasticache_engine}-${var.short_region[var.aws_region]}-${var.env}"
-    role         = "redis"
+    Name = "${var.customer}-${var.project}-${var.elasticache_engine}-${var.env}"
+    role = "redis"
   })
 }
 
@@ -35,8 +35,8 @@ resource "aws_elasticache_cluster" "redis" {
   maintenance_window   = "tue:06:00-tue:07:00"
 
   tags = merge(local.merged_tags, {
-    Name         = "${var.customer}-${var.project}-${var.elasticache_engine}-${var.short_region[var.aws_region]}-${var.env}"
-    role         = "redis"
+    Name = "${var.customer}-${var.project}-${var.elasticache_engine}-${var.env}"
+    role = "redis"
   })
 }
 
