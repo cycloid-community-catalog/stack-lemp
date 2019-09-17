@@ -16,6 +16,11 @@ function finish {
         halt -f
       fi
       echo "[halt] keeprunning" >> $LOG_FILE
+    else
+      /usr/local/bin/aws cloudformation signal-resource --stack-name ${signal_stack_name} --logical-resource-id ${signal_resource_id} --unique-id $${AWS_UNIQUE_ID} --region $${AWS_REGION} --status SUCCESS  2>&1 >> $LOG_FILE
+
+      # ensure last return code is 0
+      echo "End" >> $LOG_FILE
     fi
 }
 
@@ -43,8 +48,3 @@ echo '[Boto]
 use_endpoint_heuristics = True' > /etc/boto.cfg
 
 bash /home/admin/user-data.sh
-
-/usr/local/bin/aws cloudformation signal-resource --stack-name ${signal_stack_name} --logical-resource-id ${signal_resource_id} --unique-id $${AWS_UNIQUE_ID} --region $${AWS_REGION} --status SUCCESS  2>&1 >> $LOG_FILE
-
-# ensure last return code is 0
-echo "End" >> $LOG_FILE
