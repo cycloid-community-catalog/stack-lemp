@@ -57,6 +57,7 @@ In order to run this task, couple elements are required within the infrastructur
 |Name|Description|Type|Default|Required|
 |---|---|:---:|:---:|:---:|
 |`ansible_vault_password`|Password used by ansible vault to decrypt your vaulted files.|`-`|`((raw_ansible_vault_password))`|`True`|
+|`ansible_version`|Ansible version used in packer and cycloid-toolkit ansible runner|`-`|`"2.7"`|`True`|
 |`aws_access_key`|Amazon AWS access key for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)|`-`|`((aws.access_key))`|`True`|
 |`aws_default_region`|Amazon AWS region to use for Terraform.|`-`|`eu-west-1`|`True`|
 |`aws_secret_key`|Amazon AWS secret key for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)|`-`|`((aws.secret_key))`|`True`|
@@ -68,15 +69,15 @@ In order to run this task, couple elements are required within the infrastructur
 |`config_git_repository`|Git repository URL containing the config of the stack.|`-`|`git@github.com:MyUser/config-lemp-app.git`|`True`|
 |`config_terraform_path`|Path of Terraform files in the config git repository|`-`|`($ project $)/terraform/($ environment $)`|`True`|
 |`customer`|Name of the Cycloid Organization, used as customer variable name.|`-`|`($ organization_canonical $)`|`True`|
+|`debug_public_key`|SSH pubkey injected by packer during the ec2 ami build. Used only to debug failure.|`-`|`""`|`False`|
 |`deploy_bucket_name`|AWS S3 bucket name in which store the builded code of the website.|`-`|`($ project $)-deploy`|`True`|
 |`deploy_bucket_object_path`|AWS S3 bucket path in which store the builded code of the website.|`-`|`/catalog-lemp-app/($ environment $)/lemp-app.tar.gz`|`True`|
 |`env`|Name of the project's environment.|`-`|`($ environment $)`|`True`|
 |`lemp_git_branch`|Branch of the LEMP source code Git repository.|`-`|`master`|`True`|
 |`lemp_git_private_key`|SSH key pair to fetch LEMP source code Git repository.|`-`|`((git_lemp_app.ssh_key))`|`True`|
 |`lemp_git_repository`|URL to the Git repository containing LEMP website source code.|`-`|`git@github.com:MyUser/code-lemp.git`|`True`|
-|`ansible_version`|Ansible version used in packer and cycloid-toolkit ansible runner|`-`|`"2.7"`|`True`|
 |`project`|Name of the project.|`-`|`($ project $)`|`True`|
-|`rds_password`|Password used for your rds. Set "empty" if you dont use databases|`-`|`((raw_rds_password))`|`False`|
+|`rds_password`|Password used for your rds. Set "empty" if you dont use databases|`-`|`((raw_rds_password))`|`True`|
 |`stack_git_branch`|Branch to use on the public stack Git repository|`-`|`master`|`True`|
 |`terraform_storage_bucket_name`|AWS S3 bucket name to store terraform remote state file.|`-`|`($ organization_canonical $)-terraform-remote-state`|`True`|
 

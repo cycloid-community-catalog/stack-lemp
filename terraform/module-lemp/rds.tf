@@ -19,8 +19,8 @@ resource "aws_security_group" "rds" {
   }
 
   tags = merge(local.merged_tags, {
-    Name         = "${var.project}-rds-${var.env}"
-    role         = "rds"
+    Name = "${var.project}-rds-${var.env}"
+    role = "rds"
   })
 }
 
@@ -43,7 +43,7 @@ resource "aws_db_instance" "application" {
   backup_window             = "02:00-04:00"
   backup_retention_period   = var.rds_backup_retention
   copy_tags_to_snapshot     = true
-  final_snapshot_identifier = "${var.customer}-${var.project}-rds-${var.short_region[var.aws_region]}-${var.env}"
+  final_snapshot_identifier = "${var.customer}-${var.project}-rds-${var.env}"
   skip_final_snapshot       = var.rds_skip_final_snapshot
 
   parameter_group_name = var.rds_parameters
@@ -52,9 +52,9 @@ resource "aws_db_instance" "application" {
   vpc_security_group_ids = compact([var.bastion_sg_allow, aws_security_group.rds[0].id])
 
   tags = merge(local.merged_tags, {
-    Name         = "${var.customer}-${var.project}-rds-${var.short_region[var.aws_region]}-${var.env}"
-    type         = "master"
-    role         = "rds"
+    Name = "${var.customer}-${var.project}-rds-${var.env}"
+    type = "master"
+    role = "rds"
   })
 }
 
