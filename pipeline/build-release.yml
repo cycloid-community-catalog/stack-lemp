@@ -12,8 +12,6 @@ run:
   - |
     DIR=${PWD}
 
-    find .
-    ls ..
     echo "### Build release"
     cd ${DIR}/code
 
