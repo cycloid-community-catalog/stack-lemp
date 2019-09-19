@@ -128,6 +128,15 @@ resources:
       AWS_DEFAULT_REGION: ((aws_default_region))
       AWS_SECRET_ACCESS_KEY: ((aws_secret_key))
 
+# The Pipeline stack (will be merged with the config)
+- name: git_stack-pipeline
+  type: git
+  source:
+    uri: https://github.com/cycloid-community-catalog/stack-lemp
+    branch: ((stack_git_branch))
+    paths:
+      - pipeline/*
+
 # The Terraform stack (will be merged with the config)
 - name: git_stack-terraform
   type: git
@@ -136,6 +145,14 @@ resources:
     branch: ((stack_git_branch))
     paths:
       - terraform/*
+
+# The config (will be merged with the stack), mainly used for pipeline files
+- name: git_config
+  type: git
+  source:
+    uri: ((config_git_repository))
+    branch: ((config_git_branch))
+    private_key: ((config_git_private_key))
 
 # The Terraform config (will be merged with the stack)
 - name: git_config-terraform
@@ -354,58 +371,31 @@ jobs:
     - get: git_app-code
       params: {depth: 1}
       trigger: true
+    - get: git_config
+      params: {depth: 1}
+      trigger: false
+    - get: git_stack-pipeline
+      params: {depth: 1}
+      trigger: false
+
+    - task: merge-stack-and-config
+      config:
+        <<: *merge-stack-and-config
+        inputs:
+        - name: git_config
+          path: "config"
+        - name: git_stack-pipeline
+          path: "stack"
+      params:
+        CONFIG_PATH: ((config_pipeline_path))
+        STACK_PATH: pipeline
 
     - task: build-release
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: cycloid/busybox
-            tag: latest
-        run:
-          path: /bin/bash
-          args:
-          - -xec
-          - |
-            DIR=${PWD}
+      file: merged-stack/build-release.yml
+      params:
+        rds_password: ((rds_password))
+        env: ((env))
 
-            echo "### Build release"
-            cd ${DIR}/code
-
-            # make action/build if needed
-
-            # Generate config file if needed
-
-            # By default the following env variables are available on the ec2 instances
-            #
-            # RDS_ADDRESS: database host
-            # RDS_PORT: database port
-            # RDS_DATABASE: database name
-            # RDS_USERNAME: database root user
-            # S3_MEDIAS: media bucket name
-            # ELASTICACHE_ADDRESS: cache host
-
-            # wordpress example to use env variable and password
-            #cat ./wp-config-sample.php | sed "s/define( 'DB_NAME.*/define( 'DB_NAME', getenv('RDS_DATABASE'));/;
-            #                                 s/define( 'DB_USER.*/define( 'DB_USER', getenv('RDS_USERNAME'));/;
-            #                                 s/password_here/${rds_password}/;
-            #                                 s/define( 'DB_HOST.*/define( 'DB_HOST', getenv('RDS_ADDRESS'));/" > wp-config.php
-
-            # Update a dedicated healthcheck page if needed
-            echo '<?php echo "ok"; ?>' > healthcheck.php
-
-            # create the archive release
-            tar --exclude .git -zcf ${DIR}/release/s3_app-release.tar.gz .
-        params:
-          rds_password: ((rds_password))
-          env: ((env))
-        # caches:
-        inputs:
-        - name: git_app-code
-          path: code
-        outputs:
-        - name: release
     - put: s3_app-release
       params:
         acl: private
