@@ -241,6 +241,7 @@ jobs:
           deploy_bucket_object_path: ((deploy_bucket_object_path))
           deploy_bucket_name: ((deploy_bucket_name))
           aws_default_region: ((aws_default_region))
+          rds_password: ((rds_password))
 
     - put: ami_front
       params:

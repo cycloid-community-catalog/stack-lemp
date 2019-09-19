@@ -8,3 +8,17 @@
 
 #. php_version_to_install: 7.2
 #+ PHP-FPM version to install.
+
+
+# Application
+
+# If you are not using the environments variables, you can use a jinja template with ansible local variables to configure your database ...
+# Get a settings template from the remote git
+#ansistrano_fetch_remote_templates:
+#  - dest: /tmp/wp-config.php.j2
+#    src: "{{ansistrano_release_path.stdout}}/wp-config.php.j2"
+
+# Then use this fetched template to configure the application
+#ansistrano_parameters_templates:
+#  - src: /tmp/wp-config.php.j2
+#    dest: "{{ansistrano_release_path.stdout}}/wp-config.php"
