@@ -473,22 +473,30 @@ jobs:
       trigger: true
       passed: [application-deployment]
     - get: git_app-code
+      params: {depth: 1}
       passed: [application-deployment]
       trigger: false
 
+    - get: git_config
+      params: {depth: 1}
+      trigger: false
+    - get: git_stack-pipeline
+      params: {depth: 1}
+      trigger: false
+
+    - task: merge-stack-and-config
+      config:
+        <<: *merge-stack-and-config
+        inputs:
+        - name: git_config
+          path: "config"
+        - name: git_stack-pipeline
+          path: "stack"
+      params:
+        CONFIG_PATH: ((config_pipeline_path))
+        STACK_PATH: pipeline
 
     - task: run
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: cycloid/busybox
-            tag: latest
-        run:
-          path: /bin/bash
-          args:
-          - -xec
-          - |
-            DIR=${PWD}
-            echo "Dummy functional tests OK"
+      file: merged-stack/functional-tests.yml
+      params:
+        env: ((env))
