@@ -22,7 +22,6 @@
 #basic_auth: |
 #    satisfy any;
 #    allow 127.0.0.1;
-#    include ip_whitelist;
 #    auth_basic "Resctricted";
 #    auth_basic_user_file auth_basic/cycloid;
 

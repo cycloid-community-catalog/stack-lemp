@@ -62,13 +62,11 @@ groups:
   - terraform-apply
   - build-ami-front
   - build-application
-  - unittests
   - functional-tests
 - name: application
   jobs:
   - application-deployment
   - build-application
-  - unittests
   - functional-tests
 
 - name: infra
@@ -402,35 +400,6 @@ jobs:
         acl: private
         file: release/s3_app-release.tar.gz
 
-- name: unittests
-  max_in_flight: 1
-  build_logs_to_retain: 10
-  plan:
-  - do:
-    - get: s3_app-release
-      trigger: true
-      passed: [build-application]
-    - get: git_app-code
-      passed: [build-application]
-      trigger: false
-
-    - task: run
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: cycloid/busybox
-            tag: latest
-        run:
-          path: /bin/bash
-          args:
-          - -xec
-          - |
-            DIR=${PWD}
-            echo "Dummy tests OK"
-
-
 #
 # Front deploy
 #
@@ -448,9 +417,6 @@ jobs:
 
     - get: s3_app-release
       trigger: true
-      passed:
-        - unittests
-
 
     - get: tfstate
       trigger: false
@@ -459,7 +425,6 @@ jobs:
 
     - get: git_app-code
       trigger: false
-      passed: [unittests]
 
     - task: merge-stack-and-config
       config:
