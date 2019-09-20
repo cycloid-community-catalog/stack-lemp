@@ -31,6 +31,11 @@ ansistrano_s3_archive_content: false
 # Nginx
 #
 
+basic_auth: ""
+
+# root/public directory of your website
+nginx_application_root: ""
+
 nginx_remove_sites:
   - default
 
@@ -74,17 +79,54 @@ application_server_name:
 
 healthcheck_location: |
     location /health-check {
-      root {{ ansistrano_deploy_to }}current/;
+      root {{ ansistrano_deploy_to }}current/{{ nginx_application_root }};
       index healthcheck.php;
       fastcgi_pass   php;
       fastcgi_index  healthcheck.php;
-      fastcgi_param  SCRIPT_FILENAME  {{ ansistrano_deploy_to }}current/healthcheck.php;
+      fastcgi_param  SCRIPT_FILENAME  {{ ansistrano_deploy_to }}current/{{ nginx_application_root }}/healthcheck.php;
       fastcgi_param  PATH_INFO        $fastcgi_path_info;
 
       include        fastcgi_params;
       access_log off;
       allow all;
     }
+
+nginx_application_vhost:
+  - listen 80 default_server
+  - server_name {{ application_server_name | join(' ') }}
+  - root {{ ansistrano_deploy_to }}current/{{ nginx_application_root }}
+  - set $ssl off
+  - index index.php index.html
+  - if ($http_x_custom_proto = "https") { set $ssl on; }
+  - if ($http_x_forwarded_proto = "https") { set $ssl on; }
+  - autoindex off
+  - charset UTF-8
+  - access_log /var/log/nginx/application-access.log
+  - error_log  /var/log/nginx/application-error.log
+
+  - "{{ healthcheck_location }}"
+  - "{{ basic_auth }}"
+  - location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+  - location ~ \.php$ { echo_exec @fastcgi_backend; }
+
+  - location @fastcgi_backend {
+      expires off;
+      fastcgi_pass php;
+      fastcgi_read_timeout 900s;
+      fastcgi_connect_timeout 900s;
+      fastcgi_send_timeout 900s;
+      fastcgi_index  index.php;
+      fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+      fastcgi_param  HTTPS $ssl;
+      fastcgi_param  X-FORWARDED-PROTO $scheme;
+      fastcgi_param  X-FORWARDED-HOST  $host;
+      include        fastcgi_params;
+    }
+
+
 
 nginx_sites:
   00-metrics:
@@ -106,39 +148,8 @@ nginx_sites:
       }
 
   50-application:
-    - listen 80 default_server
-    - server_name {{ application_server_name | join(' ') }}
-    - root {{ ansistrano_deploy_to }}current/
-    - set $ssl off
-    - index index.php index.html
-    - if ($http_x_custom_proto = "https") { set $ssl on; }
-    - if ($http_x_forwarded_proto = "https") { set $ssl on; }
-    - autoindex off
-    - charset UTF-8
-    - access_log /var/log/nginx/application-access.log
-    - error_log  /var/log/nginx/application-error.log
+    "{{ nginx_application_vhost }}"
 
-    - "{{ healthcheck_location }}"
-
-    - location / {
-          try_files $uri $uri/ /index.php?$args;
-      }
-
-    - location ~ \.php$ { echo_exec @fastcgi_backend; }
-
-    - location @fastcgi_backend {
-        expires off;
-        fastcgi_pass php;
-        fastcgi_read_timeout 900s;
-        fastcgi_connect_timeout 900s;
-        fastcgi_send_timeout 900s;
-        fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-        fastcgi_param  HTTPS $ssl;
-        fastcgi_param  X-FORWARDED-PROTO $scheme;
-        fastcgi_param  X-FORWARDED-HOST  $host;
-        include        fastcgi_params;
-      }
 
 nginx_snippets:
   redirect_to_https:

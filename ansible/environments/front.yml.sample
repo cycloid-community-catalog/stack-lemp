@@ -10,6 +10,23 @@
 #+ PHP-FPM version to install.
 
 
+# NGINX
+
+# If you want to define a htaccess in the default application
+# Create the basic auth file
+#nginx_auth_basic_files:
+#  cycloid:
+#    - cycloid:foohtpasswdline
+
+#Use the basic auth in the application vhost
+#basic_auth: |
+#    satisfy any;
+#    allow 127.0.0.1;
+#    include ip_whitelist;
+#    auth_basic "Resctricted";
+#    auth_basic_user_file auth_basic/cycloid;
+
+
 # Application
 
 # If you are not using the environments variables, you can use a jinja template with ansible local variables to configure your database ...

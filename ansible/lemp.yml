@@ -63,6 +63,9 @@
         - deploy
         - notforbuild
 
+    - name: Imported tasks
+      import_tasks: tasks.yml
+
   roles:
     - role: cycloid.base-aws
     - role: cycloid.customer-ssh
