@@ -276,14 +276,20 @@ variable "elasticache_cluster_id" {
   default = ""
 }
 
-resource "random_string" "elasticache_cluster_id" {
+variable "default_short_name" {
+  default = ""
+}
+
+resource "random_string" "id" {
   length  = 18
   upper   = false
   special = false
 }
 
+#local.default_short_name is lenght 20
 locals {
-  elasticache_cluster_id = var.elasticache_cluster_id != "" ? var.elasticache_cluster_id : "cy${random_string.elasticache_cluster_id.result}"
+  elasticache_cluster_id = var.elasticache_cluster_id != "" ? var.elasticache_cluster_id : "cy${random_string.id.result}"
+  default_short_name     = var.default_short_name != "" ? var.default_short_name : "cy${random_string.id.result}"
 }
 
 variable "deploy_bucket_name" {
