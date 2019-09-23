@@ -10,7 +10,6 @@ data "template_file" "user_data_front" {
     role               = "front"
     signal_stack_name  = "${var.project}-front-${var.env}"
     signal_resource_id = "Fronts${var.env}"
-    vault_password     = var.vault_password
     rds_address        = join("", aws_db_instance.application.*.address)
     rds_port           = join("", aws_db_instance.application.*.port)
     rds_database       = join("", aws_db_instance.application.*.name)
@@ -35,4 +34,3 @@ data "template_file" "user_data_front" {
     )
   }
 }
-
