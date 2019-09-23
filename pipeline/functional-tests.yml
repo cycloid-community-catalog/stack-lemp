@@ -11,4 +11,8 @@ run:
   - -xec
   - |
     DIR=${PWD}
-    echo "Dummy functional tests OK"
+    echo "Dummy functional tests"
+    #if [ "$(curl -s -o /dev/null -w '%{http_code}' http://${env}.foo.com/health-check)" -ne "200" ]
+    #then
+    #  exit 1
+    #fi
