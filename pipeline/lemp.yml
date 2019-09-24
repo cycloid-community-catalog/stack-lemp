@@ -220,8 +220,10 @@ jobs:
   plan:
   - do:
     - get: git_stack-ansible
+      params: {depth: 1}
       trigger: true
     - get: git_config-ansible
+      params: {depth: 1}
       trigger: true
 
     - task: merge-stack-and-config
@@ -267,8 +269,10 @@ jobs:
   plan:
     - do:
       - get: git_stack-terraform
+        params: {depth: 1}
         trigger: true
       - get: git_config-terraform
+        params: {depth: 1}
         trigger: true
       - get: ami_front
         passed: [build-ami-front]
@@ -336,8 +340,10 @@ jobs:
   plan:
     - do:
         - get: git_stack-terraform
+          params: {depth: 1}
           trigger: false
         - get: git_config-terraform
+          params: {depth: 1}
           trigger: false
         - task: merge-stack-and-config
           config:
@@ -410,20 +416,26 @@ jobs:
   plan:
   - do:
     - get: git_stack-ansible
+      params: {depth: 1}
       trigger: false
 
     - get: git_config-ansible
+      params: {depth: 1}
       trigger: false
 
     - get: s3_app-release
+      passed:
+        - build-application
       trigger: true
 
     - get: tfstate
-      trigger: false
       passed:
         - terraform-apply
+      trigger: false
 
     - get: git_app-code
+      params: {depth: 1}
+      passed: [build-application]
       trigger: false
 
     - task: merge-stack-and-config
