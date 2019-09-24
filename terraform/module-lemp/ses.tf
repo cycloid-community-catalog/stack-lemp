@@ -10,6 +10,7 @@ data "aws_iam_policy_document" "ses" {
     actions = [
       "ses:ListIdentities",
       "ses:SendEmail",
+      "ses:SendRawEmail",
     ]
 
     effect = "Allow"
@@ -52,10 +53,17 @@ output "iam_ses_user_secret" {
   value = aws_iam_access_key.ses[0].secret
 }
 
+output "iam_ses_smtp_user_key" {
+  value = aws_iam_access_key.ses[0].id
+}
+
+output "iam_ses_smtp_user_secret" {
+  value = aws_iam_access_key.ses[0].ses_smtp_password
+}
+
 # Allow front to send email directly
-resource "aws_iam_policy_attachment" "ses_access" {
-  count       = var.create_ses_access ? 1 : 0
-  name       = "${var.env}-${var.project}-ses_access"
-  roles      = [aws_iam_role.front.name]
+resource "aws_iam_role_policy_attachment" "ses_access" {
+  count      = var.create_ses_access ? 1 : 0
+  role       = aws_iam_role.front.name
   policy_arn = aws_iam_policy.ses[0].arn
 }

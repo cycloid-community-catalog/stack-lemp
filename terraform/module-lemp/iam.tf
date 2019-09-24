@@ -131,9 +131,8 @@ resource "aws_iam_policy" "push-logs" {
   policy      = data.aws_iam_policy_document.push-logs.json
 }
 
-resource "aws_iam_policy_attachment" "push-logs" {
-  name       = "${var.env}-${var.project}-push-logs"
-  roles      = [aws_iam_role.front.name]
+resource "aws_iam_role_policy_attachment" "push-logs" {
+  role       = aws_iam_role.front.name
   policy_arn = aws_iam_policy.push-logs.arn
 }
 
@@ -193,8 +192,7 @@ resource "aws_iam_policy" "s3_bucket_deploy" {
   policy      = data.aws_iam_policy_document.s3_bucket_deploy.json
 }
 
-resource "aws_iam_policy_attachment" "s3_bucket_deploy" {
-  name       = "${var.env}-${var.project}-s3_bucket_deploy"
-  roles      = [aws_iam_role.front.name]
+resource "aws_iam_role_policy_attachment" "s3_bucket_deploy" {
+  role       = aws_iam_role.front.name
   policy_arn = aws_iam_policy.s3_bucket_deploy.arn
 }
