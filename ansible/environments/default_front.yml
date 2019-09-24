@@ -5,7 +5,7 @@ base_extra_pip_packages:
   - boto3
 
 # Deployment common vars
-ansistrano_user: "{{customer}}"
+ansistrano_user: "{{ customer }}"
 ansistrano_php_fpm_service_name: "php{{ php_version_to_install }}-fpm"
 ansistrano_php_fpm_enabled: true
 ansistrano_group: www-data

@@ -136,4 +136,14 @@ module "lemp" {
   #. create_s3_medias (optional, bool): false
   #+ Create a S3 bucket dedicated to medias for the LEMP application
 
+  ###
+  # Ses access
+  ###
+
+  #. create_ses_access (optional, bool): false
+  #+ Create a iam user and instance profile to use AWS SES
+
+  #. ses_resource_arn (optional, string): "*"
+  #+ Define a arn to limitate SES access
+
 }

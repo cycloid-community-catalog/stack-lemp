@@ -145,9 +145,16 @@ resource "aws_iam_policy_attachment" "push-logs" {
 data "aws_iam_policy_document" "s3_bucket_deploy" {
   statement {
     actions = [
-      "s3:ListBucket",
       "s3:ListBucketVersions",
-      "s3:GetBucketVersioning",
+      "s3:DeleteObject",
+      "s3:GetObject",
+      "s3:GetObjectAcl",
+      "s3:ListBucket",
+      "s3:PutObject",
+      "s3:PutObjectAcl",
+      "s3:AbortMultipartUpload",
+      "s3:GetObjectVersion",
+      "s3:PutObjectVersionAcl",
     ]
 
     effect = "Allow"
@@ -159,11 +166,16 @@ data "aws_iam_policy_document" "s3_bucket_deploy" {
 
   statement {
     actions = [
+      "s3:ListBucketVersions",
+      "s3:DeleteObject",
       "s3:GetObject",
       "s3:GetObjectAcl",
       "s3:ListBucket",
+      "s3:PutObject",
+      "s3:PutObjectAcl",
       "s3:AbortMultipartUpload",
       "s3:GetObjectVersion",
+      "s3:PutObjectVersionAcl",
     ]
 
     effect = "Allow"

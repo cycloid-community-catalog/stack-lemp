@@ -8,6 +8,7 @@ keywords:
   - 'nginx'
   - 'mysql'
   - 'php'
+  - 'ses'
 technologies:
   - technology: Debian
     version: 9.x
@@ -20,6 +21,8 @@ technologies:
   - technology: redis
     version: 5.x
   - technology: s3
+    version: n/a
+  - technology: ses
     version: n/a
 
 author: 'Cycloid'

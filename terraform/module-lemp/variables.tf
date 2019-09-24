@@ -295,3 +295,14 @@ variable "deploy_bucket_name" {
 variable "front_ami_id" {
   default = ""
 }
+
+
+# Ses
+
+variable "create_ses_access" {
+  default = false
+}
+
+variable "ses_resource_arn" {
+  default = "*"
+}
