@@ -161,9 +161,10 @@ nginx_snippets:
 # Logs
 #
 
-cycloid_files_watched:
+extra_cycloid_files_watched: []
+default_cycloid_files_watched:
  - name: php
-   path: "php_errorlog_path"
+   path: "{{ php_errorlog_path }}"
  - name: php-fpm
    path: "/var/log/php{{ php_version_to_install }}-fpm.log"
  - name: php-slow
@@ -174,6 +175,8 @@ cycloid_files_watched:
    path: "/var/log/nginx/error.log"
  - name: nginx-application
    path: "/var/log/nginx/application-*.log"
+
+cycloid_files_watched: "{{ default_cycloid_files_watched + extra_cycloid_files_watched }}"
 
 #
 # Php

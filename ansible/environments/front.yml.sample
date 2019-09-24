@@ -38,3 +38,25 @@
 #ansistrano_parameters_templates:
 #  - src: /tmp/wp-config.php.j2
 #    dest: "{{ansistrano_release_path.stdout}}/wp-config.php"
+
+# Crons
+
+# If you need a cron on fronts servers
+#crons:
+#  - name: php cron.php
+#    job: "php {{ ansistrano_deploy_to }}{{ ansistrano_user }}/{{ ansistrano_current_dir }}/cron.php 2>&1 >> {{ ansistrano_deploy_to }}{{ ansistrano_user }}/{{ ansistrano_current_dir }}/cron.log"
+#    minute: "*"
+#    hour: "*"
+#    day: "*"
+#    month: "*"
+#    weekday: "*"
+#    user: "{{ ansistrano_user }}"
+#    state: present
+
+
+# Logs
+
+# If you need extra logs file to send to cloudwatch. For example local application logs
+# extra_cycloid_files_watched:
+#  - name: application
+#    path: "{{ ansistrano_deploy_to }}{{ ansistrano_user }}/{{ ansistrano_current_dir }}/*.log"

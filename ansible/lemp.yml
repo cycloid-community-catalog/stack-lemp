@@ -93,10 +93,10 @@
       tags:
         - nginx
 
-    #- role: cycloid.cron
-    #  tags:
-    #    - cron
-    #    - notforbuild
+    - role: cycloid.cron
+      tags:
+        - cron
+        - notforbuild
 
     - {role: cycloid.telegraf, tags: telegraf}
     - {role: cycloid.fluentd, tags: fluentd}
