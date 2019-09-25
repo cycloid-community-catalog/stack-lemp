@@ -31,7 +31,7 @@ ansistrano_s3_archive_content: false
 # Nginx
 #
 
-basic_auth: ""
+nginx_vhost_extra_directive: ""
 
 # root/public directory of your website
 nginx_application_root: ""
@@ -105,7 +105,7 @@ nginx_application_vhost:
   - error_log  /var/log/nginx/application-error.log
 
   - "{{ healthcheck_location }}"
-  - "{{ basic_auth }}"
+  - "{{ nginx_vhost_extra_directive }}"
   - location / {
         try_files $uri $uri/ /index.php?$args;
     }
