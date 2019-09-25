@@ -99,6 +99,6 @@
         - notforbuild
 
     - {role: cycloid.telegraf, tags: telegraf}
-    - {role: cycloid.fluentd, tags: fluentd}
+    #- {role: cycloid.fluentd, tags: fluentd}
   tags:
     - front

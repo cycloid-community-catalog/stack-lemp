@@ -24,7 +24,7 @@
 #    allow 127.0.0.1;
 #    auth_basic "Resctricted";
 #    auth_basic_user_file auth_basic/cycloid;
-#    if ($ssl != "on) { rewrite ^(.*)$ https://$server_name$1 permanent; }
+#    if ($ssl != "on") { rewrite ^(.*)$ https://$server_name$1 permanent; }
 
 # Application
 
