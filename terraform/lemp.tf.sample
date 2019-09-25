@@ -7,9 +7,9 @@ module "lemp" {
   env                = var.env
   customer           = var.customer
   deploy_bucket_name = var.deploy_bucket_name
+  deploy_bucket_name = var.deploy_bucket_name
 
   #####################################
-
   #. vpc_id (required):
   #+ Amazon VPC id on which create each components.
   vpc_id = "<vpc-id>"
@@ -135,5 +135,15 @@ module "lemp" {
 
   #. create_s3_medias (optional, bool): false
   #+ Create a S3 bucket dedicated to medias for the LEMP application
+
+  ###
+  # Ses access
+  ###
+
+  #. create_ses_access (optional, bool): false
+  #+ Create a iam user and instance profile to use AWS SES
+
+  #. ses_resource_arn (optional, string): "*"
+  #+ Define a arn to limitate SES access
 
 }

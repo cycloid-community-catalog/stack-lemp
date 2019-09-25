@@ -176,7 +176,7 @@ EOF
 ###
 
 resource "aws_security_group" "alb-front" {
-  name = "${var.project}-alb-front-${var.env}"
+  name = "${var.project}-albfront-${var.env}"
   description = "Front ${var.env} for ${var.project}"
   vpc_id = var.vpc_id
 
@@ -202,14 +202,15 @@ resource "aws_security_group" "alb-front" {
   }
 
   tags = merge(local.merged_tags, {
-    Name = "${var.project}-alb-front-${var.env}"
+    Name = "${var.project}-albfront-${var.env}"
     role = "front"
   })
 }
 
+
 # TargetGroup for ALBs
 resource "aws_alb_target_group" "front-80" {
-  name = "${var.project}-front80-${var.env}"
+  name = length("${var.project}front80${var.env}") > 32 ? "${local.default_short_name}front80" : "${var.project}front80${var.env}"
   port = 80
   protocol = "HTTP"
   vpc_id = var.vpc_id

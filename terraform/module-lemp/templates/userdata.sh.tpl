@@ -30,7 +30,6 @@ export ENV=${env}
 export CUSTOMER=${customer}
 export PROJECT=${project}
 export ROLE=${role}
-export CUSTOMER_VAULT_PASSWORD=${vault_password}
 export RDS_ADDRESS=${rds_address}
 export RDS_PORT=${rds_port}
 export RDS_DATABASE=${rds_database}

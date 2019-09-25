@@ -1,8 +1,8 @@
 ---
-#- src: https://github.com/cycloidio/ansible-cron
-#  version: master
-#  name: cycloid.cron
-#  scm: git
+- src: https://github.com/cycloidio/ansible-cron
+  version: master
+  name: cycloid.cron
+  scm: git
 
 #- src: https://github.com/cycloidio/ansible-postfix
 #  version: master

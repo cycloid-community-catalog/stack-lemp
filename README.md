@@ -95,6 +95,7 @@ In order to run this task, couple elements are required within the infrastructur
 |`create_elasticache`||`bool`|`true`|`False`|
 |`create_rds`|Define if we want to create or not an RDS database.|`bool`|`false`|`False`|
 |`create_s3_medias`|Create a S3 bucket dedicated to medias for the LEMP application|`bool`|`false`|`False`|
+|`create_ses_access`|Create a iam user and instance profile to use AWS SES|`bool`|`false`|`False`|
 |`elasticache_engine`|Type of the ElastiCache engine|`-`|`redis`|`False`|
 |`elasticache_engine_version`|Version of the ElastiCache engine|`-`|`5.0.0`|`False`|
 |`elasticache_nodes`|Number of nodes in the ElastiCache cluster.|`-`|`1`|`False`|
@@ -122,6 +123,7 @@ In order to run this task, couple elements are required within the infrastructur
 |`rds_subnet_group`|RDS subnet group name to use. If not specified, create a dedicated group with private_subnets_ids.|`-`|``|`False`|
 |`rds_type`|RDS database instance size.|`-`|`db.t3.small`|`False`|
 |`rds_username`|RDS database username.|`-`|`application`|`False`|
+|`ses_resource_arn`|Define a arn to limitate SES access|`string`|`"*"`|`False`|
 |`vpc_id`|Amazon VPC id on which create each components.|`-`|``|`True`|
 
 **Outputs**

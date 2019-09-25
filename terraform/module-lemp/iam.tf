@@ -131,9 +131,8 @@ resource "aws_iam_policy" "push-logs" {
   policy      = data.aws_iam_policy_document.push-logs.json
 }
 
-resource "aws_iam_policy_attachment" "push-logs" {
-  name       = "${var.env}-${var.project}-push-logs"
-  roles      = [aws_iam_role.front.name]
+resource "aws_iam_role_policy_attachment" "push-logs" {
+  role       = aws_iam_role.front.name
   policy_arn = aws_iam_policy.push-logs.arn
 }
 
@@ -145,9 +144,16 @@ resource "aws_iam_policy_attachment" "push-logs" {
 data "aws_iam_policy_document" "s3_bucket_deploy" {
   statement {
     actions = [
-      "s3:ListBucket",
       "s3:ListBucketVersions",
-      "s3:GetBucketVersioning",
+      "s3:DeleteObject",
+      "s3:GetObject",
+      "s3:GetObjectAcl",
+      "s3:ListBucket",
+      "s3:PutObject",
+      "s3:PutObjectAcl",
+      "s3:AbortMultipartUpload",
+      "s3:GetObjectVersion",
+      "s3:PutObjectVersionAcl",
     ]
 
     effect = "Allow"
@@ -159,11 +165,16 @@ data "aws_iam_policy_document" "s3_bucket_deploy" {
 
   statement {
     actions = [
+      "s3:ListBucketVersions",
+      "s3:DeleteObject",
       "s3:GetObject",
       "s3:GetObjectAcl",
       "s3:ListBucket",
+      "s3:PutObject",
+      "s3:PutObjectAcl",
       "s3:AbortMultipartUpload",
       "s3:GetObjectVersion",
+      "s3:PutObjectVersionAcl",
     ]
 
     effect = "Allow"
@@ -181,8 +192,7 @@ resource "aws_iam_policy" "s3_bucket_deploy" {
   policy      = data.aws_iam_policy_document.s3_bucket_deploy.json
 }
 
-resource "aws_iam_policy_attachment" "s3_bucket_deploy" {
-  name       = "${var.env}-${var.project}-s3_bucket_deploy"
-  roles      = [aws_iam_role.front.name]
+resource "aws_iam_role_policy_attachment" "s3_bucket_deploy" {
+  role       = aws_iam_role.front.name
   policy_arn = aws_iam_policy.s3_bucket_deploy.arn
 }

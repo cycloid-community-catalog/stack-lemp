@@ -52,3 +52,23 @@ output "s3_medias" {
   value       = module.lemp.s3_medias
   description = "S3 bucket name dedicated to medias."
 }
+
+output "iam_ses_user_key" {
+  value       = module.lemp.iam_ses_user_key
+  description = "Iam user key for SES."
+}
+
+output "iam_ses_user_secret" {
+  value       = module.lemp.iam_ses_user_secret
+  description = "Iam user secret for SES."
+}
+
+output "iam_ses_smtp_user_key" {
+  value       = module.lemp.iam_ses_smtp_user_key
+  description = "Smtp user key for ses."
+}
+
+output "iam_ses_smtp_user_secret" {
+  value       = module.lemp.iam_ses_smtp_user_secret
+  description = "Smtp user secret for ses."
+}

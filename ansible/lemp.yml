@@ -14,6 +14,7 @@
       RDS_PORT: "{{ rds_port | default('empty', True) }}"
       RDS_DATABASE: "{{ rds_database | default('empty', True) }}"
       RDS_USERNAME: "{{ rds_username | default('empty', True) }}"
+      RDS_PASSWORD: "{{ rds_password | default('empty', True) }}"
       S3_MEDIAS: "{{ s3_medias | default('empty', True) }}"
       ELASTICACHE_ADDRESS: "{{ elasticache_address | default('empty', True) }}"
 
@@ -62,6 +63,9 @@
         - deploy
         - notforbuild
 
+    - name: Imported tasks
+      import_tasks: tasks.yml
+
   roles:
     - role: cycloid.base-aws
     - role: cycloid.customer-ssh
@@ -89,10 +93,10 @@
       tags:
         - nginx
 
-    #- role: cycloid.cron
-    #  tags:
-    #    - cron
-    #    - notforbuild
+    - role: cycloid.cron
+      tags:
+        - cron
+        - notforbuild
 
     - {role: cycloid.telegraf, tags: telegraf}
     - {role: cycloid.fluentd, tags: fluentd}

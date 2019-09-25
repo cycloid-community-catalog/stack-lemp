@@ -103,12 +103,6 @@
            "--vault-password-file /home/admin/.vault-password"
         ],
         "inventory_groups": "{{user `inventory_groups`}}"
-    },
-    {
-        "type": "shell",
-        "inline": [
-           "rm -f /home/admin/.vault-password"
-      ]
     }
   ]
 }

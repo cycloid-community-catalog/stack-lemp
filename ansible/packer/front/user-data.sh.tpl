@@ -24,7 +24,7 @@
 
 set -x
 
-VAULT_FILE="/tmp/vault-password-file"
+VAULT_FILE="/home/admin/.vault-password"
 LOG_FILE="/var/log/user-data.log"
 
 ###  ansible issue when run at boot : https://github.com/ansible/ansible/issues/21562
@@ -77,8 +77,6 @@ fi
 log "Finished ${ANSIBLE_PLAYBOOK} playbook"
 
 log "Run code deployment"
-
-echo ${CUSTOMER_VAULT_PASSWORD} > ${VAULT_FILE}
 
 export AWS_ACCESS_KEY_ID="{{aws_access_key_id}}"
 export AWS_SECRET_ACCESS_KEY="{{aws_secret_access_key}}"

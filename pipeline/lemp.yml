@@ -62,13 +62,11 @@ groups:
   - terraform-apply
   - build-ami-front
   - build-application
-  - unittests
   - functional-tests
 - name: application
   jobs:
   - application-deployment
   - build-application
-  - unittests
   - functional-tests
 
 - name: infra
@@ -181,7 +179,7 @@ resources:
     branch: ((config_git_branch))
     private_key: ((config_git_private_key))
     paths:
-      - ((config_ansible_path))/((env))-*
+      - ((config_ansible_path))/environments/((env))-*
 
 #
 # application
@@ -222,8 +220,10 @@ jobs:
   plan:
   - do:
     - get: git_stack-ansible
+      params: {depth: 1}
       trigger: true
     - get: git_config-ansible
+      params: {depth: 1}
       trigger: true
 
     - task: merge-stack-and-config
@@ -241,6 +241,7 @@ jobs:
           deploy_bucket_object_path: ((deploy_bucket_object_path))
           deploy_bucket_name: ((deploy_bucket_name))
           aws_default_region: ((aws_default_region))
+          rds_password: ((rds_password))
 
     - put: ami_front
       params:
@@ -268,8 +269,10 @@ jobs:
   plan:
     - do:
       - get: git_stack-terraform
+        params: {depth: 1}
         trigger: true
       - get: git_config-terraform
+        params: {depth: 1}
         trigger: true
       - get: ami_front
         passed: [build-ami-front]
@@ -337,8 +340,10 @@ jobs:
   plan:
     - do:
         - get: git_stack-terraform
+          params: {depth: 1}
           trigger: false
         - get: git_config-terraform
+          params: {depth: 1}
           trigger: false
         - task: merge-stack-and-config
           config:
@@ -401,35 +406,6 @@ jobs:
         acl: private
         file: release/s3_app-release.tar.gz
 
-- name: unittests
-  max_in_flight: 1
-  build_logs_to_retain: 10
-  plan:
-  - do:
-    - get: s3_app-release
-      trigger: true
-      passed: [build-application]
-    - get: git_app-code
-      passed: [build-application]
-      trigger: false
-
-    - task: run
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: cycloid/busybox
-            tag: latest
-        run:
-          path: /bin/bash
-          args:
-          - -xec
-          - |
-            DIR=${PWD}
-            echo "Dummy tests OK"
-
-
 #
 # Front deploy
 #
@@ -440,25 +416,27 @@ jobs:
   plan:
   - do:
     - get: git_stack-ansible
+      params: {depth: 1}
       trigger: false
 
     - get: git_config-ansible
+      params: {depth: 1}
       trigger: false
 
     - get: s3_app-release
-      trigger: true
       passed:
-        - unittests
-
+        - build-application
+      trigger: true
 
     - get: tfstate
-      trigger: false
       passed:
         - terraform-apply
+      trigger: false
 
     - get: git_app-code
+      params: {depth: 1}
+      passed: [build-application]
       trigger: false
-      passed: [unittests]
 
     - task: merge-stack-and-config
       config:
@@ -494,6 +472,7 @@ jobs:
           aws_default_region: ((aws_default_region))
           deploy_bucket_object_path: ((deploy_bucket_object_path))
           deploy_bucket_name: ((deploy_bucket_name))
+          rds_password: ((rds_password))
         TAGS:
           - deploy
 
@@ -506,22 +485,30 @@ jobs:
       trigger: true
       passed: [application-deployment]
     - get: git_app-code
+      params: {depth: 1}
       passed: [application-deployment]
       trigger: false
 
+    - get: git_config
+      params: {depth: 1}
+      trigger: false
+    - get: git_stack-pipeline
+      params: {depth: 1}
+      trigger: false
+
+    - task: merge-stack-and-config
+      config:
+        <<: *merge-stack-and-config
+        inputs:
+        - name: git_config
+          path: "config"
+        - name: git_stack-pipeline
+          path: "stack"
+      params:
+        CONFIG_PATH: ((config_pipeline_path))
+        STACK_PATH: pipeline
 
     - task: run
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: cycloid/busybox
-            tag: latest
-        run:
-          path: /bin/bash
-          args:
-          - -xec
-          - |
-            DIR=${PWD}
-            echo "Dummy functional tests OK"
+      file: merged-stack/functional-tests.yml
+      params:
+        env: ((env))
