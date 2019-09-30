@@ -24,7 +24,7 @@
     - [ "environments/{{ env }}-secrets.yml", "environments/empty.yml" ]
 
   pre_tasks:
-    - name: Restart fuentd to use the hostname on boot
+    - name: Restart fluentd to use the hostname on boot
       service:
         name: td-agent
         state: restarted
