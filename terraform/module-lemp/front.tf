@@ -149,7 +149,7 @@ resource "aws_cloudformation_stack" "front" {
       "UpdatePolicy": {
         "AutoScalingRollingUpdate": {
           "MinInstancesInService": "${var.front_update_min_in_service}",
-          "MinSuccessfulInstancesPercent": "50",
+          "MinSuccessfulInstancesPercent": "100",
           "SuspendProcesses": ["ScheduledActions"],
           "MaxBatchSize": "2",
           "PauseTime": "PT8M",

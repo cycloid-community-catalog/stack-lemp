@@ -231,7 +231,7 @@ variable "front_asg_scale_down_threshold" {
 }
 
 variable "front_update_min_in_service" {
-  default = 0
+  default = 1
 }
 
 ###
