@@ -94,36 +94,37 @@ In order to run this task, couple elements are required within the infrastructur
 |`cache_subnet_group`|Name of the Amazon ElastiCache subnet group to use. If not specified, create a dedicated group with private_subnets_ids.|`-`|``|`False`|
 |`create_elasticache`||`bool`|`true`|`False`|
 |`create_rds`|Define if we want to create or not an RDS database.|`bool`|`false`|`False`|
-|`create_s3_medias`|Create a S3 bucket dedicated to medias for the LEMP application|`bool`|`false`|`False`|
-|`create_ses_access`|Create a iam user and instance profile to use AWS SES|`bool`|`false`|`False`|
-|`elasticache_engine`|Type of the ElastiCache engine|`-`|`redis`|`False`|
-|`elasticache_engine_version`|Version of the ElastiCache engine|`-`|`5.0.0`|`False`|
+|`create_s3_medias`|Create a S3 bucket dedicated to medias for the LEMP application.|`bool`|`false`|`False`|
+|`create_ses_access`|Create a iam user and instance profile to use AWS SES.|`bool`|`false`|`False`|
+|`elasticache_engine`|Type of the ElastiCache engine.|`-`|`redis`|`False`|
+|`elasticache_engine_version`|Version of the ElastiCache engine.|`-`|`5.0.0`|`False`|
 |`elasticache_nodes`|Number of nodes in the ElastiCache cluster.|`-`|`1`|`False`|
 |`elasticache_parameter_group_name`|ElastiCache group parameter name to use.|`-`|`default.redis5.0`|`False`|
-|`elasticache_port`|Port of the ElastiCache|`-`|`6379`|`False`|
+|`elasticache_port`|Port of the ElastiCache.|`-`|`6379`|`False`|
 |`elasticache_type`|Instance size to use for ElastiCache nodes.|`-`|`cache.t2.micro`|`False`|
 |`extra_tags`|Dict of extra tags to add on aws resources. format { "foo" = "bar" }.|`-`|`{}`|`False`|
 |`front_asg_max_size`|Maximum number of front server allowed in the AutoScaling group.|`-`|`5`|`False`|
-|`front_count`|Desired number of front servers|`-`|`1`|`False`|
+|`front_count`|Desired number of front servers.|`-`|`1`|`False`|
 |`front_disk_size`|Disk size of front servers.|`-`|`30`|`False`|
 |`front_ebs_optimized`|Whether the Instance is EBS optimized or not, related to the instance type you choose.|`bool`|`false`|`False`|
-|`front_type`|Type of instance to use for front servers|`-`|`t3.small`|`False`|
+|`front_type`|Type of instance to use for front servers.|`-`|`t3.small`|`False`|
 |`keypair_name`|Name of an existing AWS SSH keypair to use to deploy EC2 instances.|`-`|`cycloid`|`False`|
 |`metrics_sg_allow`|Additionnal security group ID to assign to servers. Goal is to allow monitoring server to query metrics.|`-`|`""`|`False`|
 |`private_subnets_ids`|Amazon subnets IDs on which create each components.|`array`|``|`True`|
 |`public_subnets_ids`|Amazon subnets IDs on which create each components.|`array`|``|`True`|
-|`rds_backup_retention`|The days to retain backups for. Must be between 0 and 35. When creating a Read Replica the value must be greater than 0|`-`|`7`|`False`|
+|`rds_backup_retention`|The days to retain backups for. Must be between 0 and 35. When creating a Read Replica the value must be greater than 0.|`-`|`7`|`False`|
 |`rds_database`|RDS database name.|`-`|`application`|`False`|
 |`rds_disk_size`|RDS disk size.|`-`|`10`|`False`|
 |`rds_engine`|RDS database engine to use.|`-`|`mysql`|`False`|
-|`rds_engine_version`|The version of the RDS database engine|`-`|`5.7.16`|`False`|
+|`rds_engine_version`|The version of the RDS database engine.|`-`|`5.7.16`|`False`|
+|`rds_extra_sg_allow`|Amazon source security group ID which will be allowed to connect on rds.|`-`|``|`False`|
 |`rds_multiaz`|If the RDS instance is multi AZ enabled.|`bool`|`false`|`False`|
 |`rds_parameters`|Name of the RDS parameters group to use.|`-`|`default.mysql5.7`|`False`|
 |`rds_password`|RDS password. expected value is "${var.rds_password}" to get it from the pipeline.|`-`|`ChangeMePls`|`False`|
 |`rds_subnet_group`|RDS subnet group name to use. If not specified, create a dedicated group with private_subnets_ids.|`-`|``|`False`|
 |`rds_type`|RDS database instance size.|`-`|`db.t3.small`|`False`|
 |`rds_username`|RDS database username.|`-`|`application`|`False`|
-|`ses_resource_arn`|Define a arn to limitate SES access|`string`|`"*"`|`False`|
+|`ses_resource_arn`|Define a arn to limitate SES access.|`string`|`"*"`|`False`|
 |`vpc_id`|Amazon VPC id on which create each components.|`-`|``|`True`|
 
 **Outputs**

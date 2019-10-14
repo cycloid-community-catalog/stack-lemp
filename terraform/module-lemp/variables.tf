@@ -131,6 +131,10 @@ variable "rds_skip_final_snapshot" {
   default = true
 }
 
+variable "rds_extra_sg_allow" {
+  default = ""
+}
+
 #
 # Application
 #

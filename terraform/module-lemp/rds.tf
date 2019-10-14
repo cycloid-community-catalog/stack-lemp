@@ -49,7 +49,7 @@ resource "aws_db_instance" "application" {
   parameter_group_name = var.rds_parameters
   db_subnet_group_name = var.rds_subnet_group != "" ? var.rds_subnet_group : aws_db_subnet_group.rds-subnet[0].id
 
-  vpc_security_group_ids = compact([var.bastion_sg_allow, aws_security_group.rds[0].id])
+  vpc_security_group_ids = compact([var.rds_extra_sg_allow, aws_security_group.rds[0].id])
 
   tags = merge(local.merged_tags, {
     Name = "${var.customer}-${var.project}-rds-${var.env}"

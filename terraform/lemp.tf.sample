@@ -42,11 +42,11 @@ module "lemp" {
   ###
 
   #. front_count (optional): 1
-  #+ Desired number of front servers
+  #+ Desired number of front servers.
   front_count = "1"
 
   #. front_type (optional): t3.small
-  #+ Type of instance to use for front servers
+  #+ Type of instance to use for front servers.
   front_type = "t3.small"
 
   #. front_ebs_optimized (optional, bool): false
@@ -93,20 +93,23 @@ module "lemp" {
   #+ RDS database engine to use.
 
   #. rds_engine_version (optional): 5.7.16
-  #+ The version of the RDS database engine
+  #+ The version of the RDS database engine.
 
   #. rds_backup_retention (optional): 7
-  #+ The days to retain backups for. Must be between 0 and 35. When creating a Read Replica the value must be greater than 0
+  #+ The days to retain backups for. Must be between 0 and 35. When creating a Read Replica the value must be greater than 0.
 
   #. rds_parameters (optional): default.mysql5.7
   #+ Name of the RDS parameters group to use.
+
+  #. rds_extra_sg_allow (optional):
+  #+ Amazon source security group ID which will be allowed to connect on rds.
 
   ###
   # ElastiCache / redis
   ###
 
   #. create_elasticache (optional, bool): true
-  # Define if we want to create or not an Amazon ElastiCache
+  # Define if we want to create or not an Amazon ElastiCache.
 
   #. cache_subnet_group (optional):
   #+ Name of the Amazon ElastiCache subnet group to use. If not specified, create a dedicated group with private_subnets_ids.
@@ -121,29 +124,29 @@ module "lemp" {
   #+ ElastiCache group parameter name to use.
 
   #. elasticache_engine_version (optional): 5.0.0
-  #+ Version of the ElastiCache engine
+  #+ Version of the ElastiCache engine.
 
   #. elasticache_engine (optional): redis
-  #+ Type of the ElastiCache engine
+  #+ Type of the ElastiCache engine.
 
   #. elasticache_port (optional): 6379
-  #+ Port of the ElastiCache
+  #+ Port of the ElastiCache.
 
   ###
   # S3 medias
   ###
 
   #. create_s3_medias (optional, bool): false
-  #+ Create a S3 bucket dedicated to medias for the LEMP application
+  #+ Create a S3 bucket dedicated to medias for the LEMP application.
 
   ###
   # Ses access
   ###
 
   #. create_ses_access (optional, bool): false
-  #+ Create a iam user and instance profile to use AWS SES
+  #+ Create a iam user and instance profile to use AWS SES.
 
   #. ses_resource_arn (optional, string): "*"
-  #+ Define a arn to limitate SES access
+  #+ Define a arn to limitate SES access.
 
 }
