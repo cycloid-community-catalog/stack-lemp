@@ -102,6 +102,7 @@ resources:
 
 - name: tfstate
   type: terraform
+  icon: terraform
   source:
     env_name: ((env))
     backend_type: s3
@@ -128,6 +129,7 @@ resources:
 
 # The Pipeline stack (will be merged with the config)
 - name: git_stack-pipeline
+  icon: github-circle
   type: git
   source:
     uri: https://github.com/cycloid-community-catalog/stack-lemp
@@ -137,6 +139,7 @@ resources:
 
 # The Terraform stack (will be merged with the config)
 - name: git_stack-terraform
+  icon: github-circle
   type: git
   source:
     uri: https://github.com/cycloid-community-catalog/stack-lemp
@@ -147,6 +150,7 @@ resources:
 # The config (will be merged with the stack), mainly used for pipeline files
 - name: git_config
   type: git
+  icon: github-circle
   source:
     uri: ((config_git_repository))
     branch: ((config_git_branch))
@@ -155,6 +159,7 @@ resources:
 # The Terraform config (will be merged with the stack)
 - name: git_config-terraform
   type: git
+  icon: github-circle
   source:
     uri: ((config_git_repository))
     branch: ((config_git_branch))
@@ -165,6 +170,7 @@ resources:
 # The Ansible stack (will be merged with the config)
 - name: git_stack-ansible
   type: git
+  icon: github-circle
   source:
     uri: https://github.com/cycloid-community-catalog/stack-lemp
     branch: ((stack_git_branch))
@@ -174,6 +180,7 @@ resources:
 # The Ansible config (will be merged with the stack)
 - name: git_config-ansible
   type: git
+  icon: github-circle
   source:
     uri: ((config_git_repository))
     branch: ((config_git_branch))
@@ -186,6 +193,7 @@ resources:
 #
 - name: git_app-code
   type: git
+  icon: github-circle
   source:
     uri: ((lemp_git_repository))
     branch: ((lemp_git_branch))
@@ -193,6 +201,7 @@ resources:
 
 - name: s3_app-release
   type: s3
+  icon: aws
   source:
     bucket: ((deploy_bucket_name))
     versioned_file: ((deploy_bucket_object_path))
