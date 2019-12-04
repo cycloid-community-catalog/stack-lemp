@@ -139,6 +139,12 @@ module "lemp" {
   #. create_s3_medias (optional, bool): false
   #+ Create a S3 bucket dedicated to medias for the LEMP application.
 
+  #. s3_medias_acl (optional, string): "public-read"
+  #+ Set the default acl of the medias S3 bucket.
+
+  #. s3_medias_policy_json (optional, string): data.aws_iam_policy_document.public_s3_bucket_medias[0].json
+  #+ Override the default json policy applied to the bucket.
+
   ###
   # Ses access
   ###

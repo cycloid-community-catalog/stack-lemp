@@ -29,8 +29,8 @@ resource "aws_s3_bucket" "medias" {
   count = var.create_s3_medias ? 1 : 0
 
   bucket = "${var.customer}-${var.project}-medias-${var.env}"
-  policy = data.aws_iam_policy_document.public_s3_bucket_medias[0].json
-  acl    = "public-read"
+  policy = var.s3_medias_policy_json != "" ? var.s3_medias_policy_json : data.aws_iam_policy_document.public_s3_bucket_medias[0].json
+  acl    = var.s3_medias_acl
 
   tags = merge(local.merged_tags, {
     Name         = "${var.customer}-${var.project}-medias-${var.env}"
