@@ -124,6 +124,8 @@ In order to run this task, couple elements are required within the infrastructur
 |`rds_subnet_group`|RDS subnet group name to use. If not specified, create a dedicated group with private_subnets_ids.|`-`|``|`False`|
 |`rds_type`|RDS database instance size.|`-`|`db.t3.small`|`False`|
 |`rds_username`|RDS database username.|`-`|`application`|`False`|
+|`s3_medias_acl`|Set the default acl of the medias S3 bucket.|`string`|`"public-read"`|`False`|
+|`s3_medias_policy_json`|Override the default json policy applied to the bucket.|`string`|`data.aws_iam_policy_document.public_s3_bucket_medias[0].json`|`False`|
 |`ses_resource_arn`|Define a arn to limitate SES access.|`string`|`"*"`|`False`|
 |`vpc_id`|Amazon VPC id on which create each components.|`-`|``|`True`|
 

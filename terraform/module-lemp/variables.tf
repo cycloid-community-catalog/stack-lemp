@@ -71,6 +71,14 @@ variable "create_s3_medias" {
   default = false
 }
 
+variable "s3_medias_acl" {
+  default = "public-read"
+}
+
+variable "s3_medias_policy_json" {
+  default = ""
+}
+
 #
 # RDS
 #
