@@ -72,7 +72,7 @@ variable "create_s3_medias" {
 }
 
 variable "s3_medias_acl" {
-  default = "public-read"
+  default = "private"
 }
 
 variable "s3_medias_policy_json" {
