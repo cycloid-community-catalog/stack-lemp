@@ -89,3 +89,15 @@ project: ci-stack-lemp
 #. customer (required): cycloid-owl
 #+ Name of the Cycloid Organization, used as customer variable name.
 customer: cycloid-owl
+
+#. git_stack-validate_repository (required): git@github.com:cycloidio/cycloid-stacks.git
+#+ Git repository URL of the stack-validate.
+git_stack-validate_repository: git@github.com:cycloidio/cycloid-stacks.git
+
+#. git_branch (required): stacks
+#+ Branch of the of the stack-validate.
+git_stack-validate_branch: stacks
+
+#. git_key (required): ((git.ssh_key))
+#+ SSH key pair to fetch the stack-validate.
+git_stack-validate_key: ((git_github.ssh_key))
