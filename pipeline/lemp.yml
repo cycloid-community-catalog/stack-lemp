@@ -92,12 +92,6 @@ resource_types:
   source:
     repository: jdub/packer-resource
 
-- name: slack-notification
-  type: docker-image
-  source:
-    repository: cfcommunity/slack-notification-resource
-    tag: latest
-
 resources:
 
 - name: tfstate
