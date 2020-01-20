@@ -32,6 +32,7 @@ ansistrano_s3_archive_content: false
 #
 
 nginx_vhost_extra_directive: ""
+#nginx_vhost_extra_directive: "include snippets/redirect_to_https.conf"
 
 # root/public directory of your website
 nginx_application_root: ""
