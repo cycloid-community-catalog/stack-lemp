@@ -33,8 +33,8 @@ resource "aws_s3_bucket" "medias" {
   acl    = var.s3_medias_acl
 
   tags = merge(local.merged_tags, {
-    Name         = "${var.customer}-${var.project}-medias-${var.env}"
-    role         = "medias"
+    Name = "${var.customer}-${var.project}-medias-${var.env}"
+    role = "medias"
   })
 
 }
@@ -137,6 +137,10 @@ output "iam_s3-medias_user_key" {
 
 output "iam_s3-medias_user_secret" {
   value = aws_iam_access_key.s3-medias[0].secret
+}
+
+output "iam_s3-medias_user_name" {
+  value = aws_iam_user.s3-medias[0].name
 }
 
 output "s3_medias" {

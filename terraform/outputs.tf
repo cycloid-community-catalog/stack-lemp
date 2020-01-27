@@ -48,6 +48,11 @@ output "iam_s3-medias_user_secret" {
   description = "Access secret key of the dedicated IAM user to access to the media S3 bucket."
 }
 
+output "iam_s3-medias_user_name" {
+  value       = module.lemp.iam_s3-medias_user_name
+  description = "Iam user name of the dedicated IAM user to access to the media S3 bucket."
+}
+
 output "s3_medias" {
   value       = module.lemp.s3_medias
   description = "S3 bucket name dedicated to medias."
