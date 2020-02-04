@@ -7,7 +7,6 @@ module "lemp" {
   env                = var.env
   customer           = var.customer
   deploy_bucket_name = var.deploy_bucket_name
-  deploy_bucket_name = var.deploy_bucket_name
 
   #####################################
   #. vpc_id (required):
