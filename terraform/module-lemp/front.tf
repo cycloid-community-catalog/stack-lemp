@@ -123,7 +123,7 @@ locals {
 }
 
 resource "aws_cloudformation_stack" "front" {
-  name = "${var.project}-front-${var.env}"
+  name = replace("${var.project}-front-${var.env}", var.nameregex, "")
 
   template_body = <<EOF
 {
@@ -207,10 +207,9 @@ resource "aws_security_group" "alb-front" {
   })
 }
 
-
 # TargetGroup for ALBs
 resource "aws_alb_target_group" "front-80" {
-  name = length("${var.project}front80${var.env}") > 32 ? "${local.default_short_name}front80" : "${var.project}front80${var.env}"
+  name = length(replace("${var.project}front80${var.env}", var.nameregex, "")) > 32 ? "${local.default_short_name}front80" : replace("${var.project}front80${var.env}", var.nameregex, "")
   port = 80
   protocol = "HTTP"
   vpc_id = var.vpc_id
@@ -233,7 +232,7 @@ resource "aws_alb_target_group" "front-80" {
 #
 
 resource "aws_alb" "front" {
-  name = "${var.project}-front-${var.env}"
+  name = replace("${var.project}-front-${var.env}", var.nameregex, "")
   security_groups = [aws_security_group.alb-front.id]
   subnets = var.public_subnets_ids
 

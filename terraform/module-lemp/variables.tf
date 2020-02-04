@@ -300,6 +300,12 @@ locals {
   default_short_name     = var.default_short_name != "" ? var.default_short_name : "cy${random_string.id.result}"
 }
 
+#Used to only keep few char for component like ALB name
+variable "nameregex" {
+  default = "/[^0-9A-Za-z-]/"
+  type    = string
+}
+
 variable "deploy_bucket_name" {
   default = "application-deployment"
 }
