@@ -70,17 +70,17 @@ resource "aws_db_subnet_group" "rds-subnet" {
 #
 
 output "rds_address" {
-  value = aws_db_instance.application[0].address
+  value = join("", aws_db_instance.application.*.address)
 }
 
 output "rds_port" {
-  value = aws_db_instance.application[0].port
+  value = join("", aws_db_instance.application.*.port)
 }
 
 output "rds_database" {
-  value = aws_db_instance.application[0].name
+  value = join("", aws_db_instance.application.*.name)
 }
 
 output "rds_username" {
-  value = aws_db_instance.application[0].username
+  value = join("", aws_db_instance.application.*.username)
 }

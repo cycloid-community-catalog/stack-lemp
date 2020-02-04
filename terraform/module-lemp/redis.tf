@@ -48,7 +48,7 @@ resource "aws_elasticache_subnet_group" "cache-subnet" {
 }
 
 output "elasticache_address" {
-  value = aws_elasticache_cluster.redis[0].cache_nodes[0].address
+  value = length(aws_elasticache_cluster.redis) > 0 ? aws_elasticache_cluster.redis[0].cache_nodes[0].address : ""
 }
 
 output "elasticache_cluster_id" {

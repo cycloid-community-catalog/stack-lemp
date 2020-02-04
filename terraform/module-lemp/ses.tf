@@ -45,25 +45,25 @@ resource "aws_iam_user_policy_attachment" "ses_access" {
   policy_arn = aws_iam_policy.ses[0].arn
 }
 
-output "iam_ses_user_key" {
-  value = aws_iam_access_key.ses[0].id
-}
-
-output "iam_ses_user_secret" {
-  value = aws_iam_access_key.ses[0].secret
-}
-
-output "iam_ses_smtp_user_key" {
-  value = aws_iam_access_key.ses[0].id
-}
-
-output "iam_ses_smtp_user_secret" {
-  value = aws_iam_access_key.ses[0].ses_smtp_password
-}
-
 # Allow front to send email directly
 resource "aws_iam_role_policy_attachment" "ses_access" {
   count      = var.create_ses_access ? 1 : 0
   role       = aws_iam_role.front.name
   policy_arn = aws_iam_policy.ses[0].arn
+}
+
+output "iam_ses_user_key" {
+  value = join("", aws_iam_access_key.ses.*.id)
+}
+
+output "iam_ses_user_secret" {
+  value = join("", aws_iam_access_key.ses.*.secret)
+}
+
+output "iam_ses_smtp_user_key" {
+  value = join("", aws_iam_access_key.ses.*.id)
+}
+
+output "iam_ses_smtp_user_secret" {
+  value = join("", aws_iam_access_key.ses.*.ses_smtp_password)
 }
