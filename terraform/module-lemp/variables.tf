@@ -54,6 +54,7 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+# Example ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
 variable "zones" {
   description = "To use specific AWS Availability Zones."
   default     = []

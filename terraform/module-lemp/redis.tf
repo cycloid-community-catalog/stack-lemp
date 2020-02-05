@@ -41,7 +41,7 @@ resource "aws_elasticache_cluster" "redis" {
 }
 
 resource "aws_elasticache_subnet_group" "cache-subnet" {
-  name        = "cache-${var.project}-${var.vpc_id}-${var.env}"
+  name        = replace("cache-${var.project}-${var.vpc_id}-${var.env}", var.nameregex, "")
   count       = var.cache_subnet_group == "" && var.create_elasticache ? 1 : 0
   description = "redis cache subnet for ${var.project}-${var.env} ${var.vpc_id}"
   subnet_ids  = var.private_subnets_ids
