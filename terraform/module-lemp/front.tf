@@ -123,7 +123,7 @@ locals {
 }
 
 resource "aws_cloudformation_stack" "front" {
-  name = "${var.project}-front-${var.env}"
+  name = replace("${var.project}-front-${var.env}", var.nameregex, "")
 
   template_body = <<EOF
 {
@@ -176,28 +176,28 @@ EOF
 ###
 
 resource "aws_security_group" "alb-front" {
-  name = "${var.project}-albfront-${var.env}"
+  name        = "${var.project}-albfront-${var.env}"
   description = "Front ${var.env} for ${var.project}"
-  vpc_id = var.vpc_id
+  vpc_id      = var.vpc_id
 
   ingress {
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port = 443
-    to_port = 443
-    protocol = "tcp"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -207,23 +207,22 @@ resource "aws_security_group" "alb-front" {
   })
 }
 
-
 # TargetGroup for ALBs
 resource "aws_alb_target_group" "front-80" {
-  name = length("${var.project}front80${var.env}") > 32 ? "${local.default_short_name}front80" : "${var.project}front80${var.env}"
-  port = 80
+  name     = length(replace("${var.project}front80${var.env}", var.nameregex, "")) > 32 ? "${local.default_short_name}front80" : replace("${var.project}front80${var.env}", var.nameregex, "")
+  port     = 80
   protocol = "HTTP"
-  vpc_id = var.vpc_id
+  vpc_id   = var.vpc_id
 
   health_check {
-    path = var.application_health_check_path
-    matcher = var.application_health_check_matcher
-    timeout = var.application_path_health_timeout
+    path     = var.application_health_check_path
+    matcher  = var.application_health_check_matcher
+    timeout  = var.application_path_health_timeout
     interval = var.application_path_health_interval
   }
 
   stickiness {
-    type = "lb_cookie"
+    type    = "lb_cookie"
     enabled = true
   }
 }
@@ -233,12 +232,12 @@ resource "aws_alb_target_group" "front-80" {
 #
 
 resource "aws_alb" "front" {
-  name = "${var.project}-front-${var.env}"
+  name            = replace("${var.project}-front-${var.env}", var.nameregex, "")
   security_groups = [aws_security_group.alb-front.id]
-  subnets = var.public_subnets_ids
+  subnets         = var.public_subnets_ids
 
   enable_cross_zone_load_balancing = true
-  idle_timeout = 600
+  idle_timeout                     = 600
 
   tags = merge(local.merged_tags, {
     Name = "${var.customer}-${var.project}-front-${var.env}"
@@ -248,28 +247,28 @@ resource "aws_alb" "front" {
 
 # 443 by defaut to front
 resource "aws_alb_listener" "front-443" {
-  count = var.application_ssl_cert != "" ? 1 : 0
+  count             = var.application_ssl_cert != "" ? 1 : 0
   load_balancer_arn = aws_alb.front.arn
-  port = "443"
-  protocol = "HTTPS"
-  certificate_arn = var.application_ssl_cert
-  ssl_policy = var.application_ssl_policy
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn   = var.application_ssl_cert
+  ssl_policy        = var.application_ssl_policy
 
   default_action {
     target_group_arn = aws_alb_target_group.front-80.arn
-    type = "forward"
+    type             = "forward"
   }
 }
 
 # 80 default to front
 resource "aws_alb_listener" "front-80" {
   load_balancer_arn = aws_alb.front.arn
-  port = "80"
-  protocol = "HTTP"
+  port              = "80"
+  protocol          = "HTTP"
 
   default_action {
     target_group_arn = aws_alb_target_group.front-80.arn
-    type = "forward"
+    type             = "forward"
   }
 }
 
@@ -278,53 +277,53 @@ resource "aws_alb_listener" "front-80" {
 #####
 
 resource "aws_autoscaling_policy" "front-scale-up" {
-  name = "${var.project}-front-scale-up-${var.env}"
-  scaling_adjustment = var.front_asg_scale_up_scaling_adjustment
-  adjustment_type = "ChangeInCapacity"
-  cooldown = var.front_asg_scale_up_cooldown
+  name                   = "${var.project}-front-scale-up-${var.env}"
+  scaling_adjustment     = var.front_asg_scale_up_scaling_adjustment
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = var.front_asg_scale_up_cooldown
   autoscaling_group_name = aws_cloudformation_stack.front.outputs["AsgName"]
 }
 
 resource "aws_cloudwatch_metric_alarm" "front-scale-up" {
-  alarm_name = "${var.project}-front-scale-up-${var.env}"
+  alarm_name          = "${var.project}-front-scale-up-${var.env}"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods = "2"
-  metric_name = "CPUUtilization"
-  namespace = "AWS/EC2"
-  period = "60"
-  statistic = "Average"
-  threshold = var.front_asg_scale_up_threshold
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = var.front_asg_scale_up_threshold
 
   dimensions = {
     AutoScalingGroupName = aws_cloudformation_stack.front.outputs["AsgName"]
   }
 
   alarm_description = "This metric monitor ec2 cpu utilization on ${var.project} ${var.env}"
-  alarm_actions = [aws_autoscaling_policy.front-scale-up.arn]
+  alarm_actions     = [aws_autoscaling_policy.front-scale-up.arn]
 }
 
 resource "aws_autoscaling_policy" "front-scale-down" {
-  name = "${var.project}-front-scale-down-${var.env}"
-  scaling_adjustment = var.front_asg_scale_down_scaling_adjustment
-  adjustment_type = "ChangeInCapacity"
-  cooldown = var.front_asg_scale_down_cooldown
+  name                   = "${var.project}-front-scale-down-${var.env}"
+  scaling_adjustment     = var.front_asg_scale_down_scaling_adjustment
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = var.front_asg_scale_down_cooldown
   autoscaling_group_name = aws_cloudformation_stack.front.outputs["AsgName"]
 }
 
 resource "aws_cloudwatch_metric_alarm" "front-scale-down" {
-  alarm_name = "${var.project}-front-scale-down-${var.env}"
+  alarm_name          = "${var.project}-front-scale-down-${var.env}"
   comparison_operator = "LessThanOrEqualToThreshold"
-  evaluation_periods = "3"
-  metric_name = "CPUUtilization"
-  namespace = "AWS/EC2"
-  period = "120"
-  statistic = "Average"
-  threshold = var.front_asg_scale_down_threshold
+  evaluation_periods  = "3"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = "120"
+  statistic           = "Average"
+  threshold           = var.front_asg_scale_down_threshold
 
   dimensions = {
     AutoScalingGroupName = aws_cloudformation_stack.front.outputs["AsgName"]
   }
 
   alarm_description = "This metric monitor ec2 cpu utilization on ${var.project} ${var.env}"
-  alarm_actions = [aws_autoscaling_policy.front-scale-down.arn]
+  alarm_actions     = [aws_autoscaling_policy.front-scale-down.arn]
 }

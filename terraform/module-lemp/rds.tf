@@ -27,7 +27,7 @@ resource "aws_security_group" "rds" {
 resource "aws_db_instance" "application" {
   count             = var.create_rds ? 1 : 0
   depends_on        = [aws_security_group.rds]
-  identifier        = "${var.project}-rds-${var.env}"
+  identifier        = replace("${var.project}-rds-${var.env}", var.nameregex, "")
   allocated_storage = var.rds_disk_size
   storage_type      = var.rds_storage_type
   engine            = var.rds_engine
@@ -43,7 +43,7 @@ resource "aws_db_instance" "application" {
   backup_window             = "02:00-04:00"
   backup_retention_period   = var.rds_backup_retention
   copy_tags_to_snapshot     = true
-  final_snapshot_identifier = "${var.customer}-${var.project}-rds-${var.env}"
+  final_snapshot_identifier = replace("${var.customer}-${var.project}-rds-${var.env}", var.nameregex, "")
   skip_final_snapshot       = var.rds_skip_final_snapshot
 
   parameter_group_name = var.rds_parameters
@@ -70,17 +70,17 @@ resource "aws_db_subnet_group" "rds-subnet" {
 #
 
 output "rds_address" {
-  value = aws_db_instance.application[0].address
+  value = join("", aws_db_instance.application.*.address)
 }
 
 output "rds_port" {
-  value = aws_db_instance.application[0].port
+  value = join("", aws_db_instance.application.*.port)
 }
 
 output "rds_database" {
-  value = aws_db_instance.application[0].name
+  value = join("", aws_db_instance.application.*.name)
 }
 
 output "rds_username" {
-  value = aws_db_instance.application[0].username
+  value = join("", aws_db_instance.application.*.username)
 }

@@ -54,6 +54,7 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+# Example ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
 variable "zones" {
   description = "To use specific AWS Availability Zones."
   default     = []
@@ -298,6 +299,12 @@ resource "random_string" "id" {
 locals {
   elasticache_cluster_id = var.elasticache_cluster_id != "" ? var.elasticache_cluster_id : "cy${random_string.id.result}"
   default_short_name     = var.default_short_name != "" ? var.default_short_name : "cy${random_string.id.result}"
+}
+
+#Used to only keep few char for component like ALB name
+variable "nameregex" {
+  default = "/[^0-9A-Za-z-]/"
+  type    = string
 }
 
 variable "deploy_bucket_name" {
