@@ -54,6 +54,10 @@ pipeline_env_vars:
   PIPELINE_VARIABLES: variables.sample.yml
   # Where to create the pipeline
   ORGANIZATION: cycloid-owl
+  # Which project to use for pipeline
+  PROJECT: ci-stack-lemp
+  # Which environment to use for pipeline
+  ENVIRONMENT: master
   # Tmp name to create the pipeline
   PIPELINE_NAME: ci-stack-lemp-master-validate
 

@@ -38,7 +38,7 @@ deploy_bucket_name: ($ project $)-deploy
 #+ AWS S3 bucket path in which store the builded code of the website.
 deploy_bucket_object_path: /catalog-lemp-app/($ environment $)/lemp-app.tar.gz
 
-#. ansible_vault_password (required): ((raw_ansible_vault_password))
+#. ansible_vault_password (optional): ((raw_ansible_vault_password))
 #+ Password used by ansible vault to decrypt your vaulted files.
 ansible_vault_password: ((raw_ansible_vault_password))
 
