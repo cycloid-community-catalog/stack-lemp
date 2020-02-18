@@ -97,7 +97,7 @@ In order to run this task, couple elements are required within the infrastructur
 |`create_s3_medias`|Create a S3 bucket dedicated to medias for the LEMP application.|`bool`|`false`|`False`|
 |`create_ses_access`|Create a iam user and instance profile to use AWS SES.|`bool`|`false`|`False`|
 |`elasticache_engine`|Type of the ElastiCache engine.|`-`|`redis`|`False`|
-|`elasticache_engine_version`|Version of the ElastiCache engine.|`-`|`5.0.0`|`False`|
+|`elasticache_engine_version`|Version of the ElastiCache engine.|`-`|`5.0`|`False`|
 |`elasticache_nodes`|Number of nodes in the ElastiCache cluster.|`-`|`1`|`False`|
 |`elasticache_parameter_group_name`|ElastiCache group parameter name to use.|`-`|`default.redis5.0`|`False`|
 |`elasticache_port`|Port of the ElastiCache.|`-`|`6379`|`False`|
