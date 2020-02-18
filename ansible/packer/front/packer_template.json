@@ -55,7 +55,7 @@
             "# Due to https://github.com/mitchellh/packer/issues/41 wait cloud init",
             "for i in $(seq 1 300); do [ -f /var/lib/cloud/instance/boot-finished ] && break || sleep 1; done",
             "echo '{{user `public_key`}}' > /home/admin/.ssh/authorized_keys",
-            "echo '{{user `vault_password`}}' > /home/admin/.vault-password",
+            "if [ -z '{{user `vault_password`}}' ]; then echo 'fake' > /home/admin/.vault-password; else echo '{{user `vault_password`}}' > /home/admin/.vault-password; fi",
             "sudo apt-get update -qq > /dev/null",
             "sudo apt-get upgrade -yqq > /dev/null ",
             "sudo apt-get install -yqq build-essential libssl-dev libffi-dev python-dev python-setuptools git curl jq > /dev/null",
