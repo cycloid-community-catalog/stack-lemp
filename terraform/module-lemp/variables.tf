@@ -274,7 +274,7 @@ variable "elasticache_parameter_group_name" {
 }
 
 variable "elasticache_engine_version" {
-  default = "5.0"
+  default = "5.0.6"
 }
 
 variable "elasticache_port" {
