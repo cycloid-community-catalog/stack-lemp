@@ -17,6 +17,7 @@ function finish {
       fi
       echo "[halt] keeprunning" >> $LOG_FILE
     else
+      echo "cloudformation signal-resource SUCCESS" >> $LOG_FILE
       /usr/local/bin/aws cloudformation signal-resource --stack-name ${signal_stack_name} --logical-resource-id ${signal_resource_id} --unique-id $${AWS_UNIQUE_ID} --region $${AWS_REGION} --status SUCCESS  2>&1 >> $LOG_FILE
 
       # ensure last return code is 0
