@@ -122,7 +122,10 @@ locals {
   ])
 }
 
+
 resource "aws_cloudformation_stack" "front" {
+  depends_on        = [aws_iam_instance_profile.front_profile]
+
   name = replace("${var.project}-front-${var.env}", var.nameregex, "")
 
   template_body = <<EOF
