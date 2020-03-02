@@ -1,6 +1,7 @@
 # Configuration of the CI pipeline
 name: 'Lemp'
 canonical: 'stack-lemp'
+status: 'public'
 description: 'Used to deploy a php application on X Amazon EC2 instances behind an ALB load balancer (Linux, Nginx, MySQL, PHP ...).'
 keywords:
   - 'lemp'
