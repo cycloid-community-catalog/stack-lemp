@@ -164,9 +164,7 @@ virtualenv if needed
 virtualenv    .env  --clear
 source .env/bin/activate
 
-pip install ansible==2.7
-pip install molecule
-pip install docker-py
+pip install ansible==2.7 molecule==3.0a4 docker-py
 ```
 
 Run the test

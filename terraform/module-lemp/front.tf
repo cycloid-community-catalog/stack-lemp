@@ -122,7 +122,10 @@ locals {
   ])
 }
 
+
 resource "aws_cloudformation_stack" "front" {
+  depends_on        = [aws_iam_instance_profile.front_profile]
+
   name = replace("${var.project}-front-${var.env}", var.nameregex, "")
 
   template_body = <<EOF
@@ -276,12 +279,31 @@ resource "aws_alb_listener" "front-80" {
 # Cloudwatch autoscaling
 #####
 
+
+### locals Workaround to avoid issue when CF fail on first creation (https://github.com/hashicorp/terraform/issues/19558)
+#on module-lemp/front.tf line 284, in resource "aws_autoscaling_policy" "front-scale-up":
+#284:   autoscaling_group_name = aws_cloudformation_stack.front.outputs["AsgName"]
+#  |----------------
+#  | aws_cloudformation_stack.front.outputs is empty map of string
+#
+#The given key does not identify an element in this collection value.
+###
+
+locals {
+  empty_map = {
+    AsgName = ""
+  }
+
+  tmp_list       = coalescelist(aws_cloudformation_stack.front.*.outputs, list(local.empty_map))
+  cf_outputs_AsgName = lookup(local.tmp_list[0], "AsgName", "")
+}
+
 resource "aws_autoscaling_policy" "front-scale-up" {
   name                   = "${var.project}-front-scale-up-${var.env}"
   scaling_adjustment     = var.front_asg_scale_up_scaling_adjustment
   adjustment_type        = "ChangeInCapacity"
   cooldown               = var.front_asg_scale_up_cooldown
-  autoscaling_group_name = aws_cloudformation_stack.front.outputs["AsgName"]
+  autoscaling_group_name = local.cf_outputs_AsgName
 }
 
 resource "aws_cloudwatch_metric_alarm" "front-scale-up" {
@@ -295,7 +317,7 @@ resource "aws_cloudwatch_metric_alarm" "front-scale-up" {
   threshold           = var.front_asg_scale_up_threshold
 
   dimensions = {
-    AutoScalingGroupName = aws_cloudformation_stack.front.outputs["AsgName"]
+    AutoScalingGroupName = local.cf_outputs_AsgName
   }
 
   alarm_description = "This metric monitor ec2 cpu utilization on ${var.project} ${var.env}"
@@ -307,7 +329,7 @@ resource "aws_autoscaling_policy" "front-scale-down" {
   scaling_adjustment     = var.front_asg_scale_down_scaling_adjustment
   adjustment_type        = "ChangeInCapacity"
   cooldown               = var.front_asg_scale_down_cooldown
-  autoscaling_group_name = aws_cloudformation_stack.front.outputs["AsgName"]
+  autoscaling_group_name = local.cf_outputs_AsgName
 }
 
 resource "aws_cloudwatch_metric_alarm" "front-scale-down" {
@@ -321,7 +343,7 @@ resource "aws_cloudwatch_metric_alarm" "front-scale-down" {
   threshold           = var.front_asg_scale_down_threshold
 
   dimensions = {
-    AutoScalingGroupName = aws_cloudformation_stack.front.outputs["AsgName"]
+    AutoScalingGroupName = local.cf_outputs_AsgName
   }
 
   alarm_description = "This metric monitor ec2 cpu utilization on ${var.project} ${var.env}"
