@@ -21,9 +21,9 @@ aws_default_region: eu-west-1
 #+ AWS S3 bucket name to store terraform remote state file.
 terraform_storage_bucket_name: ($ organization_canonical $)-terraform-remote-state
 
-#. rds_password (required): ((raw_rds_password))
+#. rds_password (required): ((custom_rds_password))
 #+ Password used for your rds. Set "empty" if you dont use databases
-rds_password: ((raw_rds_password))
+rds_password: ((custom_rds_password))
 
 
 #
@@ -38,9 +38,9 @@ deploy_bucket_name: ($ project $)-deploy
 #+ AWS S3 bucket path in which store the builded code of the website.
 deploy_bucket_object_path: /catalog-lemp-app/($ environment $)/lemp-app.tar.gz
 
-#. ansible_vault_password (optional): ((raw_ansible_vault_password))
+#. ansible_vault_password (optional): ((custom_ansible_vault_password))
 #+ Password used by ansible vault to decrypt your vaulted files.
-ansible_vault_password: ((raw_ansible_vault_password))
+ansible_vault_password: ((custom_ansible_vault_password))
 
 #. bastion_url (required): user@bastion.server.com
 #+ bastion URL used by ansible to connect on AWS EC2 instances.
@@ -63,9 +63,9 @@ config_git_repository: git@github.com:MyUser/config-lemp-app.git
 #+ Branch of the config Git repository.
 config_git_branch: master
 
-#. config_git_private_key (required): ((git_config.ssh_key))
+#. config_git_private_key (required): ((ssh_config.ssh_key))
 #+ SSH key pair to fetch the config Git repository.
-config_git_private_key: ((git_config.ssh_key))
+config_git_private_key: ((ssh_config.ssh_key))
 
 
 #. lemp_git_repository (required): git@github.com:MyUser/code-lemp.git
@@ -76,9 +76,9 @@ lemp_git_repository: git@github.com:MyUser/code-lemp.git
 #+ Branch of the LEMP source code Git repository.
 lemp_git_branch: master
 
-#. lemp_git_private_key (required): ((git_lemp_app.ssh_key))
+#. lemp_git_private_key (required): ((ssh_lemp_app.ssh_key))
 #+ SSH key pair to fetch LEMP source code Git repository.
-lemp_git_private_key:  ((git_lemp_app.ssh_key))
+lemp_git_private_key:  ((ssh_lemp_app.ssh_key))
 
 
 #

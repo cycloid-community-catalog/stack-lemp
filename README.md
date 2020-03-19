@@ -56,7 +56,7 @@ In order to run this task, couple elements are required within the infrastructur
 
 |Name|Description|Type|Default|Required|
 |---|---|:---:|:---:|:---:|
-|`ansible_vault_password`|Password used by ansible vault to decrypt your vaulted files.|`-`|`((raw_ansible_vault_password))`|`False`|
+|`ansible_vault_password`|Password used by ansible vault to decrypt your vaulted files.|`-`|`((custom_ansible_vault_password))`|`False`|
 |`ansible_version`|Ansible version used in packer and cycloid-toolkit ansible runner|`-`|`"2.7"`|`True`|
 |`aws_access_key`|Amazon AWS access key for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)|`-`|`((aws.access_key))`|`True`|
 |`aws_default_region`|Amazon AWS region to use for Terraform.|`-`|`eu-west-1`|`True`|
@@ -65,7 +65,7 @@ In order to run this task, couple elements are required within the infrastructur
 |`bastion_url`|bastion URL used by ansible to connect on AWS EC2 instances.|`-`|`user@bastion.server.com`|`True`|
 |`config_ansible_path`|Path of Ansible files in the config Git repository|`-`|`($ project $)/ansible`|`True`|
 |`config_git_branch`|Branch of the config Git repository.|`-`|`master`|`True`|
-|`config_git_private_key`|SSH key pair to fetch the config Git repository.|`-`|`((git_config.ssh_key))`|`True`|
+|`config_git_private_key`|SSH key pair to fetch the config Git repository.|`-`|`((ssh_config.ssh_key))`|`True`|
 |`config_git_repository`|Git repository URL containing the config of the stack.|`-`|`git@github.com:MyUser/config-lemp-app.git`|`True`|
 |`config_pipeline_path`|Path of pipeline task yml files in the config Git repository. Used to override pipeline yask like build-release.yml|`-`|`($ project $)/pipeline`|`True`|
 |`config_terraform_path`|Path of Terraform files in the config git repository|`-`|`($ project $)/terraform/($ environment $)`|`True`|
@@ -75,10 +75,10 @@ In order to run this task, couple elements are required within the infrastructur
 |`deploy_bucket_object_path`|AWS S3 bucket path in which store the builded code of the website.|`-`|`/catalog-lemp-app/($ environment $)/lemp-app.tar.gz`|`True`|
 |`env`|Name of the project's environment.|`-`|`($ environment $)`|`True`|
 |`lemp_git_branch`|Branch of the LEMP source code Git repository.|`-`|`master`|`True`|
-|`lemp_git_private_key`|SSH key pair to fetch LEMP source code Git repository.|`-`|`((git_lemp_app.ssh_key))`|`True`|
+|`lemp_git_private_key`|SSH key pair to fetch LEMP source code Git repository.|`-`|`((ssh_lemp_app.ssh_key))`|`True`|
 |`lemp_git_repository`|URL to the Git repository containing LEMP website source code.|`-`|`git@github.com:MyUser/code-lemp.git`|`True`|
 |`project`|Name of the project.|`-`|`($ project $)`|`True`|
-|`rds_password`|Password used for your rds. Set "empty" if you dont use databases|`-`|`((raw_rds_password))`|`True`|
+|`rds_password`|Password used for your rds. Set "empty" if you dont use databases|`-`|`((custom_rds_password))`|`True`|
 |`stack_git_branch`|Branch to use on the public stack Git repository|`-`|`master`|`True`|
 |`terraform_storage_bucket_name`|AWS S3 bucket name to store terraform remote state file.|`-`|`($ organization_canonical $)-terraform-remote-state`|`True`|
 
