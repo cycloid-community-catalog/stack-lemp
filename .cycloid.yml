@@ -1,8 +1,10 @@
-# Configuration of the CI pipeline
+---
+# Configuration of the Cycloid stack
 name: 'Lemp'
 canonical: 'stack-lemp'
 status: 'public'
-description: 'Used to deploy a php application on X Amazon EC2 instances behind an ALB load balancer (Linux, Nginx, MySQL, PHP ...).'
+description: |
+  Used to deploy a php application on X Amazon EC2 instances behind an ALB load balancer (Linux, Nginx, MySQL, PHP, etc.).
 keywords:
   - 'lemp'
   - 'linux'
@@ -10,6 +12,10 @@ keywords:
   - 'mysql'
   - 'php'
   - 'ses'
+  - 'provider:aws'
+author: 'Cycloid'
+image: |
+  https://raw.githubusercontent.com/cycloid-community-catalog/stack-lemp/master/icon.png
 technologies:
   - technology: Debian
     version: 9.x
@@ -26,14 +32,11 @@ technologies:
   - technology: ses
     version: n/a
 
-author: 'Cycloid'
-image: 'https://raw.githubusercontent.com/cycloid-community-catalog/stack-lemp/master/icon.png'
-type: 'stack'
 config:
   # Configuration of the CI pipeline
   pipeline:
     pipeline:
-      path: 'pipeline/lemp.yml'
+      path: 'pipeline/pipeline.yml'
     variables:
       path: 'pipeline/variables.sample.yml'
 
