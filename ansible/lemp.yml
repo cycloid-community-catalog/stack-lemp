@@ -98,7 +98,12 @@
         - cron
         - notforbuild
 
-    - {role: cycloid.telegraf, tags: telegraf}
+    - role: cycloid.telegraf
+      tags:
+        - telegraf
+      when: telegraf_install
+
+
     - {role: cycloid.fluentd, tags: fluentd}
   tags:
     - front

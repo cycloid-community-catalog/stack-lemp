@@ -60,3 +60,24 @@
 # extra_cycloid_files_watched:
 #  - name: application
 #    path: "{{ ansistrano_deploy_to }}{{ ansistrano_user }}/{{ ansistrano_current_dir }}/*.log"
+
+
+#
+# telegraf / monitoring
+#
+
+# Install telegraf ? (default false)
+# telegraf_install: true
+
+# See telegraf inputs for more plugings https://github.com/influxdata/telegraf/tree/master/plugins/inputs
+# Like https://github.com/influxdata/telegraf/tree/master/plugins/inputs/net_response for tcp port checks
+
+# telegraf_plugins_extra:
+#   linux_sysctl_fs:
+#   conntrack:
+#   nginx:
+#     config:
+#         - urls = ["http://127.0.0.1/nginx_status"]
+#   phpfpm:
+#     config:
+#         - urls = ["http://127.0.0.1/fpm-status"]

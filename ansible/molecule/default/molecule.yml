@@ -42,6 +42,7 @@ provisioner:
       project: lemp
       customer: cycloid
       role: front
+      telegraf_install: true
     #skip-tags: molecule-notest
     #vvv: "True"
 

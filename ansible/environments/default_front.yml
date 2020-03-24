@@ -255,3 +255,10 @@ php_fpm_pools:
     php_flag[display_errors]: on
     php_admin_flag[log_errors]: true
     php_admin_value[error_log]: "{{ php_errorlog_path }}"
+
+#
+# telegraf / monitoring
+#
+
+# Do not install telegraf
+telegraf_install: false
