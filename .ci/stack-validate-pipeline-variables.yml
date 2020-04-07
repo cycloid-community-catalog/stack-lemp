@@ -49,7 +49,7 @@ pipeline_env_vars:
   USERNAME: ((cycloid_bot_account.login))
   PASSWORD: ((cycloid_bot_account.password))
   # TEMPLATE to use in the stack
-  PIPELINE_TEMPLATE: lemp.yml
+  PIPELINE_TEMPLATE: pipeline.yml
   # VARIABLES to use to create the PIPELINE_TEMPLATE
   PIPELINE_VARIABLES: variables.sample.yml
   # Where to create the pipeline
