@@ -111,9 +111,7 @@ nginx_application_vhost:
         try_files $uri $uri/ /index.php?$args;
     }
 
-  - location ~ \.php$ { echo_exec @fastcgi_backend; }
-
-  - location @fastcgi_backend {
+  - location ~ \.php$ {
       expires off;
       fastcgi_pass php;
       fastcgi_read_timeout 900s;
@@ -126,8 +124,6 @@ nginx_application_vhost:
       fastcgi_param  X-FORWARDED-HOST  $host;
       include        fastcgi_params;
     }
-
-
 
 nginx_sites:
   00-metrics:
@@ -163,6 +159,9 @@ nginx_snippets:
 #
 # Logs
 #
+
+# Use the latest version
+fluentd_tdagent_version: 4
 
 extra_cycloid_files_watched: []
 default_cycloid_files_watched:
