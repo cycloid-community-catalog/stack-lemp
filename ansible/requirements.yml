@@ -32,8 +32,9 @@
   name: cycloid.telegraf
   scm: git
 
+# keep compatible with ansible 2.9
 - src: https://github.com/dj-wasabi/ansible-telegraf
-  version: master
+  version: 0.14.0
   name: dj-wasabi.telegraf
   scm: git
 
