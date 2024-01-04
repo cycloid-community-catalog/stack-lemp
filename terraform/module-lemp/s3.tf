@@ -92,40 +92,40 @@ resource "aws_iam_policy" "s3-medias" {
   policy      = data.aws_iam_policy_document.s3-medias[0].json
 }
 
-resource "aws_iam_user" "s3-medias" {
-  count = var.create_s3_medias ? 1 : 0
-  name  = "s3-medias-${var.project}-${var.env}"
-  path  = "/"
-}
-
-resource "aws_iam_access_key" "s3-medias" {
-  count = var.create_s3_medias ? 1 : 0
-  user  = aws_iam_user.s3-medias[0].name
-}
-
-resource "aws_iam_user_policy_attachment" "s3-medias_access" {
-  count      = var.create_s3_medias ? 1 : 0
-  user       = aws_iam_user.s3-medias[0].name
-  policy_arn = aws_iam_policy.s3-medias[0].arn
-}
-
-resource "aws_iam_role_policy_attachment" "front_medias_access" {
-  count      = var.create_s3_medias ? 1 : 0
-  role       = aws_iam_role.front.name
-  policy_arn = aws_iam_policy.s3-medias[0].arn
-}
-
-output "iam_s3-medias_user_key" {
-  value = try(aws_iam_access_key.s3-medias[0].id, "")
-}
-
-output "iam_s3-medias_user_secret" {
-  value = try(aws_iam_access_key.s3-medias[0].secret, "")
-}
-
-output "iam_s3-medias_user_name" {
-  value = try(aws_iam_user.s3-medias[0].name, "")
-}
+#resource "aws_iam_user" "s3-medias" {
+#  count = var.create_s3_medias ? 1 : 0
+#  name  = "s3-medias-${var.project}-${var.env}"
+#  path  = "/"
+#}
+#
+#resource "aws_iam_access_key" "s3-medias" {
+#  count = var.create_s3_medias ? 1 : 0
+#  user  = aws_iam_user.s3-medias[0].name
+#}
+#
+#resource "aws_iam_user_policy_attachment" "s3-medias_access" {
+#  count      = var.create_s3_medias ? 1 : 0
+#  user       = aws_iam_user.s3-medias[0].name
+#  policy_arn = aws_iam_policy.s3-medias[0].arn
+#}
+#
+#resource "aws_iam_role_policy_attachment" "front_medias_access" {
+#  count      = var.create_s3_medias ? 1 : 0
+#  role       = aws_iam_role.front.name
+#  policy_arn = aws_iam_policy.s3-medias[0].arn
+#}
+#
+#output "iam_s3-medias_user_key" {
+#  value = try(aws_iam_access_key.s3-medias[0].id, "")
+#}
+#
+#output "iam_s3-medias_user_secret" {
+#  value = try(aws_iam_access_key.s3-medias[0].secret, "")
+#}
+#
+#output "iam_s3-medias_user_name" {
+#  value = try(aws_iam_user.s3-medias[0].name, "")
+#}
 
 output "s3_medias" {
   value = try(aws_s3_bucket.medias[0].id, "")
