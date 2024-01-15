@@ -108,13 +108,13 @@ resource "aws_iam_policy" "s3-medias" {
 #  user       = aws_iam_user.s3-medias[0].name
 #  policy_arn = aws_iam_policy.s3-medias[0].arn
 #}
-#
-#resource "aws_iam_role_policy_attachment" "front_medias_access" {
-#  count      = var.create_s3_medias ? 1 : 0
-#  role       = aws_iam_role.front.name
-#  policy_arn = aws_iam_policy.s3-medias[0].arn
-#}
-#
+
+resource "aws_iam_role_policy_attachment" "front_medias_access" {
+  count      = var.create_s3_medias ? 1 : 0
+  role       = aws_iam_role.front.name
+  policy_arn = aws_iam_policy.s3-medias[0].arn
+}
+
 #output "iam_s3-medias_user_key" {
 #  value = try(aws_iam_access_key.s3-medias[0].id, "")
 #}
