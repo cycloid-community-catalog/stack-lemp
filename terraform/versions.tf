@@ -5,5 +5,9 @@ terraform {
     aws = {
       source = "hashicorp/aws"
     }
+    toggles = {
+      source  = "reinoudk/toggles"
+      version = "0.3.0"
+    }
   }
 }

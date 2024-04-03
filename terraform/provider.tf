@@ -12,6 +12,9 @@ provider "aws" {
   }
 }
 
+# required to allow to toggle aws access keys
+# based on issue here: https://github.com/hashicorp/terraform-provider-aws/issues/23180
+provider "toggles" {}
 
 variable "customer" {
 }
