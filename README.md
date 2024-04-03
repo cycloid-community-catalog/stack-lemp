@@ -1,6 +1,6 @@
 # stack-lemp (Linux, NGINX, MySQL, PHP)
 
-This stack will create A full LEMP infrastructure based on ASG and RDS database.
+This stack will create a full LEMP infrastructure based on Auto Scaling Groups (ASG) and an RDS database on AWS
 
   * Linux operating system
   * NGINX (Pronounced as Engine-X) web server
