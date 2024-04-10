@@ -7,7 +7,7 @@
              "filters": {
                "architecture": "x86_64",
                "virtualization-type": "hvm",
-               "name": "debian-11-amd64-*",
+               "name": "debian-12-amd64-*",
                "root-device-type": "ebs"
              },
              "owners": ["379101102735", "136693071363", "125523088429", "099720109477"],
