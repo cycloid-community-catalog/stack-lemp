@@ -1,8 +1,9 @@
 base_extra_packages:
   - jq
   - python3-mysqldb
-base_extra_pip_packages:
-  - boto3
+  - python3-boto3
+  - cron
+  - net-tools
 
 # Deployment common vars
 ansistrano_user: "{{ customer }}"
@@ -160,9 +161,6 @@ nginx_snippets:
 # Logs
 #
 
-# Use the latest version
-fluentd_tdagent_version: 4
-
 extra_cycloid_files_watched: []
 default_cycloid_files_watched:
  - name: php
@@ -209,7 +207,7 @@ php_expose_php: "Off"
 php_webserver_daemon: nginx
 php_debian_pkg_managed: true
 php_debian_pkg_name:
-  - deb https://packages.sury.org/php/ bullseye main
+  - deb https://packages.sury.org/php/ bookworm main
 php_debian_pkg_key: https://packages.sury.org/php/apt.gpg
 
 php_packages:
