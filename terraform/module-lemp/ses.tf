@@ -34,6 +34,20 @@ resource "aws_iam_user" "ses" {
   path  = "/"
 }
 
+# access key toogle creation
+resource "time_rotating" "toggle_interval" {
+  rotation_days = 60
+}
+
+resource "toggles_leapfrog" "toggle" {
+  trigger = time_rotating.toggle_interval.rotation_rfc3339
+}
+
+resource "aws_iam_access_key" "ses-beta" {
+  count = var.create_ses_access ? 1 : 0
+  user = aws_iam_user.ses[0].name
+}
+
 resource "aws_iam_access_key" "ses" {
   count = var.create_ses_access ? 1 : 0
   user  = aws_iam_user.ses[0].name
@@ -53,17 +67,18 @@ resource "aws_iam_role_policy_attachment" "ses_access" {
 }
 
 output "iam_ses_user_key" {
-  value = try(aws_iam_access_key.ses[0].id, "")
+  value = toggles_leapfrog.toggle.beta ? try(aws_iam_access_key.ses-beta[0].id, "") : try(aws_iam_access_key.ses[0].id, "")
+  sensitive = true
 }
 
 output "iam_ses_user_secret" {
-  value = try(aws_iam_access_key.ses[0].secret, "")
+  value = toggles_leapfrog.toggle.beta ? try(aws_iam_access_key.ses-beta[0].secret, "") : try(aws_iam_access_key.ses[0].secret, "")
 }
 
 output "iam_ses_smtp_user_key" {
-  value = try(aws_iam_access_key.ses[0].id, "")
+  value = toggles_leapfrog.toggle.beta ? try(aws_iam_access_key.ses-beta[0].id, "") : try(aws_iam_access_key.ses[0].id, "")
 }
 
 output "iam_ses_smtp_user_secret" {
-  value = try(aws_iam_access_key.ses[0].ses_smtp_password_v4, "")
+  value = toggles_leapfrog.toggle.beta ? try(aws_iam_access_key.ses-beta[0].ses_smtp_password_v4, "") : try(aws_iam_access_key.ses[0].ses_smtp_password_v4, "")
 }
