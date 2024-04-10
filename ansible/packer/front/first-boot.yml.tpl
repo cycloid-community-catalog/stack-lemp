@@ -17,15 +17,8 @@
      - awscli
      - boto
 
-   - name: Gather ec2 facts
+   - name: Gather ec2 metadata facts
      ec2_metadata_facts:
-
-   - name: Retrieve all tags on an instance
-     ec2_tag:
-       region: '{{ ansible_ec2_placement_region }}'
-       resource: '{{ ansible_ec2_instance_id }}'
-       state: list
-     register: ec2_tags
 
    - name: "Set facts with hostname"
      set_fact: ansible_hostname="{{ ami_client|lower }}-{{ ami_project|lower }}-{{ ami_role|lower }}-{{ ami_env|lower }}-{{ ansible_ec2_instance_id }}"
