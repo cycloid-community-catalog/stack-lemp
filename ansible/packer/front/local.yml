@@ -22,5 +22,5 @@
       file: state=absent path=/etc/ansible/hosts
 
     - name: Generate /etc/ansible/hosts
-      lineinfile: dest=/etc/ansible/hosts regexp="^\[{{ item }}\]" line='[{{item | regex_replace('-', '_')}}]\n127.0.0.1\n' create=true
+      lineinfile: dest=/etc/ansible/hosts regexp="^\[{{ item }}\]" line='[{{item}}]\n127.0.0.1\n' create=true
       with_items: "{{ groups }}"
