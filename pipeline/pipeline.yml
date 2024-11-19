@@ -5,7 +5,7 @@ shared:
   - &merge-stack-and-config
     platform: linux
     image_resource:
-      type: docker-image
+      type: registry-image
       source:
         repository: cycloid/cycloid-toolkit
         tag: "((cycloid_toolkit_tag_prefix))((ansible_version))"
@@ -20,7 +20,7 @@ shared:
     config:
       platform: linux
       image_resource:
-        type: docker-image
+        type: registry-image
         source:
           repository: cycloid/cycloid-toolkit
           tag: "((cycloid_toolkit_tag_prefix))((ansible_version))"
@@ -37,7 +37,7 @@ shared:
     config:
       platform: linux
       image_resource:
-        type: docker-image
+        type: registry-image
         source:
           repository: cycloid/cycloid-toolkit
           tag: "((cycloid_toolkit_tag_prefix))((ansible_version))"
@@ -82,13 +82,13 @@ groups:
 resource_types:
 
 - name: terraform
-  type: docker-image
+  type: registry-image
   source:
     repository: ljfranklin/terraform-resource
     tag: ((terraform_version))
 
 - name: packer
-  type: docker-image
+  type: registry-image
   source:
     repository: jdub/packer-resource
 
