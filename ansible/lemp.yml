@@ -71,11 +71,7 @@
         - deploy
         - notforbuild
 
-    - name: Imported tasks
-      import_tasks: tasks.yml
-
   roles:
-    - role: cycloid.base-aws
     - role: cycloid.customer-ssh
       home_directory: "/home/{{ ansistrano_user }}"
       user: "{{ ansistrano_user }}"
@@ -101,17 +97,10 @@
       tags:
         - nginx
 
-    - role: cycloid.cron
-      tags:
-        - cron
-        - notforbuild
-
     - role: cycloid.telegraf
       tags:
         - telegraf
       when: telegraf_install
 
-
-    - {role: cycloid.fluentd, tags: fluentd}
   tags:
     - front

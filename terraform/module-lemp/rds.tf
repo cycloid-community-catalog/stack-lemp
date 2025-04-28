@@ -6,7 +6,7 @@
 
 resource "aws_security_group" "rds" {
   count       = var.create_rds ? 1 : 0
-  name        = "${var.project}-rds-${var.env}"
+  name        = "${local.name_prefix}-rds"
   description = "rds ${var.env} for ${var.project}"
   vpc_id      = var.vpc_id
 
@@ -19,7 +19,7 @@ resource "aws_security_group" "rds" {
   }
 
   tags = merge(var.extra_tags, {
-    Name = "${var.project}-rds-${var.env}"
+    Name = "${local.name_prefix}-rds"
     role = "rds"
   })
 }
@@ -27,7 +27,7 @@ resource "aws_security_group" "rds" {
 resource "aws_db_instance" "application" {
   count             = var.create_rds ? 1 : 0
   depends_on        = [aws_security_group.rds]
-  identifier        = replace("${var.project}-rds-${var.env}", var.nameregex, "")
+  identifier        = replace("${local.name_prefix}-rds", var.nameregex, "")
   allocated_storage = var.rds_disk_size
   storage_type      = var.rds_storage_type
   engine            = var.rds_engine
@@ -43,7 +43,7 @@ resource "aws_db_instance" "application" {
   backup_window             = "02:00-04:00"
   backup_retention_period   = var.rds_backup_retention
   copy_tags_to_snapshot     = true
-  final_snapshot_identifier = replace("${var.customer}-${var.project}-rds-${var.env}", var.nameregex, "")
+  final_snapshot_identifier = replace("${local.name_prefix}-rds", var.nameregex, "")
   skip_final_snapshot       = var.rds_skip_final_snapshot
 
   parameter_group_name = var.rds_parameters
@@ -52,16 +52,16 @@ resource "aws_db_instance" "application" {
   vpc_security_group_ids = compact([var.rds_extra_sg_allow, aws_security_group.rds[0].id])
 
   tags = merge(var.extra_tags, {
-    Name = "${var.customer}-${var.project}-rds-${var.env}"
+    Name = "${local.name_prefix}-rds"
     type = "master"
     role = "rds"
   })
 }
 
 resource "aws_db_subnet_group" "rds-subnet" {
-  name        = "rds-${var.project}-${var.vpc_id}-${var.env}"
+  name        = "${local.name_prefix}-${var.vpc_id}-rds"
   count       = var.rds_subnet_group == "" && var.create_rds ? 1 : 0
-  description = "subnet-rds-${var.project}-${var.env}-${var.vpc_id}"
+  description = "subnet-rds-${local.name_prefix}-${var.vpc_id}"
   subnet_ids  = var.private_subnets_ids
 }
 

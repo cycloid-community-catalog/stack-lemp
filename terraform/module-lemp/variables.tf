@@ -1,20 +1,22 @@
-data "aws_region" "current" {}
-
-variable "bastion_sg_allow" {
-}
-
-variable "metrics_sg_allow" {
-  default = ""
+variable "organization" {
 }
 
 variable "project" {
-  default = "lemp"
 }
 
 variable "env" {
 }
 
-variable "customer" {
+variable "component" {
+}
+
+locals {
+  name_prefix            = "${var.organization}-${var.project}-${var.env}-${var.component}"
+  name_prefix_underscore = replace(local.name_prefix, "-", "_")
+}
+
+variable "metrics_sg_allow" {
+  default = ""
 }
 
 variable "extra_tags" {
@@ -26,11 +28,13 @@ variable "keypair_name" {
 }
 
 variable "private_subnets_ids" {
-  type = list(string)
+  type    = list(string)
+  default = []
 }
 
 variable "public_subnets_ids" {
-  type = list(string)
+  type    = list(string)
+  default = []
 }
 
 variable "cache_subnet_group" {
@@ -38,6 +42,7 @@ variable "cache_subnet_group" {
 }
 
 variable "vpc_id" {
+  default = ""
 }
 
 data "aws_availability_zones" "available" {
@@ -111,7 +116,7 @@ variable "rds_subnet_group" {
 }
 
 variable "rds_parameters" {
-  default = "default.mysql5.7"
+  default = "default.mysql8.0"
 }
 
 variable "rds_engine" {
@@ -119,7 +124,7 @@ variable "rds_engine" {
 }
 
 variable "rds_engine_version" {
-  default = "5.7.16"
+  default = "8.0"
 }
 
 variable "rds_backup_retention" {
@@ -194,7 +199,7 @@ variable "front_associate_public_ip_address" {
 }
 
 variable "debian_ami_name" {
-  default = "debian-11-amd64-*"
+  default = "debian-12-amd64-*"
 }
 
 #
@@ -260,11 +265,11 @@ variable "elasticache_engine" {
 }
 
 variable "elasticache_parameter_group_name" {
-  default = "default.redis5.0"
+  default = "default.redis8.0"
 }
 
 variable "elasticache_engine_version" {
-  default = "5.0.6"
+  default = "8.0"
 }
 
 variable "elasticache_port" {
@@ -357,3 +362,5 @@ variable "cloudfront_compress" {
 variable "cloudfront_cached_methods" {
   default = ["GET", "HEAD"]
 }
+
+data "aws_region" "current" {}

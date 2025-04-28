@@ -50,7 +50,7 @@ shared:
         KEEP: 3
         AWS_NAME_PATTERNS: >
                   [
-                    "((customer))_((project))_front_((env))"
+                    "($ .organization $)_($ .project $)_($ .environment $)_($ .component $)_front",
                   ]
 
 groups:
@@ -84,13 +84,14 @@ resource_types:
 - name: terraform
   type: registry-image
   source:
-    repository: ljfranklin/terraform-resource
-    tag: ((terraform_version))
+    repository: cycloid/terraform-resource
+    tag: 1.11.4
 
 - name: packer
   type: registry-image
+  privileged: true
   source:
-    repository: jdub/packer-resource
+    repository: mitodl/concourse-packer-resource
 
 resources:
 
@@ -98,21 +99,19 @@ resources:
   type: terraform
   icon: terraform
   source:
-    env_name: ((env))
-    backend_type: s3
+    # Use Cycloid Terraform HTTP backend.
+    backend_type: http
     backend_config:
-      bucket: ((terraform_storage_bucket_name))
-      key: ((project))-((env)).tfstate
-      workspace_key_prefix: ((project))
-      region: ((aws_default_region))
-      access_key: ((aws_access_key))
-      secret_key: ((aws_secret_key))
+      address: '($ .api_url $)/inventory?jwt=($ .inventory_jwt $)'
+      skip_cert_verification: true
+    env_name: ($ .environment $)
     vars:
       access_key: ((aws_access_key))
       secret_key: ((aws_secret_key))
-      env: ((env))
-      project: ((project))
-      customer: ((customer))
+      env: ($ .environment $)
+      project: ($ .project $)
+      organization: ($ .organization $)
+      component: ($ .component $)
       aws_region: ((aws_default_region))
       rds_password: ((rds_password))
       deploy_bucket_name: ((deploy_bucket_name))
@@ -127,7 +126,7 @@ resources:
   type: git
   source:
     uri: https://github.com/cycloid-community-catalog/stack-lemp
-    branch: ((stack_git_branch))
+    branch: ($ .catalog_repository_branch $)
     paths:
       - pipeline/*
 
@@ -137,29 +136,9 @@ resources:
   type: git
   source:
     uri: https://github.com/cycloid-community-catalog/stack-lemp
-    branch: ((stack_git_branch))
+    branch: ($ .catalog_repository_branch $)
     paths:
       - terraform/*
-
-# The config (will be merged with the stack), mainly used for pipeline files
-- name: git_config
-  type: git
-  icon: github-circle
-  source:
-    uri: ((config_git_repository))
-    branch: ((config_git_branch))
-    private_key: ((config_git_private_key))
-
-# The Terraform config (will be merged with the stack)
-- name: git_config-terraform
-  type: git
-  icon: github-circle
-  source:
-    uri: ((config_git_repository))
-    branch: ((config_git_branch))
-    private_key: ((config_git_private_key))
-    paths:
-      - ((config_terraform_path))/*
 
 # The Ansible stack (will be merged with the config)
 - name: git_stack-ansible
@@ -167,20 +146,59 @@ resources:
   icon: github-circle
   source:
     uri: https://github.com/cycloid-community-catalog/stack-lemp
-    branch: ((stack_git_branch))
+    branch: ($ .catalog_repository_branch $)
     paths:
       - ansible/*
 
-# The Ansible config (will be merged with the stack)
+# The config (will be merged with the stack), mainly used for pipeline files
+- name: git_config
+  type: git
+  icon: github-circle
+  source:
+    uri: ($ .cr_url $)
+    branch: ($ .cr_branch $)
+    ($- if eq .cr_cred_type "basic_auth" $)
+    username: ((($ .cr_cred_path $).username))
+    password: ((($ .cr_cred_path $).password))
+    ($- end $)
+    ($- if eq .cr_cred_type "ssh" $)
+    private_key: ((($ .cr_cred_path $).ssh_key))
+    ($- end $)
+
+# The Terraform config (will be merged with the stack)
+- name: git_config-terraform
+  type: git
+  icon: github-circle
+  source:
+    uri: ($ .cr_url $)
+    branch: ($ .cr_branch $)
+    ($- if eq .cr_cred_type "basic_auth" $)
+    username: ((($ .cr_cred_path $).username))
+    password: ((($ .cr_cred_path $).password))
+    ($- end $)
+    ($- if eq .cr_cred_type "ssh" $)
+    private_key: ((($ .cr_cred_path $).ssh_key))
+    ($- end $)
+    # Include only the Terraform files in the specified directory.
+    paths:
+      - ($ .config_root $)/terraform/*
+
 - name: git_config-ansible
   type: git
   icon: github-circle
   source:
-    uri: ((config_git_repository))
-    branch: ((config_git_branch))
-    private_key: ((config_git_private_key))
+    uri: ($ .cr_url $)
+    branch: ($ .cr_branch $)
+    ($- if eq .cr_cred_type "basic_auth" $)
+    username: ((($ .cr_cred_path $).username))
+    password: ((($ .cr_cred_path $).password))
+    ($- end $)
+    ($- if eq .cr_cred_type "ssh" $)
+    private_key: ((($ .cr_cred_path $).ssh_key))
+    ($- end $)
+    # Include only the Terraform files in the specified directory.
     paths:
-      - ((config_ansible_path))/environments/((env))-*
+      - ($ .config_root $)/ansible/environments/*
 
 #
 # application
@@ -238,7 +256,7 @@ jobs:
         - name: git_stack-ansible
           path: "stack"
       params:
-        CONFIG_PATH: ((config_ansible_path))
+        CONFIG_PATH: ($ .config_root $)/ansible
         STACK_PATH: ansible
         EXTRA_ANSIBLE_VARS:
           deploy_bucket_object_path: ((deploy_bucket_object_path))
@@ -248,21 +266,27 @@ jobs:
 
     - put: ami_front
       params:
-        inventory_groups: tag_role_front,tag_project_((project)),tag_env_((env))
-        env: ((env))
-        customer: ((customer))
-        project: ((project))
-        role: front
-        public_key: ((debug_public_key))
-        vault_password: ((ansible_vault_password))
-        skip_tags: deploy,notforbuild
-        template: merged-stack/packer/front/packer_template.json
-        var_file: merged-stack/packer/front/secrets.json
-        aws_access_key_id: ((aws_admin.access_key))
-        aws_secret_access_key: ((aws_admin.secret_key))
-        aws_region: ((aws_default_region))
-        ansible_version: ((ansible_version))
-        packer_instance_type: t3.small
+        template: merged-stack/packer/front/packer_template.json.pkr.hcl
+        objective: build
+        env_vars:
+          AWS_DEFAULT_REGION: ((aws_default_region))
+          AWS_ACCESS_KEY_ID: ((aws_admin.access_key))
+          AWS_SECRET_ACCESS_KEY: ((aws_admin.secret_key))
+        vars:
+          packer_instance_type: t3.small
+          inventory_groups: tag_role_front,tag_project_($ .project $),tag_env_($ .environment $)
+          env: ($ .environment $)
+          organization: ($ .organization $)
+          project: ($ .project $)
+          role: front
+          component: ($ .component $)
+          public_key: ((debug_public_key))
+          vault_password: ((ansible_vault_password))
+          skip_tags: deploy,notforbuild
+          ansible_version: ((ansible_version))
+          aws_access_key_id: ((aws_admin.access_key))
+          aws_secret_access_key: ((aws_admin.secret_key))
+          aws_region: ((aws_default_region))
 
 # Merge and trigger a plan whenever there is a commit in Terraform stack or config
 - name: terraform-plan
@@ -290,7 +314,7 @@ jobs:
           - name: git_stack-terraform
             path: "stack"
         params:
-          CONFIG_PATH: ((config_terraform_path))
+          CONFIG_PATH: ($ .config_root $)/terraform
           STACK_PATH: terraform
 
       - put: tfstate
@@ -327,7 +351,7 @@ jobs:
           - name: git_stack-terraform
             path: "stack"
         params:
-          CONFIG_PATH: ((config_terraform_path))
+          CONFIG_PATH: ($ .config_root $)/terraform
           STACK_PATH: terraform
 
       - put: tfstate
@@ -357,7 +381,7 @@ jobs:
             - name: git_stack-terraform
               path: "stack"
           params:
-            CONFIG_PATH: ((config_terraform_path))
+            CONFIG_PATH: ($ .config_root $)/terraform
             STACK_PATH: terraform
 
         - put: tfstate
@@ -395,14 +419,14 @@ jobs:
         - name: git_stack-pipeline
           path: "stack"
       params:
-        CONFIG_PATH: ((config_pipeline_path))
+        CONFIG_PATH: ($ .config_root $)/pipeline
         STACK_PATH: pipeline
 
     - task: build-release
       file: merged-stack/build-release.yml
       params:
         rds_password: ((rds_password))
-        env: ((env))
+        env: ($ .environment $)
 
     - put: s3_app-release
       params:
@@ -452,7 +476,7 @@ jobs:
         - name: tfstate
           path: "terraform"
       params:
-        CONFIG_PATH: ((config_ansible_path))
+        CONFIG_PATH: ($ .config_root $)/ansible
         STACK_PATH: ansible
 
     - task: run-ansible
@@ -468,9 +492,9 @@ jobs:
         ANSIBLE_PLAYBOOK_NAME: lemp.yml
         ANSIBLE_FORCE_GALAXY: false
         EXTRA_ANSIBLE_VARS:
-          customer: ((customer))
-          project: ((project))
-          env: ((env))
+          organization: ($ .organization $)
+          project: ($ .project $)
+          env: ($ .environment $)
           default_ec2_region: ((aws_default_region))
           aws_default_region: ((aws_default_region))
           deploy_bucket_object_path: ((deploy_bucket_object_path))
@@ -508,10 +532,10 @@ jobs:
         - name: git_stack-pipeline
           path: "stack"
       params:
-        CONFIG_PATH: ((config_pipeline_path))
+        CONFIG_PATH: ($ .config_root $)/pipeline
         STACK_PATH: pipeline
 
     - task: run
       file: merged-stack/functional-tests.yml
       params:
-        env: ((env))
+        env: ($ .environment $)

@@ -23,7 +23,7 @@ data "aws_iam_policy_document" "ses" {
 
 resource "aws_iam_policy" "ses" {
   count       = var.create_ses_access ? 1 : 0
-  name        = "${var.project}-${var.env}-ses_access"
+  name        = "${local.name_prefix}-ses_access"
   description = "Grant ses access on ${var.ses_resource_arn}"
   policy      = data.aws_iam_policy_document.ses[0].json
 }

@@ -15,13 +15,13 @@ data "aws_iam_policy_document" "assume_role" {
 
 # Create IAM Role for front
 resource "aws_iam_role" "front" {
-  name               = "cycloid_${var.project}-${var.env}-front"
+  name               = "${local.name_prefix}-front"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
   path               = "/${var.project}/"
 }
 
 resource "aws_iam_instance_profile" "front_profile" {
-  name = "cycloid_profile-front-${var.project}-${var.env}"
+  name = "${local.name_prefix}-profile"
   role = aws_iam_role.front.name
 }
 
@@ -40,7 +40,7 @@ data "aws_iam_policy_document" "ec2-tag-describe" {
 }
 
 resource "aws_iam_policy" "ec2-tag-describe" {
-  name        = "${var.env}-${var.project}-ec2-tag-describe"
+  name        = "${local.name_prefix}-ec2-tag-describe"
   path        = "/"
   description = "EC2 tags Read only"
   policy      = data.aws_iam_policy_document.ec2-tag-describe.json
@@ -67,13 +67,13 @@ data "aws_iam_policy_document" "cloudformation-signal" {
     effect = "Allow"
 
     resources = [
-      "arn:aws:cloudformation:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:stack/${var.project}-front-${var.env}/*",
+      "arn:aws:cloudformation:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:stack/${local.name_prefix}-front/*",
     ]
   }
 }
 
 resource "aws_iam_policy" "cloudformation-signal" {
-  name        = "${var.env}-${var.project}-cloudformation-signal"
+  name        = "${local.name_prefix}-cloudformation-signal"
   path        = "/"
   description = "Allow to send stack signal for front"
   policy      = data.aws_iam_policy_document.cloudformation-signal.json
@@ -101,7 +101,7 @@ data "aws_iam_policy_document" "push-logs" {
       "logs:CreateLogStream",
     ]
 
-    resources = ["arn:aws:logs:*:*:log-group:${var.project}_${var.env}:*"]
+    resources = ["arn:aws:logs:*:*:log-group:${local.name_prefix_underscore}:*"]
   }
 
   statement {
@@ -125,7 +125,7 @@ data "aws_iam_policy_document" "push-logs" {
 }
 
 resource "aws_iam_policy" "push-logs" {
-  name        = "${var.env}-${var.project}-push-logs"
+  name        = "${local.name_prefix}-push-logs"
   path        = "/"
   description = "Push log to cloudwatch"
   policy      = data.aws_iam_policy_document.push-logs.json
@@ -188,7 +188,7 @@ data "aws_iam_policy_document" "s3_bucket_deploy" {
 }
 
 resource "aws_iam_policy" "s3_bucket_deploy" {
-  name        = "${var.env}-${var.project}-s3_bucket_deploy"
+  name        = "${local.name_prefix}-s3_bucket_deploy"
   path        = "/"
   description = "Get code archive"
   policy      = data.aws_iam_policy_document.s3_bucket_deploy.json
@@ -197,4 +197,9 @@ resource "aws_iam_policy" "s3_bucket_deploy" {
 resource "aws_iam_role_policy_attachment" "s3_bucket_deploy" {
   role       = aws_iam_role.front.name
   policy_arn = aws_iam_policy.s3_bucket_deploy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "instance-ssm" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  role       = aws_iam_role.front.name
 }

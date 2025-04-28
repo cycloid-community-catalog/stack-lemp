@@ -2,6 +2,34 @@
 
 set -e
 
+# Wait for apt to be available
+apt_wait () {
+  while sudo fuser /var/lib/dpkg/lock >/dev/null 2>&1 ; do
+    sleep 1
+  done
+  while sudo fuser /var/lib/apt/lists/lock >/dev/null 2>&1 ; do
+    sleep 1
+  done
+}
+
+# Wait for apt to be available
+apt_wait
+
+# Debug tools
+apt-get update -y
+apt-get install net-tools jq netcat-traditional rsync vim git bind9-dnsutils -y
+
+# To install SSM Agent on Debian Server
+# https://docs.aws.amazon.com/systems-manager/latest/userguide/agent-install-deb.html
+
+mkdir /tmp/ssm
+cd /tmp/ssm
+wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_amd64/amazon-ssm-agent.deb
+dpkg -i amazon-ssm-agent.deb
+systemctl status amazon-ssm-agent
+systemctl enable amazon-ssm-agent
+systemctl start amazon-ssm-agent
+
 function finish {
     if [ $rc != 0 ]; then
       export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
@@ -29,7 +57,7 @@ function finish {
 trap 'rc=$?; set +e; finish' EXIT
 
 export ENV=${env}
-export CUSTOMER=${customer}
+export ORGANIZATION=${organization}
 export PROJECT=${project}
 export ROLE=${role}
 export RDS_ADDRESS=${rds_address}
@@ -49,3 +77,5 @@ echo '[Boto]
 use_endpoint_heuristics = True' > /etc/boto.cfg
 
 bash /home/admin/user-data.sh
+
+

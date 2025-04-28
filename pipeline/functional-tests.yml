@@ -3,16 +3,16 @@ platform: linux
 image_resource:
   type: registry-image
   source:
-    repository: cycloid/busybox
+    repository: busybox
     tag: latest
 run:
   path: /bin/bash
   args:
-  - -xec
-  - |
-    DIR=${PWD}
-    echo "Dummy functional tests"
-    #if [ "$(curl -s -o /dev/null -w '%{http_code}' http://${env}.foo.com/health-check)" -ne "200" ]
-    #then
-    #  exit 1
-    #fi
+    - -xec
+    - |
+      DIR=${PWD}
+      echo "Dummy functional tests"
+      #if [ "$(curl -s -o /dev/null -w '%{http_code}' http://${env}.foo.com/health-check)" -ne "200" ]
+      #then
+      #  exit 1
+      #fi

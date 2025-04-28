@@ -1,6 +1,6 @@
 resource "aws_security_group" "redis" {
   count       = var.create_elasticache ? 1 : 0
-  name        = "${var.customer}-${var.project}-${var.elasticache_engine}-${var.env}"
+  name        = "${local.name_prefix}-${var.elasticache_engine}"
   description = "${var.elasticache_engine} ${var.env} for ${var.project}"
   vpc_id      = var.vpc_id
 
@@ -15,7 +15,7 @@ resource "aws_security_group" "redis" {
   }
 
   tags = merge(var.extra_tags, {
-    Name = "${var.customer}-${var.project}-${var.elasticache_engine}-${var.env}"
+    Name = "${local.name_prefix}-${var.elasticache_engine}"
     role = "redis"
   })
 }
@@ -35,13 +35,13 @@ resource "aws_elasticache_cluster" "redis" {
   maintenance_window   = "tue:06:00-tue:07:00"
 
   tags = merge(var.extra_tags, {
-    Name = "${var.customer}-${var.project}-${var.elasticache_engine}-${var.env}"
+    Name = "${local.name_prefix}-${var.elasticache_engine}"
     role = "redis"
   })
 }
 
 resource "aws_elasticache_subnet_group" "cache-subnet" {
-  name        = replace("cache-${var.project}-${var.vpc_id}-${var.env}", var.nameregex, "")
+  name        = replace("${local.name_prefix}-cache", var.nameregex, "")
   count       = var.cache_subnet_group == "" && var.create_elasticache ? 1 : 0
   description = "redis cache subnet for ${var.project}-${var.env} ${var.vpc_id}"
   subnet_ids  = var.private_subnets_ids
