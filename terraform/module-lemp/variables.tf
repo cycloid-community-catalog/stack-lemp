@@ -199,7 +199,7 @@ variable "front_associate_public_ip_address" {
 }
 
 variable "debian_ami_name" {
-  default = "debian-12-amd64-*"
+  default = "debian-12-*"
 }
 
 #
