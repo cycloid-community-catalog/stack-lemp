@@ -5,7 +5,7 @@
 ###
 
 resource "aws_security_group" "front" {
-  name        = "${var.project}-front-${var.env}"
+  name        = "${local.name_prefix}-front"
   description = "Front ${var.env} for ${var.project}"
   vpc_id      = var.vpc_id
 
@@ -25,7 +25,7 @@ resource "aws_security_group" "front" {
   }
 
   tags = merge(var.extra_tags, {
-    Name = "${var.project}-front-${var.env}"
+    Name = "${local.name_prefix}-front"
     role = "front"
   })
 }
@@ -35,7 +35,7 @@ resource "aws_security_group" "front" {
 ###
 
 resource "aws_launch_template" "front" {
-  name_prefix = "${var.project}_front_${var.env}_version_"
+  name_prefix = "${local.name_prefix_underscore}_front_version_"
 
   image_id      = local.image_id
   instance_type = var.front_type
@@ -59,7 +59,6 @@ resource "aws_launch_template" "front" {
 
     security_groups = compact(
       [
-        var.bastion_sg_allow,
         aws_security_group.front.id,
         var.metrics_sg_allow,
       ],
@@ -81,7 +80,7 @@ resource "aws_launch_template" "front" {
     resource_type = "instance"
 
     tags = merge(var.extra_tags, {
-      Name = "${var.project}-front-${var.env}"
+      Name = "${local.name_prefix}-front"
       role = "front"
     })
   }
@@ -89,7 +88,7 @@ resource "aws_launch_template" "front" {
     resource_type = "volume"
 
     tags = merge(var.extra_tags, {
-      Name = "${var.project}-front-${var.env}"
+      Name = "${local.name_prefix}-front"
       role = "front"
     })
   }
@@ -117,7 +116,7 @@ locals {
     { "Key" = tag, "Value" = var.extra_tags[tag], "PropagateAtLaunch" = "true" }
     ],
     [
-      { "Key" = "Name", "Value" = "${var.project}-front-${var.env}", "PropagateAtLaunch" = "true" },
+      { "Key" = "Name", "Value" = "${local.name_prefix}-front", "PropagateAtLaunch" = "true" },
       { "Key" = "role", "Value" = "front", "PropagateAtLaunch" = "true" }
   ])
 }
@@ -126,7 +125,7 @@ locals {
 resource "aws_cloudformation_stack" "front" {
   depends_on = [aws_iam_instance_profile.front_profile]
 
-  name = replace("${var.project}-front-${var.env}", var.nameregex, "")
+  name = replace("${local.name_prefix}-front", var.nameregex, "")
 
   template_body = <<EOF
 {
@@ -179,7 +178,7 @@ EOF
 ###
 
 resource "aws_security_group" "alb-front" {
-  name        = "${var.project}-albfront-${var.env}"
+  name        = "${local.name_prefix}-albfront"
   description = "Front ${var.env} for ${var.project}"
   vpc_id      = var.vpc_id
 
@@ -205,7 +204,7 @@ resource "aws_security_group" "alb-front" {
   }
 
   tags = merge(var.extra_tags, {
-    Name = "${var.project}-albfront-${var.env}"
+    Name = "${local.name_prefix}-albfront"
     role = "front"
   })
 }
@@ -235,7 +234,7 @@ resource "aws_alb_target_group" "front-80" {
 #
 
 resource "aws_alb" "front" {
-  name            = replace("${var.project}-front-${var.env}", var.nameregex, "")
+  name            = length(replace("${var.project}-${var.env}-front", var.nameregex, "")) > 32 ? "${local.default_short_name}front80" : replace("${var.project}-${var.env}-front", var.nameregex, "")
   security_groups = [aws_security_group.alb-front.id]
   subnets         = var.public_subnets_ids
 
@@ -243,7 +242,7 @@ resource "aws_alb" "front" {
   idle_timeout                     = 600
 
   tags = merge(var.extra_tags, {
-    Name = "${var.customer}-${var.project}-front-${var.env}"
+    Name = "${var.organization}-${local.name_prefix}-front"
     role = "front"
   })
 }
@@ -299,7 +298,7 @@ locals {
 }
 
 resource "aws_autoscaling_policy" "front-scale-up" {
-  name                   = "${var.project}-front-scale-up-${var.env}"
+  name                   = "${local.name_prefix}-front-scale-up"
   scaling_adjustment     = var.front_asg_scale_up_scaling_adjustment
   adjustment_type        = "ChangeInCapacity"
   cooldown               = var.front_asg_scale_up_cooldown
@@ -307,7 +306,7 @@ resource "aws_autoscaling_policy" "front-scale-up" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "front-scale-up" {
-  alarm_name          = "${var.project}-front-scale-up-${var.env}"
+  alarm_name          = "${local.name_prefix}-front-scale-up"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -325,7 +324,7 @@ resource "aws_cloudwatch_metric_alarm" "front-scale-up" {
 }
 
 resource "aws_autoscaling_policy" "front-scale-down" {
-  name                   = "${var.project}-front-scale-down-${var.env}"
+  name                   = "${local.name_prefix}-front-scale-down"
   scaling_adjustment     = var.front_asg_scale_down_scaling_adjustment
   adjustment_type        = "ChangeInCapacity"
   cooldown               = var.front_asg_scale_down_cooldown
@@ -333,7 +332,7 @@ resource "aws_autoscaling_policy" "front-scale-down" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "front-scale-down" {
-  alarm_name          = "${var.project}-front-scale-down-${var.env}"
+  alarm_name          = "${local.name_prefix}-front-scale-down"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "3"
   metric_name         = "CPUUtilization"

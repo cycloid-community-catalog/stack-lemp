@@ -1,22 +1,21 @@
 ---
-version: '2'
+version: "4"
 # Configuration of the Cycloid stack
-name: 'Lemp'
-canonical: 'stack-lemp'
-status: 'private'
+name: "Lemp"
+canonical: "stack-lemp"
+status: "private"
 description: |
   Used to deploy a php application on X Amazon EC2 instances behind an ALB load balancer (Linux, Nginx, MySQL, PHP, etc.).
 keywords:
-  - 'lemp'
-  - 'linux'
-  - 'nginx'
-  - 'mysql'
-  - 'php'
-  - 'ses'
-  - 'provider:aws'
-author: 'Cycloid'
-image: |
-  https://raw.githubusercontent.com/cycloid-community-catalog/stack-lemp/master/icon.png
+  - "lemp"
+  - "linux"
+  - "nginx"
+  - "mysql"
+  - "php"
+  - "ses"
+  - "provider:aws"
+author: "Cycloid"
+image: https://raw.githubusercontent.com/cycloid-community-catalog/stack-lemp/master/icon.png
 technologies:
   - technology: Debian
     version: 9.x
@@ -25,34 +24,34 @@ technologies:
   - technology: php-fpm
     version: 7.2
   - technology: mysql
-    version: 5.7.x
+    version: 8.x
   - technology: redis
-    version: 5.x
+    version: 8.x
   - technology: s3
     version: n/a
   - technology: ses
     version: n/a
 
 config:
-  default:
-    name: 'Default'
-    description: 'Default pipeline usecase'
+  lemp:
+    name: "LEMP"
+    description: "Default pipeline usecase"
     # Configuration of the CI pipeline
     pipeline:
       pipeline:
-        path: 'pipeline/pipeline.yml'
+        path: "pipeline/pipeline.yml"
       variables:
-        path: 'pipeline/variables.sample.yml'
-        destination: '($ project $)/pipeline/variables-($ environment $).yml'
+        path: "pipeline/variables.sample.yml"
+        destination: "($ .config_root $)/pipeline/variables.yml"
 
     # Configuration of ansible for provisionning
     ansible:
       front:
-        path: 'ansible/environments/front.yml.sample'
-        destination: '($ project $)/ansible/environments/($ environment $)-front.yml'
+        path: "ansible/environments/front.yml.sample"
+        destination: "($ .config_root $)/ansible/environments/front.yml"
 
     # Configuration of terraform to setup the infrastructure
     terraform:
       lemp:
-        path: 'terraform/lemp.tf.sample'
-        destination: '($ project $)/terraform/($ environment $)/lemp.tf'
+        path: "terraform/lemp.tf.sample"
+        destination: "($ .config_root $)/terraform/main.tf"

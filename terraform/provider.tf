@@ -7,19 +7,24 @@ provider "aws" {
       "cycloid.io" = "true"
       env          = var.env
       project      = var.project
-      client       = var.customer
+      organization = var.organization
+      component    = var.component
+      client       = var.organization # Used by legacy stop-start feature. This will be replaced by organization tag
     }
   }
 }
 
 
-variable "customer" {
+variable "organization" {
 }
 
 variable "project" {
 }
 
 variable "env" {
+}
+
+variable "component" {
 }
 
 variable "rds_password" {

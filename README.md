@@ -63,97 +63,129 @@ In order to run this task, couple elements are required within the infrastructur
 |`aws_secret_key`|Amazon AWS secret key for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)|`-`|`((aws.secret_key))`|`True`|
 |`bastion_private_key_pair`|bastion SSH private key used by ansible to connect on AWS EC2 instances and the bastion itself.|`-`|`((ssh_bastion.ssh_key))`|`True`|
 |`bastion_url`|bastion URL used by ansible to connect on AWS EC2 instances.|`-`|`user@bastion.server.com`|`True`|
-|`config_ansible_path`|Path of Ansible files in the config Git repository|`-`|`($ project $)/ansible`|`True`|
+|`config_ansible_path`|Path of Ansible files in the config Git repository|`-`|`($ .project $)/ansible`|`True`|
 |`config_git_branch`|Branch of the config Git repository.|`-`|`master`|`True`|
 |`config_git_private_key`|SSH key pair to fetch the config Git repository.|`-`|`((ssh_config.ssh_key))`|`True`|
 |`config_git_repository`|Git repository URL containing the config of the stack.|`-`|`git@github.com:MyUser/config-lemp-app.git`|`True`|
-|`config_pipeline_path`|Path of pipeline task yml files in the config Git repository. Used to override pipeline yask like build-release.yml|`-`|`($ project $)/pipeline`|`True`|
-|`config_terraform_path`|Path of Terraform files in the config git repository|`-`|`($ project $)/terraform/($ environment $)`|`True`|
-|`customer`|Name of the Cycloid Organization, used as customer variable name.|`-`|`($ organization_canonical $)`|`True`|
+|`config_pipeline_path`|Path of pipeline task yml files in the config Git repository. Used to override pipeline yask like build-release.yml|`-`|`($ .project $)/pipeline`|`True`|
+|`config_terraform_path`|Path of Terraform files in the config git repository|`-`|`($ .project $)/terraform/($ .environment $)`|`True`|
+|`customer`|Name of the Cycloid Organization, used as customer variable name.|`-`|`($ .organization_canonical $)`|`True`|
 |`cycloid_toolkit_tag_prefix`|Prefix used with ansible_version to match cycloid-toolkit docker image tag. (example with "a": cycloid/cycloid-toolkit:a2.9).|`-`|`"a"`|`True`|
 |`debug_public_key`|SSH pubkey injected by packer during the ec2 ami build. Used only to debug failure.|`-`|`""`|`False`|
-|`deploy_bucket_name`|AWS S3 bucket name in which store the builded code of the website.|`-`|`($ project $)-deploy`|`True`|
-|`deploy_bucket_object_path`|AWS S3 bucket path in which store the builded code of the website.|`-`|`/catalog-lemp-app/($ environment $)/lemp-app.tar.gz`|`True`|
-|`env`|Name of the project's environment.|`-`|`($ environment $)`|`True`|
+|`deploy_bucket_name`|AWS S3 bucket name in which store the builded code of the website.|`-`|`($ .project $)-deploy`|`True`|
+|`deploy_bucket_object_path`|AWS S3 bucket path in which store the builded code of the website.|`-`|`/catalog-lemp-app/($ .environment $)/lemp-app.tar.gz`|`True`|
+|`env`|Name of the project's environment.|`-`|`($ .environment $)`|`True`|
 |`lemp_git_branch`|Branch of the LEMP source code Git repository.|`-`|`master`|`True`|
 |`lemp_git_private_key`|SSH key pair to fetch LEMP source code Git repository.|`-`|`((ssh_lemp_app.ssh_key))`|`True`|
 |`lemp_git_repository`|URL to the Git repository containing LEMP website source code.|`-`|`git@github.com:MyUser/code-lemp.git`|`True`|
-|`project`|Name of the project.|`-`|`($ project $)`|`True`|
+|`project`|Name of the project.|`-`|`($ .project $)`|`True`|
 |`rds_password`|Password used for your rds. Set "empty" if you dont use databases|`-`|`((custom_rds_password))`|`True`|
 |`stack_git_branch`|Branch to use on the public stack Git repository|`-`|`master`|`True`|
-|`terraform_storage_bucket_name`|AWS S3 bucket name to store terraform remote state file.|`-`|`($ organization_canonical $)-terraform-remote-state`|`True`|
+|`terraform_storage_bucket_name`|AWS S3 bucket name to store terraform remote state file.|`-`|`($ .organization_canonical $)-terraform-remote-state`|`True`|
 |`terraform_version`|terraform version used to execute your code.|`-`|`'1.0.1'`|`True`|
 
 ## Terraform
 
-**Inputs**
+### Inputs
 
-|Name|Description|Type|Default|Required|
-|---|---|:---:|:---:|:---:|
-|`application_ssl_cert`|ARN of an Amazon cert (ACM) to use for the loadbalancer.|`-`|``|`False`|
-|`bastion_sg_allow`|Amazon source security group ID which will be allowed to connect on Fronts port 22 (SSH).|`-`|``|`False`|
-|`cache_subnet_group`|Name of the Amazon ElastiCache subnet group to use. If not specified, create a dedicated group with private_subnets_ids.|`-`|``|`False`|
-|`cloudfront_aliases`|Extra cname for the cloudfront distribution.|`list`|`[]`|`False`|
-|`cloudfront_ssl_certificate`|ACM certificate arn to use for cloudfront domain. Need to be in us-east-1 region.|`string`|`"arn:aws:acm:us-east-1:xxxxxxxx:certificate/xxxxxxx"`|`False`|
-|`create_cloudfront_medias`|Create a Cloudfront on top of medias S3 bucket.|`bool`|`false`|`False`|
-|`create_elasticache`||`bool`|`true`|`False`|
-|`create_rds`|Define if we want to create or not an RDS database.|`bool`|`false`|`False`|
-|`create_s3_medias`|Create a S3 bucket dedicated to medias for the LEMP application.|`bool`|`false`|`False`|
-|`create_ses_access`|Create a iam user and instance profile to use AWS SES.|`bool`|`false`|`False`|
-|`elasticache_engine`|Type of the ElastiCache engine.|`-`|`redis`|`False`|
-|`elasticache_engine_version`|Version of the ElastiCache engine.|`-`|`5.0.6`|`False`|
-|`elasticache_nodes`|Number of nodes in the ElastiCache cluster.|`-`|`1`|`False`|
-|`elasticache_parameter_group_name`|ElastiCache group parameter name to use.|`-`|`default.redis5.0`|`False`|
-|`elasticache_port`|Port of the ElastiCache.|`-`|`6379`|`False`|
-|`elasticache_type`|Instance size to use for ElastiCache nodes.|`-`|`cache.t2.micro`|`False`|
-|`extra_tags`|Dict of extra tags to add on aws resources. format { "foo" = "bar" }.|`-`|`{}`|`False`|
-|`front_asg_max_size`|Maximum number of front server allowed in the AutoScaling group.|`-`|`5`|`False`|
-|`front_count`|Desired number of front servers.|`-`|`1`|`False`|
-|`front_disk_size`|Disk size of front servers.|`-`|`30`|`False`|
-|`front_ebs_optimized`|Whether the Instance is EBS optimized or not, related to the instance type you choose.|`bool`|`false`|`False`|
-|`front_type`|Type of instance to use for front servers.|`-`|`t3.small`|`False`|
-|`keypair_name`|Name of an existing AWS SSH keypair to use to deploy EC2 instances.|`-`|`cycloid`|`False`|
-|`metrics_sg_allow`|Additionnal security group ID to assign to servers. Goal is to allow monitoring server to query metrics.|`-`|`""`|`False`|
-|`private_subnets_ids`|Amazon subnets IDs on which create each components.|`array`|``|`True`|
-|`public_subnets_ids`|Amazon subnets IDs on which create each components.|`array`|``|`True`|
-|`rds_backup_retention`|The days to retain backups for. Must be between 0 and 35. When creating a Read Replica the value must be greater than 0.|`-`|`7`|`False`|
-|`rds_database`|RDS database name.|`-`|`application`|`False`|
-|`rds_disk_size`|RDS disk size.|`-`|`10`|`False`|
-|`rds_engine`|RDS database engine to use.|`-`|`mysql`|`False`|
-|`rds_engine_version`|The version of the RDS database engine.|`-`|`5.7.16`|`False`|
-|`rds_extra_sg_allow`|Amazon source security group ID which will be allowed to connect on rds.|`-`|``|`False`|
-|`rds_multiaz`|If the RDS instance is multi AZ enabled.|`bool`|`false`|`False`|
-|`rds_parameters`|Name of the RDS parameters group to use.|`-`|`default.mysql5.7`|`False`|
-|`rds_password`|RDS password. expected value is "${var.rds_password}" to get it from the pipeline.|`-`|`ChangeMePls`|`False`|
-|`rds_subnet_group`|RDS subnet group name to use. If not specified, create a dedicated group with private_subnets_ids.|`-`|``|`False`|
-|`rds_type`|RDS database instance size.|`-`|`db.t3.small`|`False`|
-|`rds_username`|RDS database username.|`-`|`application`|`False`|
-|`s3_medias_acl`|Set the default acl of the medias S3 bucket.|`string`|`"public-read"`|`False`|
-|`s3_medias_policy_json`|Override the default json policy applied to the bucket.|`string`|`data.aws_iam_policy_document.public_s3_bucket_medias[0].json`|`False`|
-|`ses_resource_arn`|Define a arn to limitate SES access.|`string`|`"*"`|`False`|
-|`vpc_id`|Amazon VPC id on which create each components.|`-`|``|`True`|
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_application_health_check_matcher"></a> [application\_health\_check\_matcher](#input\_application\_health\_check\_matcher) | n/a | `number` | `200` | no |
+| <a name="input_application_health_check_path"></a> [application\_health\_check\_path](#input\_application\_health\_check\_path) | n/a | `string` | `"/health-check"` | no |
+| <a name="input_application_path_health_interval"></a> [application\_path\_health\_interval](#input\_application\_path\_health\_interval) | n/a | `number` | `45` | no |
+| <a name="input_application_path_health_timeout"></a> [application\_path\_health\_timeout](#input\_application\_path\_health\_timeout) | n/a | `number` | `15` | no |
+| <a name="input_application_ssl_cert"></a> [application\_ssl\_cert](#input\_application\_ssl\_cert) | n/a | `string` | `""` | no |
+| <a name="input_application_ssl_policy"></a> [application\_ssl\_policy](#input\_application\_ssl\_policy) | n/a | `string` | `"ELBSecurityPolicy-TLS-1-2-2017-01"` | no |
+| <a name="input_cache_subnet_group"></a> [cache\_subnet\_group](#input\_cache\_subnet\_group) | n/a | `string` | `""` | no |
+| <a name="input_cloudfront_aliases"></a> [cloudfront\_aliases](#input\_cloudfront\_aliases) | n/a | `list(string)` | `[]` | no |
+| <a name="input_cloudfront_cached_methods"></a> [cloudfront\_cached\_methods](#input\_cloudfront\_cached\_methods) | n/a | `list` | <pre>[<br>  "GET",<br>  "HEAD"<br>]</pre> | no |
+| <a name="input_cloudfront_compress"></a> [cloudfront\_compress](#input\_cloudfront\_compress) | n/a | `bool` | `true` | no |
+| <a name="input_cloudfront_default_ttl"></a> [cloudfront\_default\_ttl](#input\_cloudfront\_default\_ttl) | n/a | `number` | `300` | no |
+| <a name="input_cloudfront_max_ttl"></a> [cloudfront\_max\_ttl](#input\_cloudfront\_max\_ttl) | n/a | `number` | `1200` | no |
+| <a name="input_cloudfront_min_ttl"></a> [cloudfront\_min\_ttl](#input\_cloudfront\_min\_ttl) | n/a | `number` | `0` | no |
+| <a name="input_cloudfront_minimum_protocol_version"></a> [cloudfront\_minimum\_protocol\_version](#input\_cloudfront\_minimum\_protocol\_version) | n/a | `string` | `"TLSv1"` | no |
+| <a name="input_cloudfront_price_class"></a> [cloudfront\_price\_class](#input\_cloudfront\_price\_class) | n/a | `string` | `"PriceClass_200"` | no |
+| <a name="input_cloudfront_ssl_certificate"></a> [cloudfront\_ssl\_certificate](#input\_cloudfront\_ssl\_certificate) | n/a | `string` | `"arn:aws:acm:us-east-1:xxxxxxxx:certificate/xxxxxxx"` | no |
+| <a name="input_component"></a> [component](#input\_component) | n/a | `any` | n/a | yes |
+| <a name="input_create_cloudfront_medias"></a> [create\_cloudfront\_medias](#input\_create\_cloudfront\_medias) | n/a | `bool` | `false` | no |
+| <a name="input_create_elasticache"></a> [create\_elasticache](#input\_create\_elasticache) | n/a | `bool` | `false` | no |
+| <a name="input_create_rds"></a> [create\_rds](#input\_create\_rds) | n/a | `bool` | `false` | no |
+| <a name="input_create_s3_medias"></a> [create\_s3\_medias](#input\_create\_s3\_medias) | n/a | `bool` | `false` | no |
+| <a name="input_create_ses_access"></a> [create\_ses\_access](#input\_create\_ses\_access) | n/a | `bool` | `false` | no |
+| <a name="input_debian_ami_name"></a> [debian\_ami\_name](#input\_debian\_ami\_name) | n/a | `string` | `"debian-11-amd64-*"` | no |
+| <a name="input_default_short_name"></a> [default\_short\_name](#input\_default\_short\_name) | n/a | `string` | `""` | no |
+| <a name="input_deploy_bucket_name"></a> [deploy\_bucket\_name](#input\_deploy\_bucket\_name) | n/a | `string` | `"application-deployment"` | no |
+| <a name="input_elasticache_cluster_id"></a> [elasticache\_cluster\_id](#input\_elasticache\_cluster\_id) | n/a | `string` | `""` | no |
+| <a name="input_elasticache_engine"></a> [elasticache\_engine](#input\_elasticache\_engine) | n/a | `string` | `"redis"` | no |
+| <a name="input_elasticache_engine_version"></a> [elasticache\_engine\_version](#input\_elasticache\_engine\_version) | n/a | `string` | `"8.0"` | no |
+| <a name="input_elasticache_nodes"></a> [elasticache\_nodes](#input\_elasticache\_nodes) | n/a | `number` | `1` | no |
+| <a name="input_elasticache_parameter_group_name"></a> [elasticache\_parameter\_group\_name](#input\_elasticache\_parameter\_group\_name) | n/a | `string` | `"default.redis8.0"` | no |
+| <a name="input_elasticache_port"></a> [elasticache\_port](#input\_elasticache\_port) | n/a | `string` | `"6379"` | no |
+| <a name="input_elasticache_type"></a> [elasticache\_type](#input\_elasticache\_type) | n/a | `string` | `"cache.t2.micro"` | no |
+| <a name="input_env"></a> [env](#input\_env) | n/a | `any` | n/a | yes |
+| <a name="input_extra_tags"></a> [extra\_tags](#input\_extra\_tags) | n/a | `map` | `{}` | no |
+| <a name="input_front_ami_id"></a> [front\_ami\_id](#input\_front\_ami\_id) | n/a | `string` | `""` | no |
+| <a name="input_front_asg_max_size"></a> [front\_asg\_max\_size](#input\_front\_asg\_max\_size) | n/a | `number` | `5` | no |
+| <a name="input_front_asg_min_size"></a> [front\_asg\_min\_size](#input\_front\_asg\_min\_size) | n/a | `number` | `1` | no |
+| <a name="input_front_asg_scale_down_cooldown"></a> [front\_asg\_scale\_down\_cooldown](#input\_front\_asg\_scale\_down\_cooldown) | n/a | `number` | `500` | no |
+| <a name="input_front_asg_scale_down_scaling_adjustment"></a> [front\_asg\_scale\_down\_scaling\_adjustment](#input\_front\_asg\_scale\_down\_scaling\_adjustment) | n/a | `number` | `-1` | no |
+| <a name="input_front_asg_scale_down_threshold"></a> [front\_asg\_scale\_down\_threshold](#input\_front\_asg\_scale\_down\_threshold) | n/a | `number` | `30` | no |
+| <a name="input_front_asg_scale_up_cooldown"></a> [front\_asg\_scale\_up\_cooldown](#input\_front\_asg\_scale\_up\_cooldown) | n/a | `number` | `300` | no |
+| <a name="input_front_asg_scale_up_scaling_adjustment"></a> [front\_asg\_scale\_up\_scaling\_adjustment](#input\_front\_asg\_scale\_up\_scaling\_adjustment) | n/a | `number` | `2` | no |
+| <a name="input_front_asg_scale_up_threshold"></a> [front\_asg\_scale\_up\_threshold](#input\_front\_asg\_scale\_up\_threshold) | n/a | `number` | `85` | no |
+| <a name="input_front_associate_public_ip_address"></a> [front\_associate\_public\_ip\_address](#input\_front\_associate\_public\_ip\_address) | n/a | `bool` | `false` | no |
+| <a name="input_front_count"></a> [front\_count](#input\_front\_count) | n/a | `number` | `1` | no |
+| <a name="input_front_disk_size"></a> [front\_disk\_size](#input\_front\_disk\_size) | n/a | `number` | `30` | no |
+| <a name="input_front_disk_type"></a> [front\_disk\_type](#input\_front\_disk\_type) | n/a | `string` | `"gp2"` | no |
+| <a name="input_front_ebs_optimized"></a> [front\_ebs\_optimized](#input\_front\_ebs\_optimized) | n/a | `bool` | `false` | no |
+| <a name="input_front_type"></a> [front\_type](#input\_front\_type) | n/a | `string` | `"t3.small"` | no |
+| <a name="input_front_update_min_in_service"></a> [front\_update\_min\_in\_service](#input\_front\_update\_min\_in\_service) | n/a | `number` | `1` | no |
+| <a name="input_keypair_name"></a> [keypair\_name](#input\_keypair\_name) | n/a | `string` | `"cycloid"` | no |
+| <a name="input_metrics_sg_allow"></a> [metrics\_sg\_allow](#input\_metrics\_sg\_allow) | n/a | `string` | `""` | no |
+| <a name="input_nameregex"></a> [nameregex](#input\_nameregex) | Used to only keep few char for component like ALB name | `string` | `"/[^0-9A-Za-z-]/"` | no |
+| <a name="input_organization"></a> [organization](#input\_organization) | n/a | `any` | n/a | yes |
+| <a name="input_private_subnets_ids"></a> [private\_subnets\_ids](#input\_private\_subnets\_ids) | n/a | `list(string)` | `[]` | no |
+| <a name="input_project"></a> [project](#input\_project) | n/a | `any` | n/a | yes |
+| <a name="input_public_subnets_ids"></a> [public\_subnets\_ids](#input\_public\_subnets\_ids) | n/a | `list(string)` | `[]` | no |
+| <a name="input_rds_backup_retention"></a> [rds\_backup\_retention](#input\_rds\_backup\_retention) | n/a | `number` | `7` | no |
+| <a name="input_rds_database"></a> [rds\_database](#input\_rds\_database) | n/a | `string` | `"application"` | no |
+| <a name="input_rds_disk_size"></a> [rds\_disk\_size](#input\_rds\_disk\_size) | n/a | `number` | `10` | no |
+| <a name="input_rds_engine"></a> [rds\_engine](#input\_rds\_engine) | n/a | `string` | `"mysql"` | no |
+| <a name="input_rds_engine_version"></a> [rds\_engine\_version](#input\_rds\_engine\_version) | n/a | `string` | `"8.0"` | no |
+| <a name="input_rds_extra_sg_allow"></a> [rds\_extra\_sg\_allow](#input\_rds\_extra\_sg\_allow) | n/a | `string` | `""` | no |
+| <a name="input_rds_multiaz"></a> [rds\_multiaz](#input\_rds\_multiaz) | n/a | `bool` | `false` | no |
+| <a name="input_rds_parameters"></a> [rds\_parameters](#input\_rds\_parameters) | n/a | `string` | `"default.mysql8.0"` | no |
+| <a name="input_rds_password"></a> [rds\_password](#input\_rds\_password) | n/a | `string` | `"ChangeMePls"` | no |
+| <a name="input_rds_skip_final_snapshot"></a> [rds\_skip\_final\_snapshot](#input\_rds\_skip\_final\_snapshot) | n/a | `bool` | `true` | no |
+| <a name="input_rds_storage_type"></a> [rds\_storage\_type](#input\_rds\_storage\_type) | n/a | `string` | `"gp2"` | no |
+| <a name="input_rds_subnet_group"></a> [rds\_subnet\_group](#input\_rds\_subnet\_group) | n/a | `string` | `""` | no |
+| <a name="input_rds_type"></a> [rds\_type](#input\_rds\_type) | n/a | `string` | `"db.t3.small"` | no |
+| <a name="input_rds_username"></a> [rds\_username](#input\_rds\_username) | n/a | `string` | `"application"` | no |
+| <a name="input_s3_medias_acl"></a> [s3\_medias\_acl](#input\_s3\_medias\_acl) | n/a | `string` | `"private"` | no |
+| <a name="input_s3_medias_policy_json"></a> [s3\_medias\_policy\_json](#input\_s3\_medias\_policy\_json) | n/a | `string` | `""` | no |
+| <a name="input_ses_resource_arn"></a> [ses\_resource\_arn](#input\_ses\_resource\_arn) | n/a | `string` | `"*"` | no |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | n/a | `string` | `""` | no |
+| <a name="input_zones"></a> [zones](#input\_zones) | To use specific AWS Availability Zones. | `list` | `[]` | no |
 
-**Outputs**
+### Outputs
 
 | Name | Description |
 |------|-------------|
-| alb_front_dns_name | DNS name of the front ALB. |
-| alb_front_zone_id | Zone ID of the front ALB. |
-| elasticache_address | Address of the ElastiCache. |
-| elasticache_cluster_id | Cluster Id of the ElastiCache. |
-| rds_address | Address of the RDS database. |
-| rds_port | Port of the RDS database. |
-| rds_username | Username of the RDS database. |
-| rds_database | Database name of the RDS database. |
-| iam_s3-medias_user_key | Access key of the dedicated IAM user to access to the media S3 bucket. |
-| iam_s3-medias_user_secret | Access secret key of the dedicated IAM user to access to the media S3 bucket. |
-| iam_s3-medias_user_name | Iam user name of the dedicated IAM user to access to the media S3 bucket. |
-| s3_medias | S3 bucket name dedicated to medias. |
-| iam_ses_user_key | Iam user key for SES. |
-| iam_ses_user_secret | Iam user secret for SES. |
-| iam_ses_smtp_user_key | Smtp user key for ses. |
-| iam_ses_smtp_user_secret | Smtp user secret for ses. |
-| cloudfront_medias_domain_name | Cloudfront domain on top of S3 medias bucket. |
+| <a name="output_alb_front_dns_name"></a> [alb\_front\_dns\_name](#output\_alb\_front\_dns\_name) | n/a |
+| <a name="output_alb_front_zone_id"></a> [alb\_front\_zone\_id](#output\_alb\_front\_zone\_id) | n/a |
+| <a name="output_cloudfront_medias_domain_name"></a> [cloudfront\_medias\_domain\_name](#output\_cloudfront\_medias\_domain\_name) | n/a |
+| <a name="output_elasticache_address"></a> [elasticache\_address](#output\_elasticache\_address) | n/a |
+| <a name="output_elasticache_cluster_id"></a> [elasticache\_cluster\_id](#output\_elasticache\_cluster\_id) | n/a |
+| <a name="output_iam_ses_smtp_user_key"></a> [iam\_ses\_smtp\_user\_key](#output\_iam\_ses\_smtp\_user\_key) | n/a |
+| <a name="output_iam_ses_smtp_user_secret"></a> [iam\_ses\_smtp\_user\_secret](#output\_iam\_ses\_smtp\_user\_secret) | n/a |
+| <a name="output_iam_ses_user_key"></a> [iam\_ses\_user\_key](#output\_iam\_ses\_user\_key) | n/a |
+| <a name="output_iam_ses_user_secret"></a> [iam\_ses\_user\_secret](#output\_iam\_ses\_user\_secret) | n/a |
+| <a name="output_rds_address"></a> [rds\_address](#output\_rds\_address) | n/a |
+| <a name="output_rds_database"></a> [rds\_database](#output\_rds\_database) | n/a |
+| <a name="output_rds_port"></a> [rds\_port](#output\_rds\_port) | n/a |
+| <a name="output_rds_username"></a> [rds\_username](#output\_rds\_username) | n/a |
+| <a name="output_s3_medias"></a> [s3\_medias](#output\_s3\_medias) | n/a |
+
 
 
 ## Ansible

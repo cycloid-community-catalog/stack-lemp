@@ -34,8 +34,8 @@ export ANSIBLE_REMOTE_TEMP=$HOME/.ansible/tmp
 ###
 
 ANSIBLE_PLAYBOOK="/home/admin/first-boot.yml"
-# Path is related to https://github.com/cycloidio/ansible-customer-ssh/blob/master/tasks/main.yml#L32
-ANSIBLE_DEPLOYMENT_PLAYBOOK="/home/admin/${CUSTOMER}/lemp.yml"
+# Path is related to https://github.com/cycloidio/ansible-organization-ssh/blob/master/tasks/main.yml#L32
+ANSIBLE_DEPLOYMENT_PLAYBOOK="/home/admin/${ORGANIZATION}/lemp.yml"
 
 # Output both to stdout and to ${LOG_FILE}
 exec &> >(tee -a ${LOG_FILE})
@@ -60,8 +60,8 @@ log "Starting ${ANSIBLE_PLAYBOOK} playbook"
 
 ANSIBLE_FORCE_COLOR=1 PYTHONUNBUFFERED=1 ansible-playbook ${ANSIBLE_PLAYBOOK} --diff \
     -e "env=${ENV}" \
-    -e "customer=${CUSTOMER}" \
-    -e "client=${CUSTOMER}" \
+    -e "organization=${ORGANIZATION}" \
+    -e "client=${ORGANIZATION}" \
     -e "role=${ROLE}" \
     -e "project=${PROJECT}" \
     --connection=local
@@ -83,7 +83,7 @@ export AWS_SECRET_ACCESS_KEY="{{aws_secret_access_key}}"
 ANSIBLE_FORCE_COLOR=1 PYTHONUNBUFFERED=1 ansible-playbook ${ANSIBLE_DEPLOYMENT_PLAYBOOK} --diff \
          -e "env=${ENV}" \
          -e "project=${PROJECT}" \
-         -e "customer=${CUSTOMER}" \
+         -e "organization=${ORGANIZATION}" \
          -e "rds_address=${RDS_ADDRESS}" \
          -e "rds_port=${RDS_PORT}" \
          -e "rds_database=${RDS_DATABASE}" \
@@ -92,7 +92,7 @@ ANSIBLE_FORCE_COLOR=1 PYTHONUNBUFFERED=1 ansible-playbook ${ANSIBLE_DEPLOYMENT_P
          -e "elasticache_address=${ELASTICACHE_ADDRESS}" \
          -e "ec2_tag_env=${ENV}" \
          -e "ec2_tag_project=${PROJECT}" \
-         -e "ec2_tag_client=${CUSTOMER}" \
+         -e "ec2_tag_client=${ORGANIZATION}" \
          -e "ec2_tag_role=${ROLE}" \
          -e "ansistrano_rolling_elb_enabled=false" \
          -e "runatboot=true" \
@@ -114,6 +114,6 @@ fi
 log "Finished running code deployment"
 
 log "Removing playbooks"
-rm -fr /home/admin/first-boot.yml /home/admin/${CUSTOMER} ${ANSIBLE_LOCAL_TEMP} -rf
+rm -fr /home/admin/first-boot.yml /home/admin/${ORGANIZATION} ${ANSIBLE_LOCAL_TEMP} -rf
 log "Finishing ${0} script and removing it"
 rm ${0}

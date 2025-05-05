@@ -6,9 +6,9 @@ data "template_file" "user_data_front" {
   vars = {
     env                = var.env
     project            = var.project
-    customer           = var.customer
+    organization       = var.organization
     role               = "front"
-    signal_stack_name  = "${var.project}-front-${var.env}"
+    signal_stack_name  = "${local.name_prefix}-front"
     signal_resource_id = "Fronts${var.env}"
     rds_address        = try(aws_db_instance.application[0].address, "")
     rds_port           = try(aws_db_instance.application[0].port, "")
