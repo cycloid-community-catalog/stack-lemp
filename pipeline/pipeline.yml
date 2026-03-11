@@ -126,7 +126,13 @@ resources:
   type: git
   source:
     uri: https://github.com/cycloid-community-catalog/stack-lemp
-    branch: ($ .catalog_repository_branch $)
+    # Allow stack versioning by tag or branch
+    ($- if eq .stack_version_type "tag" $)
+    tag_filter: ($ .stack_version_ref $)
+    fetch_tags: true
+    ($- else $)
+    branch: ($ coalesce .stack_version_ref .catalog_repository_branch $)
+    ($- end $)
     paths:
       - pipeline/*
 
@@ -136,7 +142,13 @@ resources:
   type: git
   source:
     uri: https://github.com/cycloid-community-catalog/stack-lemp
-    branch: ($ .catalog_repository_branch $)
+    # Allow stack versioning by tag or branch
+    ($- if eq .stack_version_type "tag" $)
+    tag_filter: ($ .stack_version_ref $)
+    fetch_tags: true
+    ($- else $)
+    branch: ($ coalesce .stack_version_ref .catalog_repository_branch $)
+    ($- end $)
     paths:
       - terraform/*
 
@@ -146,7 +158,13 @@ resources:
   icon: github-circle
   source:
     uri: https://github.com/cycloid-community-catalog/stack-lemp
-    branch: ($ .catalog_repository_branch $)
+    # Allow stack versioning by tag or branch
+    ($- if eq .stack_version_type "tag" $)
+    tag_filter: ($ .stack_version_ref $)
+    fetch_tags: true
+    ($- else $)
+    branch: ($ coalesce .stack_version_ref .catalog_repository_branch $)
+    ($- end $)
     paths:
       - ansible/*
 
