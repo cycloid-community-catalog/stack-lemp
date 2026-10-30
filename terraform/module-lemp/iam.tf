@@ -89,6 +89,20 @@ resource "aws_iam_role_policy_attachment" "cloudformation-signal" {
 #####################
 
 data "aws_iam_policy_document" "push-logs" {
+  # Log stream level actions: still require the log stream ARN (suffix :*)
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "logs:PutLogEvents",
+      "logs:CreateLogStream",
+    ]
+
+    resources = ["arn:aws:logs:*:*:log-group:${local.name_prefix_underscore}:*"]
+  }
+
+  # Log group level actions: must use the log group ARN (no :* suffix).
+  # Required since AWS CloudWatch Logs IAM change effective 2027-04-26.
   statement {
     effect = "Allow"
 
@@ -96,12 +110,10 @@ data "aws_iam_policy_document" "push-logs" {
       "logs:UntagLogGroup",
       "logs:TagLogGroup",
       "logs:PutRetentionPolicy",
-      "logs:PutLogEvents",
       "logs:DeleteRetentionPolicy",
-      "logs:CreateLogStream",
     ]
 
-    resources = ["arn:aws:logs:*:*:log-group:${local.name_prefix_underscore}:*"]
+    resources = ["arn:aws:logs:*:*:log-group:${local.name_prefix_underscore}"]
   }
 
   statement {
